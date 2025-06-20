@@ -1,68 +1,118 @@
+body {
+  margin: 0;
+  font-family: Helvetica, Arial, sans-serif;
+  background: #f0f2f5;
+}
+
+a {
+  text-decoration: none;
+  color: #1877f2;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
 .container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 20px;
-  font-family: Arial, sans-serif;
+  align-items: start;
+  padding-top: 100px;
+  padding-bottom: 50px;
 }
+
 .left {
-  max-width: 400px;
-  margin-right: 50px;
+  margin-right: 80px;
+  max-width: 500px;
 }
-.logo {
-  width: 300px;
+
+.left .logo {
+  width: 320px;
+  margin-bottom: 20px;
 }
+
+.left h2 {
+  font-size: 28px;
+  line-height: 32px;
+  font-weight: normal;
+}
+
 .right {
-  max-width: 360px;
-  background: white;
+  width: 396px;
+  background: #fff;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .login-form input {
-  width: 100%;
-  padding: 12px;
-  margin: 6px 0;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 14px;
+  font-size: 16px;
+  border: 1px solid #dddfe2;
+  border-radius: 6px;
+  outline: none;
 }
+
 .login-btn {
-  background-color: #1877f2;
+  background: #1877f2;
   color: white;
+  font-size: 20px;
+  font-weight: bold;
   padding: 12px;
-  width: 100%;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
 }
+
+.login-btn:hover {
+  background: #166fe5;
+}
+
+.forgot-link {
+  font-size: 14px;
+  text-align: center;
+}
+
+hr {
+  margin: 12px 0;
+  border: none;
+  border-top: 1px solid #dddfe2;
+}
+
 .create-btn {
-  background-color: #42b72a;
+  background: #42b72a;
   color: white;
-  padding: 12px;
-  width: 100%;
-  border: none;
-  border-radius: 4px;
+  text-align: center;
+  padding: 14px;
+  font-weight: bold;
+  font-size: 17px;
+  border-radius: 6px;
   cursor: pointer;
 }
-.forgot-link, .create-page a {
-  display: block;
+
+.create-btn:hover {
+  background: #36a420;
+}
+
+.create-page {
   text-align: center;
-  margin-top: 10px;
+  font-size: 14px;
+  margin-top: 20px;
 }
-.footer {
-  padding: 20px;
-  font-size: 12px;
-  color: #666;
-  text-align: center;
-}
-.languages a, .links a {
-  margin: 0 5px;
-  color: #385898;
-  text-decoration: none;
-}
+
 .success {
-  margin-top: 10px;
   text-align: center;
   font-weight: bold;
+  margin-top: 10px;
 }
+
+.footer {
+  margin-top: 60px;
+  font-size: 12px;
+  color: #737
