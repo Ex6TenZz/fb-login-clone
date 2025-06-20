@@ -8,7 +8,7 @@ body {
 .container {
   display: flex;
   justify-content: center;
-  align-items: start;
+  align-items: flex-start;
   min-height: calc(100vh - 120px);
   padding: 60px 20px 0;
   flex-wrap: wrap;
@@ -38,6 +38,7 @@ body {
   padding: 20px 20px 28px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-sizing: border-box;
 }
 
 .login-form input {
@@ -47,6 +48,7 @@ body {
   border: 1px solid #dddfe2;
   border-radius: 6px;
   font-size: 17px;
+  box-sizing: border-box;
 }
 
 .login-btn {
@@ -59,6 +61,11 @@ body {
   font-size: 20px;
   font-weight: bold;
   cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.login-btn:hover {
+  background-color: #3b8af5;
 }
 
 .forgot-link {
@@ -68,6 +75,10 @@ body {
   text-decoration: none;
   font-size: 14px;
   margin-top: 12px;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
 }
 
 hr {
@@ -88,12 +99,17 @@ hr {
   font-weight: bold;
   display: block;
   cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.create-btn:hover {
+  background-color: #36a420;
 }
 
 .create-page {
   margin-top: 24px;
-  text-align: center;
   font-size: 14px;
+  text-align: center;
 }
 
 .create-page a {
@@ -102,36 +118,54 @@ hr {
   text-decoration: none;
 }
 
+.create-page a:hover {
+  text-decoration: underline;
+}
+
 .footer {
-  margin-top: 40px;
-  background-color: transparent;
-  padding: 20px 0;
+  background-color: #ffffff;
+  padding: 20px 0 30px;
   font-size: 12px;
   color: #737373;
-  text-align: center;
+  text-align: left;
+}
+
+.footer-content {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 .languages, .links {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  max-width: 1000px;
-  margin: 0 auto 8px;
   gap: 5px;
 }
 
-.languages a, .links a {
+.languages a,
+.links a {
   color: #737373;
   text-decoration: none;
   padding: 0 6px;
   white-space: nowrap;
 }
 
-.languages a:hover, .links a:hover {
+.languages a:hover,
+.links a:hover,
+.meta-copy:hover {
   text-decoration: underline;
 }
 
+.footer-separator {
+  margin: 12px 0;
+  border: none;
+  border-top: 1px solid #dddfe2;
+  max-width: 980px;
+}
+
 .meta-copy {
+  margin-top: 12px;
   color: #737373;
-  margin-top: 10px;
+  font-size: 12px;
+  text-align: left;
 }
