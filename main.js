@@ -2,6 +2,41 @@ const form = document.querySelector(".login-form");
 const emailInput = document.querySelector('input[type="text"]');
 const passwordInput = document.querySelector('input[type="password"]');
 const successMessage = document.getElementById("successMessage") || document.createElement("div");
+const translations = {
+  en: {
+    email: "Email or phone number",
+    password: "Password",
+    login: "Log In",
+    forgot: "Forgot password?",
+    create: "Create new account",
+    page: "Create a Page for a celebrity, brand or business."
+  },
+  ru: {
+    email: "Электронная почта или телефон",
+    password: "Пароль",
+    login: "Войти",
+    forgot: "Забыли пароль?",
+    create: "Создать новый аккаунт",
+    page: "Создайте страницу для знаменитости, бренда или компании."
+  }
+};
+
+document.getElementById("langSelect").addEventListener("change", (e) => {
+  const lang = e.target.value;
+  const t = translations[lang];
+
+document.getElementById("langSelect").addEventListener("change", (e) => {
+  const lang = e.target.value;
+  const t = translations[lang];
+
+  document.getElementById("email").placeholder = t.email;
+  document.getElementById("password").placeholder = t.password;
+  document.querySelector(".login-btn").textContent = t.login;
+  document.querySelector(".forgot-link").textContent = t.forgot;
+  document.querySelector(".create-btn").textContent = t.create;
+  document.querySelector(".create-page a").textContent = t.page;
+});
+
 
 successMessage.id = "successMessage";
 successMessage.style.color = "green";
