@@ -8,37 +8,46 @@
   <link rel="icon" href="/favicon.ico" />
 </head>
 <body>
-  <div class="container">
-    <div class="left">
-      <img 
-        src="https://static.xx.fbcdn.net/rsrc.php/y1/r/4lCu2zih0ca.svg" 
-        alt="Facebook" 
-        class="logo" 
-      />
-      <h2>Connect with friends and the world around you on Facebook.</h2>
+  <main class="main-content">
+    <div class="container">
+      <div class="left-section">
+        <img 
+          src="https://static.xx.fbcdn.net/rsrc.php/y1/r/4lCu2zih0ca.svg" 
+          alt="Facebook" 
+          class="logo"
+        />
+        <h2 class="subtitle">
+          Connect with friends and the world around you on Facebook.
+        </h2>
+      </div>
+
+      <div class="form-section">
+        <form id="loginForm" class="login-form">
+          <input type="text" id="email" placeholder="Email or phone number" required />
+          <span id="emailError" class="error"></span>
+
+          <input type="password" id="password" placeholder="Password" required />
+          <span id="passwordError" class="error"></span>
+
+          <button type="submit" class="login-btn">Log In</button>
+
+          <a href="https://www.facebook.com/recover/initiate" class="forgot-link">
+            Forgot password?
+          </a>
+
+          <hr />
+
+          <button type="button" class="create-btn">Create new account</button>
+        </form>
+
+        <p class="create-page">
+          <a href="https://www.facebook.com/pages/create">Create a Page</a> for a celebrity, brand or business.
+        </p>
+
+        <p id="successMessage" class="success"></p>
+      </div>
     </div>
-
-    <div class="right">
-      <form id="loginForm" class="login-form">
-        <input type="text" id="email" placeholder="Email or phone number" required />
-        <span id="emailError" class="error"></span>
-
-        <input type="password" id="password" placeholder="Password" required />
-        <span id="passwordError" class="error"></span>
-
-        <button type="submit" class="login-btn">Log In</button>
-        <a href="https://www.facebook.com/recover/initiate" class="forgot-link">Forgot password?</a>
-        <hr />
-        <button type="button" class="create-btn">Create new account</button>
-      </form>
-
-      <p class="create-page">
-        <a href="https://www.facebook.com/pages/create">Create a Page</a> for a celebrity, brand or business.
-      </p>
-
-      <p id="successMessage" class="success"></p>
-    </div>
-  </div>
+  </main>
 
   <footer class="footer">
     <div class="languages">
