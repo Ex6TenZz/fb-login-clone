@@ -103,35 +103,34 @@ hr {
 }
 
 .footer {
-  margin-top: 40px;
-  background-color: transparent;
-  padding: 20px 0;
+  background-color: #f0f2f5;
+  padding: 30px 20px;
   font-size: 12px;
   color: #737373;
-  text-align: center;
 }
 
-.languages, .links {
+.footer .footer-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.footer .languages,
+.footer .links {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  max-width: 1000px;
-  margin: 0 auto 8px;
-  gap: 5px;
+  gap: 10px;
+  margin-bottom: 15px;
 }
 
-.languages a, .links a {
+.footer .languages a,
+.footer .links a {
   color: #737373;
   text-decoration: none;
-  padding: 0 6px;
-  white-space: nowrap;
+  font-weight: 500;
 }
 
-.languages a:hover, .links a:hover {
-  text-decoration: underline;
-}
-
-.meta-copy {
+.footer .meta-copy {
   color: #737373;
   margin-top: 10px;
 }
