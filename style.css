@@ -1,133 +1,117 @@
 body {
   margin: 0;
   font-family: Helvetica, Arial, sans-serif;
-  background: #f0f2f5;
-}
-
-a {
-  text-decoration: none;
-  color: #1877f2;
-}
-
-a:hover {
-  text-decoration: underline;
+  background-color: #f0f2f5;
 }
 
 .container {
   display: flex;
   justify-content: center;
-  align-items: start;
-  padding-top: 100px;
-  padding-bottom: 50px;
+  align-items: center;
+  flex-direction: row;
+  height: 85vh;
+  padding: 20px;
 }
 
-.left {
-  margin-right: 80px;
-  max-width: 500px;
+.left-section {
+  margin-right: 60px;
 }
 
-.left .logo {
-  width: 320px;
-  margin-bottom: 20px;
+.logo {
+  font-size: 56px;
+  color: #1877f2;
+  margin: 0;
+  position: relative;
+  top: 20px;
 }
 
-.left h2 {
+.description {
   font-size: 28px;
-  line-height: 32px;
-  font-weight: normal;
+  max-width: 400px;
+  margin-top: 0;
+  position: relative;
+  top: -10px;
+  left: 2px;
 }
 
-.right {
+.form-section {
   width: 396px;
   background: #fff;
   padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  text-align: center;
 }
 
 .login-form input {
+  width: 100%;
   padding: 14px;
-  font-size: 16px;
+  margin: 6px 0;
   border: 1px solid #dddfe2;
   border-radius: 6px;
+  font-size: 17px;
   outline: none;
 }
 
 .login-btn {
-  background: #1877f2;
-  color: white;
+  background-color: #1877f2;
+  color: #fff;
   font-size: 20px;
-  font-weight: bold;
-  padding: 12px;
+  padding: 14px;
   border: none;
   border-radius: 6px;
+  width: 100%;
+  font-weight: bold;
   cursor: pointer;
-}
-
-.login-btn:hover {
-  background: #166fe5;
 }
 
 .forgot-link {
+  display: block;
+  margin-top: 10px;
   font-size: 14px;
-  text-align: center;
+  color: #1877f2;
+  text-decoration: none;
 }
 
 hr {
-  margin: 12px 0;
+  margin: 20px 0;
   border: none;
-  border-top: 1px solid #dddfe2;
+  height: 1px;
+  background-color: #dddfe2;
 }
 
-.create-btn {
-  background: #42b72a;
-  color: white;
-  text-align: center;
-  padding: 14px;
+.create-account-btn {
+  background-color: #42b72a;
+  color: #fff;
   font-weight: bold;
-  font-size: 17px;
+  padding: 14px;
+  border: none;
   border-radius: 6px;
+  display: inline-block;
+  font-size: 17px;
+  text-decoration: none;
   cursor: pointer;
 }
 
-.create-btn:hover {
-  background: #36a420;
-}
-
-.create-page {
-  text-align: center;
-  font-size: 14px;
+.create-page-note {
   margin-top: 20px;
+  font-size: 14px;
 }
 
-.success {
-  text-align: center;
+.create-page-link {
+  color: #000;
+  text-decoration: none;
   font-weight: bold;
-  margin-top: 10px;
 }
 
 .footer {
-  margin-top: 60px;
+  background-color: #f5f6f7;
+  padding: 30px 20px;
+  text-align: center;
   font-size: 12px;
   color: #737373;
-  text-align: center;
-  padding: 20px 10px;
 }
 
-.languages, .links {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
-  margin: 5px 0;
-}
-
-.meta-copy {
-  margin-top: 10px;
+.footer-links {
+  margin: 6px 0;
 }
