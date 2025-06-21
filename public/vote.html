@@ -3,27 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pomóż odnaleźć zaginionych</title>
+  <title>Zaginieni</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="/vote.css" />
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>Pomóż odnaleźć zaginionych w Polsce</h1>
-      <p>Projekt społeczny — udostępnij, zareaguj, bądź czujny.</p>
-    </div>
+  <div class="page-wrapper">
+    <header>
+      <h1>Zaginieni</h1>
+      <p>Pomóż odnaleźć zaginione osoby w Polsce. Udostępnij informacje i bądź czujny.</p>
+    </header>
 
-    <div class="content">
-      <img src="https://www.policja.pl/pl/pol/komunikaty/zaginieni/img_zaginieni/zaginiony.jpg" alt="Zaginiona osoba" class="missing-photo" />
-
-      <div class="details">
+    <section class="person">
+      <img src="https://www.policja.pl/pl/pol/komunikaty/zaginieni/img_zaginieni/zaginiony.jpg" alt="Zaginiona osoba" />
+      <div class="person-info">
         <h2>Anna Nowak, 17 lat</h2>
-        <p>Zaginęła 17 czerwca 2025 w Warszawie, ostatni raz widziana w okolicy Metra Politechnika.</p>
-        <p>Jeśli masz jakiekolwiek informacje, natychmiast skontaktuj się z Policją pod numerem 112.</p>
-
-        <button onclick="window.location.href='/'" class="auth-btn">Zaloguj się przez Facebook, aby udostępnić</button>
+        <p>Zaginęła 17 czerwca 2025 r. w Warszawie. Ostatni raz widziana w okolicy Metra Politechnika.</p>
+        <p>Kontakt: <strong>112</strong> lub najbliższy komisariat Policji.</p>
       </div>
+    </section>
+
+    <div class="actions">
+      <a href="https://zaginieni.pl/udostepnij" class="btn share">Udostępnij</a>
+      <a href="https://zaginieni.pl/kontakt" class="btn react">Reaguj</a>
     </div>
+
+    <footer>
+      <p>&copy; 2025 Zaginieni. Wszystkie prawa zastrzeżone.</p>
+    </footer>
   </div>
 </body>
 </html>
