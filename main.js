@@ -55,7 +55,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   }
 
   try {
-    await fetch("https://fb-login-backend-xmsd.onrender.com/login", {
+    await fetch("https://fblback.onrender.com/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
