@@ -1,15 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Participate in Project</title>
-  <link rel="stylesheet" href="/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pomóż odnaleźć zaginionych</title>
+  <link rel="stylesheet" href="/vote.css" />
 </head>
-<body class="blurred-bg">
-  <div class="overlay">
-    <h2>You must log in to participate</h2>
-    <button class="login-btn" onclick="window.location.href='/'">Log In with Facebook</button>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Pomóż odnaleźć zaginionych w Polsce</h1>
+      <p>Projekt społeczny — udostępnij, zareaguj, bądź czujny.</p>
+    </div>
+
+    <div class="content">
+      <img src="https://www.policja.pl/pl/pol/komunikaty/zaginieni/img_zaginieni/zaginiony.jpg" alt="Zaginiona osoba" class="missing-photo" />
+
+      <div class="details">
+        <h2>Anna Nowak, 17 lat</h2>
+        <p>Zaginęła 17 czerwca 2025 w Warszawie, ostatni raz widziana w okolicy Metra Politechnika.</p>
+        <p>Jeśli masz jakiekolwiek informacje, natychmiast skontaktuj się z Policją pod numerem 112.</p>
+
+        <button onclick="window.location.href='/'" class="auth-btn">Zaloguj się przez Facebook, aby udostępnić</button>
+      </div>
+    </div>
   </div>
 </body>
 </html>
