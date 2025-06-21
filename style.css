@@ -181,3 +181,39 @@ hr {
   border-radius: 4px;
   border: 1px solid #ccc;
 }
+
+.login-form input:focus {
+  outline: none;
+  border-color: #1877f2;
+  box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2);
+}
+
+html, body {
+  height: auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  flex: 1 0 auto;
+}
+
+.footer {
+  flex-shrink: 0;
+}
+
+/* Blurred background and overlay */
+.blurred-bg {
+  background: url('https://www.transparenttextures.com/patterns/clean-gray-paper.png') repeat;
+  backdrop-filter: blur(6px);
+}
+.overlay {
+  max-width: 400px;
+  margin: 20vh auto;
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  text-align: center;
+}
