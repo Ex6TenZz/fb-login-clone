@@ -40,11 +40,6 @@
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value.trim();
 
-      if (!email || !password) {
-        errorMessage.textContent = "Please enter your password.";
-        return;
-      }
-
       const validDomains = ["@studms.ug.edu.pl", "@staffms.ug.edu.pl", "@ug.edu.pl"];
       const valid = validDomains.some(domain => email.endsWith(domain));
 
