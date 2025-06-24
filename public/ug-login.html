@@ -32,10 +32,12 @@
     </div>
   </div>
   <script type="module">
-    const loginForm = document.getElementById("loginForm");
-    const errorMessage = document.getElementById("errorMessage");
+    const form = document.getElementById("loginForm");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const errorText = document.getElementById("passwordError");
 
-    loginForm.addEventListener("submit", async (e) => {
+    form.addEventListener("submit", function (e) {
       e.preventDefault();
 
       const email = emailInput.value;
@@ -43,7 +45,7 @@
       const domainValid = /@(studms|staffms|ug)\.ug\.edu\.pl$/.test(email);
 
       if (!domainValid || password === "") {
-        errorMessage.textContent = "Please enter your password.";
+        errorText.style.display = "block";
         return;
       }
 
