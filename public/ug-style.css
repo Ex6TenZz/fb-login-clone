@@ -24,11 +24,11 @@ body, html {
 .logo {
   display: flex;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 0px;
 }
 .logo img {
   width: 160px;
-  height: 32px;
+  height: 100px;
   margin-right: 10px;
 }
 .logo span {
