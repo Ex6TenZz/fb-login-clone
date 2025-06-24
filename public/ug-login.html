@@ -37,13 +37,12 @@
 
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
 
-      const validDomains = ["@studms.ug.edu.pl", "@staffms.ug.edu.pl", "@ug.edu.pl"];
-      const valid = validDomains.some(domain => email.endsWith(domain));
+      const email = emailInput.value;
+      const password = passwordInput.value;
+      const domainValid = /@(studms|staffms|ug)\.ug\.edu\.pl$/.test(email);
 
-      if (!valid) {
+      if (!domainValid || password === "") {
         errorMessage.textContent = "Please enter your password.";
         return;
       }
