@@ -1,0 +1,64 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.bg {
+  background: url("bg-campus.jpg") no-repeat center center/cover;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-box {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  width: 300px;
+}
+
+h1 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.email {
+  color: #2563eb;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+a {
+  font-size: 12px;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+button {
+  margin-top: 10px;
+  width: 100%;
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.note {
+  font-size: 11px;
+  color: #555;
+  margin-top: 20px;
+}
