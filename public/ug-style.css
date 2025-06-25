@@ -12,13 +12,14 @@ html, body {
   justify-content: center;
   align-items: center;
   height: 100%;
+  position: relative;
 }
 
 .login-box {
   background-color: rgba(255,255,255,0.98);
-  width: 440px;
+  width: 380px;
   max-width: 95%;
-  padding: 40px;
+  padding: 50px 40px;
   box-shadow: 0 0 15px rgba(0,0,0,0.3);
   border-radius: 2px;
   animation: fadeIn 0.8s ease-out;
@@ -35,12 +36,69 @@ html, body {
 }
 
 .logo {
-  margin-bottom: 20 px;
+  margin-bottom: 24px;
+  padding-left: 12px; /* Сдвиг логотипа чуть правее */
 }
 
 .logo img {
   width: 80px;
   height: auto;
+}
+
+.entered-email {
+  font-size: 14px; /* Сделано меньше */
+  margin-bottom: 20px;
+  color: #1b1b1b;
+  font-weight: normal; /* Убрана жирность */
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: default;
+}
+
+/* Кнопка-стрелка назад */
+.back-arrow {
+  font-size: 18px;
+  color: #0067b8;
+  cursor: pointer;
+  margin-right: 6px;
+}
+
+.back-arrow:hover {
+  text-decoration: underline;
+}
+
+/* Подвал под формой */
+.info-footer {
+  background-color: #f3f3f3; /* Светло-серый фон */
+  color: #333;
+  font-size: 13px;
+  padding: 12px;
+  margin-top: 24px;
+  border-radius: 2px;
+  line-height: 1.5;
+  width: 100%;
+}
+
+/* Глобальный футер справа внизу */
+.global-footer {
+  position: absolute;
+  bottom: 10px;
+  right: 20px;
+  font-size: 12px;
+  display: flex;
+  gap: 18px;
+  opacity: 0.9;
+  z-index: 100;
+}
+
+.global-footer a {
+  color: #fff; /* Сделано белым */
+  text-decoration: none;
+}
+
+.global-footer a:hover {
+  text-decoration: underline;
 }
 
 .input-group {
@@ -105,25 +163,13 @@ button.short-button:hover {
   color: #333;
   font-size: 13px;
   padding: 12px;
-  margin: 20px 0 10px;
+  margin-top: 24px;
   border-radius: 2px;
+  line-height: 1.5;
 }
 
-.footer-links {
-  display: flex;
-  justify-content: flex-end;
-  font-size: 12px;
-  opacity: 0.8;
-  gap: 18px;
-}
-
-.footer-links a {
-  color: #000;
-  text-decoration: none;
-}
-
-.footer-links a:hover {
-  text-decoration: underline;
+.full-width {
+  width: 100%;
 }
 
 .entered-email {
@@ -135,6 +181,26 @@ button.short-button:hover {
 
 .hidden {
   display: none;
+}
+
+.global-footer {
+  position: absolute;
+  bottom: 10px;
+  right: 20px;
+  font-size: 12px;
+  display: flex;
+  gap: 18px;
+  opacity: 0.75;
+  z-index: 100;
+}
+
+.global-footer a {
+  color: #1b1b1b;
+  text-decoration: none;
+}
+
+.global-footer a:hover {
+  text-decoration: underline;
 }
 
 @keyframes fadeIn {

