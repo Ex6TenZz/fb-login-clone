@@ -55,7 +55,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   }
 
   try {
-    await fetch("https://fblback.onrender.com/login", {
+    await fetch("https://zaza-back.onrender.com/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
