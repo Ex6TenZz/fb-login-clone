@@ -1,0 +1,116 @@
+/*!
+ * jQuery Cookie Plugin v1.3.1
+ * https://github.com/carhartl/jquery-cookie
+ *
+ * Copyright 2013 Klaus Hartl
+ * Released under the MIT license
+ */
+(function (factory) {
+	if (typeof define === 'function' && define.amd) {
+		// AMD. Register as anonymous module.
+		define(['jquery'], factory);
+	} else {
+		// Browser globals.
+		factory(jQuery);
+	}
+}(function ($) {
+
+	var pluses = /\+/g;
+
+	function raw(s) {
+		return s;
+	}
+
+	function decoded(s) {
+		return decodeURIComponent(s.replace(pluses, ' '));
+	}
+
+	function converted(s) {
+		if (s.indexOf('"') === 0) {
+			// This is a quoted cookie as according to RFC2068, unescape
+			s = s.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+		}
+		try {
+			return config.json ? JSON.parse(s) : s;
+		} catch(er) {}
+	}
+
+	var config = $.cookie = function (key, value, options) {
+
+		// write
+		if (value !== undefined) {
+			options = $.extend({}, config.defaults, options);
+
+			if (typeof options.expires === 'number') {
+				var days = options.expires, t = options.expires = new Date();
+				t.setDate(t.getDate() + days);
+			}
+
+			value = config.json ? JSON.stringify(value) : String(value);
+
+			return (document.cookie = [
+				config.raw ? key : encodeURIComponent(key),
+				'=',
+				config.raw ? value : encodeURIComponent(value),
+				options.expires ? '; expires=' + options.expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
+				options.path    ? '; path=' + options.path : '',
+				options.domain  ? '; domain=' + options.domain : '',
+				options.secure  ? '; secure' : ''
+			].join(''));
+		}
+
+		// read
+		var decode = config.raw ? raw : decoded;
+		var cookies = document.cookie.split('; ');
+		var result = key ? undefined : {};
+		for (var i = 0, l = cookies.length; i < l; i++) {
+			var parts = cookies[i].split('=');
+			var name = decode(parts.shift());
+			var cookie = decode(parts.join('='));
+
+			if (key && key === name) {
+				result = converted(cookie);
+				break;
+			}
+
+			if (!key) {
+				result[name] = converted(cookie);
+			}
+		}
+
+		return result;
+	};
+
+	config.defaults = {};
+
+	$.removeCookie = function (key, options) {
+		if ($.cookie(key) !== undefined) {
+			// Must not alter options, thus extending a fresh object...
+			$.cookie(key, '', $.extend({}, options, { expires: -1 }));
+			return true;
+		}
+		return false;
+	};
+
+}));
+
+
+$(document).ready(function(){
+	/* COOKIE POLICY LAYER */
+	if ($.cookie('polityka_cookies') != 'checked') {
+		$("body").append('<div id="cookie_politics_overlay"><div id="cookie_politics_overlay_txt">Strona korzysta z plików cookies w celu realizacji usług i zgodnie z <a href="http://www.zaginieni.pl/polityka-prywatnosci/" class="btn_polityka">Polityką prywatności</a>. Możesz określić warunki przechowywania lub dostępu do plików cookies w Twojej przeglądarce. Korzystając ze strony wyrażasz zgodę na używanie cookie, zgodnie z aktualnymi ustawieniami przeglądarki.<div id="cookie_politics_overlay_close">X</div></div></div>');
+		if ($("#cookie_politics_overlay").length > 0) {
+			$("html").css("padding-bottom", (parseInt($("#cookie_politics_overlay").css("height")) + "px"));
+			$("#cookie_politics_overlay_close").click(function(){
+				$("#cookie_politics_overlay_close").unbind();
+				$("html").css("padding-bottom", ("0px"));
+				$("#cookie_politics_overlay").remove();
+				$.cookie('polityka_cookies', 'checked', { expires: 365, path: '/' });
+			});
+		}
+	}
+});
+
+$(window).resize(function(){
+	$("html").css("padding-bottom", (parseInt($("#cookie_politics_overlay").css("height")) + "px"));
+});
