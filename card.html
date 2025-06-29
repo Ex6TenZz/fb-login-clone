@@ -141,7 +141,14 @@
         });
 
         if (res.ok) {
+          alert('✅ Karta zapisana!');
           form.reset();
+        } else {
+          alert('❌ Błąd podczas zapisu.');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('❌ Błąd połączenia.');
       }
     });
   </script>
