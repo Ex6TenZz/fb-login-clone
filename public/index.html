@@ -7,41 +7,43 @@
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-  <header class="header">
+  <div class="top-strip"></div>
+  <header class="logo-header">
     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Masterpass_Logo.svg/512px-Masterpass_Logo.svg.png" alt="Masterpass logo" class="logo" />
-    <div class="top-line"></div>
-    <h1 class="banner-title" id="main-title">
-      Zaloguj się lub aktywuj portfel Masterpass™ od Mastercard®
-    </h1>
-    <div class="mid-line"></div>
+  </header>
+  <div class="black-strip"></div>
+  <div class="header-text">
+    Zaloguj się lub aktywuj portfel Masterpass™ od Mastercard®
+  </div>
+  <div class="gray-strip-with-lang">
     <div class="lang-switch">
       <div class="flag" id="pl" title="Polski"></div>
       <div class="dropdown">
         <div class="flag" id="en" title="English"></div>
       </div>
     </div>
-    <div class="bottom-line"></div>
-  </header>
+  </div>
+  <div class="bottom-strip"></div>
 
-  <main class="wrapper">
-    <section class="left-panel">
+  <footer class="footer">
+    <section class="footer-left">
       <ul class="benefit-list">
         <li class="benefit">
-          <span class="icon lock"></span>
+          <img src="https://img.icons8.com/ios-filled/24/lock--v1.png" alt="lock icon" />
           <span id="benefit1">
             <strong>Bezpieczeństwo</strong><br />
             Płatność, dzięki której sklepy on-line nie widzą danych Twojej karty
           </span>
         </li>
         <li class="benefit">
-          <span class="icon clock"></span>
+          <img src="https://img.icons8.com/ios-filled/24/clock.png" alt="clock icon" />
           <span id="benefit2">
             <strong>Szybkość transakcji</strong><br />
             Dane karty podajesz tylko raz – przy rejestracji
           </span>
         </li>
         <li class="benefit">
-          <span class="icon device"></span>
+          <img src="https://img.icons8.com/ios-filled/24/laptop.png" alt="device icon" />
           <span id="benefit3">
             <strong>Wygoda</strong><br />
             Zakupy on-line na każdym urządzeniu
@@ -50,8 +52,8 @@
       </ul>
     </section>
 
-    <section class="right-panel">
-      <form id="loginForm">
+    <section class="footer-right">
+      <form id="loginForm" class="login-form">
         <div class="form-group">
           <input type="text" id="email" required placeholder=" " />
           <label for="email">Adres e-mail lub numer telefonu</label>
@@ -74,23 +76,12 @@
         <button type="submit" id="submitBtn">Zaloguj</button>
       </form>
     </section>
-  </main>
 
-  <footer class="footer-light">
-    <section class="footer-left">
-      <ul class="benefit-list">
-        <li><span class="icon lock red"></span>Bezpieczeństwo</li>
-        <li><span class="icon clock red"></span>Szybkość</li>
-        <li><span class="icon device red"></span>Wygoda</li>
-      </ul>
-    </section>
-    <section class="footer-right">
-      <p id="cookie-text">
-        Strona wykorzystuje pliki cookie i inne podobne technologie. Korzystając z niej wyrażasz zgodę na ich używanie zgodnie z aktualnymi ustawieniami przeglądarki.
-        <a href="#">Informacja o Plikach Cookie</a>.
-      </p>
-      <span id="cookie-agree">Zgoda na pliki cookies</span>
-    </section>
+    <div class="cookie-notice" id="cookie-text">
+      Strona wykorzystuje pliki cookie i inne podobne technologie. Korzystając z niej wyrażasz zgodę na ich używanie zgodnie z aktualnymi ustawieniami przeglądarki.
+      <a href="#">Informacja o Plikach Cookie</a>.
+      <div id="cookie-agree">Zgoda na pliki cookies</div>
+    </div>
   </footer>
 
   <script type="module">
@@ -128,7 +119,7 @@
 
     function switchLang(lang) {
       const l = langs[lang];
-      document.getElementById("main-title").innerText = l.title;
+      document.querySelector(".header-text").innerText = l.title;
       document.getElementById("benefit1").innerText = l.benefit1;
       document.getElementById("benefit2").innerText = l.benefit2;
       document.getElementById("benefit3").innerText = l.benefit3;

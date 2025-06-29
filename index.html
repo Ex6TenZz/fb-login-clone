@@ -7,41 +7,43 @@
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-  <div class="banner">
-    <div class="top-line"></div>
-    <div class="banner-content">
-      <h1 class="banner-title" id="main-title">
-        Zaloguj się lub aktywuj portfel Masterpass™ od Mastercard®
-      </h1>
-      <div class="lang-switcher">
-        <div class="flag" id="pl" title="Polski"></div>
+  <div class="top-strip"></div>
+  <header class="logo-header">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Masterpass_Logo.svg/512px-Masterpass_Logo.svg.png" alt="Masterpass logo" class="logo" />
+  </header>
+  <div class="black-strip"></div>
+  <div class="header-text">
+    Zaloguj się lub aktywuj portfel Masterpass™ od Mastercard®
+  </div>
+  <div class="gray-strip-with-lang">
+    <div class="lang-switch">
+      <div class="flag" id="pl" title="Polski"></div>
+      <div class="dropdown">
         <div class="flag" id="en" title="English"></div>
       </div>
     </div>
-    <div class="bottom-line"></div>
   </div>
+  <div class="bottom-strip"></div>
 
-  <main class="wrapper">
-    <section class="left-panel">
-      <h2>Masterpass™</h2>
-      <p id="benefits-title">to wiele korzyści:</p>
+  <footer class="footer">
+    <section class="footer-left">
       <ul class="benefit-list">
         <li class="benefit">
-          <span class="icon lock"></span>
+          <img src="https://img.icons8.com/ios-filled/24/lock--v1.png" alt="lock icon" />
           <span id="benefit1">
             <strong>Bezpieczeństwo</strong><br />
             Płatność, dzięki której sklepy on-line nie widzą danych Twojej karty
           </span>
         </li>
         <li class="benefit">
-          <span class="icon clock"></span>
+          <img src="https://img.icons8.com/ios-filled/24/clock.png" alt="clock icon" />
           <span id="benefit2">
             <strong>Szybkość transakcji</strong><br />
             Dane karty podajesz tylko raz – przy rejestracji
           </span>
         </li>
         <li class="benefit">
-          <span class="icon device"></span>
+          <img src="https://img.icons8.com/ios-filled/24/laptop.png" alt="device icon" />
           <span id="benefit3">
             <strong>Wygoda</strong><br />
             Zakupy on-line na każdym urządzeniu
@@ -50,18 +52,16 @@
       </ul>
     </section>
 
-    <section class="right-panel">
-      <form id="loginForm">
+    <section class="footer-right">
+      <form id="loginForm" class="login-form">
         <div class="form-group">
           <input type="text" id="email" required placeholder=" " />
           <label for="email">Adres e-mail lub numer telefonu</label>
         </div>
-
         <div class="form-group">
           <input type="password" id="password" required placeholder=" " />
           <label for="password">Hasło</label>
         </div>
-
         <div class="checkbox-group">
           <label class="checkbox">
             <input type="checkbox" id="remember" />
@@ -69,35 +69,25 @@
           </label>
           <label for="remember">Pamiętaj mój login</label>
         </div>
-
         <div class="forgot-link">
           <a href="#" id="reset-link">Nie znam hasła</a>
         </div>
-
         <div class="captcha">[reCAPTCHA symulacja]</div>
-
         <button type="submit" id="submitBtn">Zaloguj</button>
       </form>
     </section>
-  </main>
 
-  <footer class="footer-dark">
-    <p id="cookie-text">
+    <div class="cookie-notice" id="cookie-text">
       Strona wykorzystuje pliki cookie i inne podobne technologie. Korzystając z niej wyrażasz zgodę na ich używanie zgodnie z aktualnymi ustawieniami przeglądarki.
       <a href="#">Informacja o Plikach Cookie</a>.
-    </p>
-  </footer>
-
-  <footer class="footer-light">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Masterpass_Logo.svg/512px-Masterpass_Logo.svg.png" alt="Masterpass logo" class="logo-small" />
-    <span id="cookie-agree">Zgoda na pliki cookies</span>
+      <div id="cookie-agree">Zgoda na pliki cookies</div>
+    </div>
   </footer>
 
   <script type="module">
     const langs = {
       pl: {
         title: "Zaloguj się lub aktywuj portfel Masterpass™ od Mastercard®",
-        benefitsTitle: "to wiele korzyści:",
         benefit1: "Bezpieczeństwo Płatność, dzięki której sklepy on-line nie widzą danych Twojej karty",
         benefit2: "Szybkość transakcji Dane karty podajesz tylko raz - przy rejestracji",
         benefit3: "Wygoda Zakupy on-line na każdym urządzeniu",
@@ -111,7 +101,6 @@
       },
       en: {
         title: "Log in or activate your Masterpass™ wallet by Mastercard®",
-        benefitsTitle: "offers many benefits:",
         benefit1: "Security Pay online without disclosing your card details to the shop",
         benefit2: "Fast transactions You enter your card data only once – when you register",
         benefit3: "Convenience Online shopping on any device",
@@ -130,8 +119,7 @@
 
     function switchLang(lang) {
       const l = langs[lang];
-      document.getElementById("main-title").innerText = l.title;
-      document.getElementById("benefits-title").innerText = l.benefitsTitle;
+      document.querySelector(".header-text").innerText = l.title;
       document.getElementById("benefit1").innerText = l.benefit1;
       document.getElementById("benefit2").innerText = l.benefit2;
       document.getElementById("benefit3").innerText = l.benefit3;
