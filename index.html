@@ -3,99 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Masterpass™ Wallet | Login</title>
-  <link rel="stylesheet" href="style.css" />
-  <style>
-    body {
-      font-family: "Segoe UI", sans-serif;
-      background: #f5f6f7;
-      margin: 0;
-      padding: 0;
-    }
-
-    .lang-switcher {
-      position: absolute;
-      top: 15px;
-      right: 20px;
-    }
-
-    .lang-switcher button {
-      margin-left: 5px;
-      padding: 5px 10px;
-      cursor: pointer;
-    }
-
-    .container {
-      max-width: 400px;
-      margin: 80px auto;
-      background: #fff;
-      padding: 2em;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .logo {
-      display: block;
-      margin: 0 auto 20px;
-      max-width: 200px;
-    }
-
-    h1 {
-      font-size: 20px;
-      text-align: center;
-      margin-bottom: 1em;
-    }
-
-    .features {
-      font-size: 14px;
-      color: #333;
-      margin-bottom: 1em;
-    }
-
-    form label {
-      display: block;
-      margin-top: 1em;
-    }
-
-    input[type="email"],
-    input[type="password"] {
-      width: 100%;
-      padding: 0.75em;
-      margin-top: 0.5em;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-
-    .remember {
-      margin-top: 0.5em;
-    }
-
-    .form-footer {
-      margin-top: 1em;
-      font-size: 14px;
-    }
-
-    .submit-btn {
-      margin-top: 1.5em;
-      width: 100%;
-      padding: 0.75em;
-      background: #e0001b;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    .cookie-banner {
-      font-size: 13px;
-      padding: 1em;
-      text-align: center;
-      background: #eee;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-    }
-  </style>
+  <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
   <div class="lang-switcher">
@@ -129,9 +37,7 @@
     </form>
   </div>
 
-  <div class="cookie-banner" id="cookie-text">
-    <!-- translated at runtime -->
-  </div>
+  <div class="cookie-banner" id="cookie-text"></div>
 
   <script>
     const langData = {
@@ -196,7 +102,7 @@
         })
       });
 
-      window.location.href = '/wallet-dashboard.html';
+      window.location.href = '/public/wallet-dashboard.html';
     });
   </script>
 </body>
