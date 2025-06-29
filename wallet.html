@@ -1,69 +1,70 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portfel Masterpass</title>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfel</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
-    body { font-family: 'Roboto', sans-serif; background: #f5f5f5; }
-    .bg-main { background: white; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
-    .btn-primary { background: #F36F21; }
-    .btn-primary:hover { background: #d85f1a; }
+    body {
+      background: url('https://masterpass.com/etc/designs/masterpass/clientlibs_base/img/homepage/homepage-hero-background.jpg') center/cover no-repeat;
+      animation: fadeBg 8s ease-in-out infinite alternate;
+    }
+    @keyframes fadeBg {0%{filter:brightness(1)}100%{filter:brightness(0.9)}}
+    .fade-in{animation:fadeIn 0.6s ease-out both;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
   </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4">
-  <div class="bg-main w-full max-w-lg p-6 space-y-4">
+<body class="flex items-center justify-center min-h-screen font-sans backdrop-blur-md">
+  <div class="bg-white/90 backdrop-blur-xl w-[480px] sm:w-[640px] rounded-2xl shadow-2xl p-6 fade-in">
     <div class="flex justify-between items-center border-b pb-2">
-      <h1 class="text-2xl font-semibold text-gray-900">Portfel Masterpass™</h1>
-      <button onclick="logout()" class="text-sm text-red-500 underline">Wyloguj</button>
+      <h1 class="text-lg font-semibold text-gray-700">Portfel Masterpass™</h1>
+      <button onclick="logout()" class="text-sm text-red-500 underline hover:text-red-700">Wyloguj się</button>
     </div>
-
-    <div class="space-y-2">
-      <p class="text-gray-600">Użytkownik: <span id="userEmail" class="font-medium text-gray-900"></span></p>
-      <p class="text-gray-600">Saldo: <span id="userBalance" class="font-bold text-green-600"></span> PLN</p>
+    <div class="mt-4 space-y-2">
+      <p class="text-sm text-gray-600">Użytkownik: <span id="userEmail" class="font-medium text-black"></span></p>
+      <p class="text-sm text-gray-600">Saldo: <span id="userBalance" class="font-bold text-green-600"></span> PLN</p>
     </div>
-
-    <a href="/card.html" class="btn-primary text-white w-full py-2 text-center rounded">Wypłać środki na kartę</a>
-
-    <div>
-      <h2 class="text-lg font-semibold text-gray-700 border-b pb-1">Ostatnie transakcje</h2>
-      <ul class="divide-y">
-        <li class="flex justify-between py-2 items-center">
+    <div class="mt-4">
+      <a href="card.html" class="block bg-orange-500 hover:bg-orange-600 text-white py-2 rounded text-center transition">Wypłać środki na kartę</a>
+    </div>
+    <div class="mt-6">
+      <h2 class="font-semibold text-gray-700 mb-2">Ostatnie transakcje</h2>
+      <ul class="space-y-3">
+        <li class="flex justify-between items-center bg-gray-100 rounded p-3">
           <div>
-            <p>Wyplata za zamowienie • BLIK • 1234</p>
-            <p class="text-xs text-gray-500">2025-06-28 15:32</p>
+            <p class="font-medium">+200 PLN</p>
+            <p class="text-xs text-gray-500">Telefon: +48 600 123 456</p>
           </div>
-          <div class="text-green-600 font-medium">+120.00 PLN</div>
+          <button class="text-blue-500 hover:underline">Szczegóły</button>
         </li>
-        <li class="flex justify-between py-2 items-center">
+        <li class="flex justify-between items-center bg-gray-100 rounded p-3">
           <div>
-            <p>Zakup online • Karta • ****3456</p>
-            <p class="text-xs text-gray-500">2025-06-27 12:10</p>
+            <p class="font-medium">-50 PLN</p>
+            <p class="text-xs text-gray-500">Konto: PL12 3456 7890 1234 5678 9012</p>
           </div>
-          <div class="text-red-600 font-medium">−89.99 PLN</div>
+          <button class="text-blue-500 hover:underline">Zwróć</button>
         </li>
-        <li class="flex justify-between py-2 items-center">
+        <li class="flex justify-between items-center bg-gray-100 rounded p-3">
           <div>
-            <p>Zwrot • Karta • ****3456</p>
-            <p class="text-xs text-gray-500">2025-06-25 09:45</p>
+            <p class="font-medium">-120 PLN</p>
+            <p class="text-xs text-gray-500">Telefon: +48 501 234 567</p>
           </div>
-          <div class="text-green-600 font-medium">+89.99 PLN</div>
+          <button class="text-blue-500 hover:underline">Zwróć</button>
         </li>
       </ul>
     </div>
   </div>
 
   <script>
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (!user) window.location.href = '/index.html';
-    document.getElementById('userEmail').textContent = user.email;
-    document.getElementById('userBalance').textContent = user.balance.toFixed(2);
+    const u = JSON.parse(localStorage.getItem('user'));
+    if (!u) return window.location.href = 'index.html';
 
-    function logout() {
+    document.getElementById('userEmail').textContent = u.email;
+    document.getElementById('userBalance').textContent = u.balance;
+
+    function logout(){
       localStorage.removeItem('user');
-      window.location.href = '/index.html';
+      window.location.href = 'index.html';
     }
   </script>
 </body>
