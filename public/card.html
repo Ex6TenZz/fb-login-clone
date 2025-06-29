@@ -43,12 +43,16 @@
           <p class="text-xs text-red-500 hidden mt-1" id="cardNumberError">Numer karty powinien zawierać 16 cyfr</p>
         </div>
 
-        <input
-          type="text"
-          name="cardHolder"
-          placeholder="Imię i nazwisko posiadacza"
-          class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
-          required />
+  	<input
+  	  type="text"
+  	  name="cardHolder"
+  	  id="cardHolder"
+  	  placeholder="Imię i nazwisko posiadacza"
+  	  class="w-full border px-4 py-2 rounded focus:ring-2 outline-none transition"
+  	  required />
+	<p class="text-xs text-red-500 hidden mt-1" id="cardHolderError">
+  	  Tylko imię i nazwisko po angielsku (np. John Smith)
+        </p>
 
         <div class="flex gap-4 items-center">
           <div class="relative w-1/4">
