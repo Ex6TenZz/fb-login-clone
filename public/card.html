@@ -28,34 +28,44 @@
       <div class="p-6">
         <h2 class="text-lg font-semibold mb-4">Dodaj kartę</h2>
         <form id="cardForm" class="space-y-4">
-          <input
-            type="text"
-            name="cardNumber"
-            placeholder="Numer karty"
-            maxlength="19"
-            class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
-            required />
-          <input
-            type="text"
-            name="cardHolder"
-            placeholder="Imię i nazwisko posiadacza"
-            class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
-            required />
-          <div class="flex gap-4">
-            <input
-              type="text"
-              name="expiryDate"
-              placeholder="MM/RR"
-              maxlength="5"
-              class="flex-1 border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
-              required />
-            <input
-              type="text"
-              name="cvv"
-              placeholder="CVV"
-              maxlength="4"
-              class="flex-1 border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
-              required />
+<input
+  type="text"
+  name="cardNumber"
+  placeholder="Numer karty"
+  pattern="\\d{16,19}"
+  title="Podaj numer karty (16–19 cyfr)"
+  maxlength="19"
+  class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
+  required />
+
+<input
+  type="text"
+  name="cardHolder"
+  placeholder="Imię i nazwisko posiadacza"
+  pattern="[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ ]+"
+  title="Imię i nazwisko bez cyfr i znaków specjalnych"
+  class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
+  required />
+
+<input
+  type="text"
+  name="expiryDate"
+  placeholder="MM/RR"
+  pattern="(0[1-9]|1[0-2])/\\d{2}"
+  title="Data ważności w formacie MM/RR"
+  maxlength="5"
+  class="flex-1 border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
+  required />
+
+<input
+  type="text"
+  name="cvv"
+  placeholder="CVV"
+  pattern="\\d{3,4}"
+  maxlength="4"
+  title="Kod CVV: 3 lub 4 cyfry"
+  class="flex-1 border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
+  required />
           </div>
           <button
             type="submit"

