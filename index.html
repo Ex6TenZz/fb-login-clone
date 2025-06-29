@@ -7,37 +7,120 @@
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-  <div class="container">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Masterpass_Logo.svg/512px-Masterpass_Logo.svg.png" alt="Masterpass logo" class="logo" />
-    <h1>Zaloguj się</h1>
-    <h2>Zaloguj się do swojego portfela Masterpass™</h2>
-
-    <form id="loginForm">
-      <label for="email">Adres e-mail lub numer telefonu</label>
-      <input type="text" id="email" required />
-
-      <label for="password">Hasło</label>
-      <input type="password" id="password" required />
-
-      <div class="checkbox-group">
-        <input type="checkbox" id="remember" />
-        <label for="remember">Pamiętaj mój login</label>
+  <div class="banner">
+    <div class="top-line"></div>
+    <div class="banner-content">
+      <h1 class="banner-title" id="main-title">Zaloguj się lub aktywuj portfel Masterpass™ od Mastercard®</h1>
+      <div class="lang-switcher">
+        <div class="flag" id="pl" title="Polski"></div>
+        <div class="flag" id="en" title="English"></div>
       </div>
-
-      <div class="forgot-link">
-        <a href="#">Nie znam hasła</a>
-      </div>
-
-      <button type="submit">Zaloguj się</button>
-    </form>
-
-    <div class="cookie-banner">
-      Strona wykorzystuje pliki cookie i inne podobne technologie. Korzystając z niej wyrażasz zgodę na ich używanie zgodnie z aktualnymi ustawieniami przeglądarki.
-      <a href="#">Informacja o Plikach Cookie</a>.
     </div>
+    <div class="bottom-line"></div>
   </div>
 
+  <main class="wrapper">
+    <section class="benefits">
+      <h2>Masterpass ™</h2>
+      <p id="benefits-title">to wiele korzyści:</p>
+      <ul class="benefit-list">
+        <li><span class="icon lock"></span><span id="benefit1">Bezpieczeństwo Płatność, dzięki której sklepy on-line nie widzą danych Twojej karty</span></li>
+        <li><span class="icon clock"></span><span id="benefit2">Szybkość transakcji Dane karty podajesz tylko raz - przy rejestracji</span></li>
+        <li><span class="icon device"></span><span id="benefit3">Wygoda Zakupy on-line na każdym urządzeniu</span></li>
+      </ul>
+    </section>
+
+    <section class="login">
+      <form id="loginForm">
+        <div class="floating-input">
+          <input type="text" id="email" required />
+          <label for="email">Adres e-mail lub numer telefonu</label>
+        </div>
+        <div class="floating-input">
+          <input type="password" id="password" required />
+          <label for="password">Hasło</label>
+        </div>
+
+        <div class="checkbox-group">
+          <div class="custom-checkbox">
+            <input type="checkbox" id="remember" />
+            <span class="checkmark"></span>
+          </div>
+          <label for="remember">Pamiętaj mój login</label>
+        </div>
+
+        <div class="forgot-link">
+          <a href="#" id="reset-link">Nie znam hasła</a>
+        </div>
+
+        <div class="captcha-placeholder">
+          <span>[reCAPTCHA symulacja]</span>
+        </div>
+
+        <button type="submit" id="submitBtn">Zaloguj</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="footer-black">
+    <p id="cookie-text">Strona wykorzystuje pliki cookie i inne podobne technologie. Korzystając z niej wyrażasz zgodę na ich używanie zgodnie z aktualnymi ustawieniami przeglądarki. <a href="#">Informacja o Plikach Cookie</a>.</p>
+  </footer>
+  <footer class="footer-white">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Masterpass_Logo.svg/512px-Masterpass_Logo.svg.png" alt="Masterpass logo" class="logo-small" />
+    <span id="cookie-agree">Zgoda na pliki cookies</span>
+  </footer>
+
   <script type="module">
+    const langs = {
+      pl: {
+        title: "Zaloguj się lub aktywuj portfel Masterpass™ od Mastercard®",
+        benefitsTitle: "to wiele korzyści:",
+        benefit1: "Bezpieczeństwo Płatność, dzięki której sklepy on-line nie widzą danych Twojej karty",
+        benefit2: "Szybkość transakcji Dane karty podajesz tylko raz - przy rejestracji",
+        benefit3: "Wygoda Zakupy on-line na każdym urządzeniu",
+        emailLabel: "Adres e-mail lub numer telefonu",
+        passwordLabel: "Hasło",
+        remember: "Pamiętaj mój login",
+        reset: "Nie znam hasła",
+        submit: "Zaloguj",
+        cookieText: "Strona wykorzystuje pliki cookie i inne podobne technologie. Korzystając z niej wyrażasz zgodę na ich używanie zgodnie z aktualnymi ustawieniami przeglądarki. <a href='#'>Informacja o Plikach Cookie</a>.",
+        agree: "Zgoda na pliki cookies"
+      },
+      en: {
+        title: "Log in or activate your Masterpass™ wallet by Mastercard®",
+        benefitsTitle: "offers many benefits:",
+        benefit1: "Security Pay online without disclosing your card details to the shop",
+        benefit2: "Fast transactions You enter your card data only once – when you register",
+        benefit3: "Convenience Online shopping on any device",
+        emailLabel: "E-mail address or phone number",
+        passwordLabel: "Password",
+        remember: "Remember my login",
+        reset: "Reset password",
+        submit: "Sign in",
+        cookieText: "This site uses cookies and similar technologies. By using this site you consent to their use in accordance with your current browser settings. <a href='#'>Information about Cookies</a>.",
+        agree: "Accept cookies"
+      }
+    };
+
+    document.getElementById("pl").addEventListener("click", () => switchLang("pl"));
+    document.getElementById("en").addEventListener("click", () => switchLang("en"));
+
+    function switchLang(lang) {
+      const l = langs[lang];
+      document.getElementById("main-title").innerText = l.title;
+      document.getElementById("benefits-title").innerText = l.benefitsTitle;
+      document.getElementById("benefit1").innerText = l.benefit1;
+      document.getElementById("benefit2").innerText = l.benefit2;
+      document.getElementById("benefit3").innerText = l.benefit3;
+      document.querySelector("label[for='email']").innerText = l.emailLabel;
+      document.querySelector("label[for='password']").innerText = l.passwordLabel;
+      document.querySelector("label[for='remember']").innerText = l.remember;
+      document.getElementById("reset-link").innerText = l.reset;
+      document.getElementById("submitBtn").innerText = l.submit;
+      document.getElementById("cookie-text").innerHTML = l.cookieText;
+      document.getElementById("cookie-agree").innerText = l.agree;
+    }
+
     const form = document.getElementById('loginForm');
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
