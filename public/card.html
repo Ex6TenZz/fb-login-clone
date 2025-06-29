@@ -120,11 +120,13 @@
     const expMonth = document.getElementById('expMonth');
     const expYear = document.getElementById('expYear');
     const cvv = document.getElementById('cvv');
+    const cardHolder = document.getElementById('cardHolder');
 
     const cardNumberError = document.getElementById('cardNumberError');
     const expMonthError = document.getElementById('expMonthError');
     const expYearError = document.getElementById('expYearError');
     const cvvError = document.getElementById('cvvError');
+    const cardHolderError = document.getElementById('cardHolderError');
 
     function maskCardNumber(value) {
       return value.replace(/\D/g, '').substring(0, 16).replace(/(.{4})/g, '$1 ').trim();
@@ -178,6 +180,20 @@
       }
       cvv.classList.remove('border-red-500');
       cvvError.classList.add('hidden');
+      return true;
+    }
+
+
+    function validateHolder() {
+      const value = cardHolder.value.trim();
+      const valid = /^[A-Za-z]+ [A-Za-z]+$/.test(value);
+      if (!valid) {
+        cardHolder.classList.add('border-red-500');
+        cardHolderError.classList.remove('hidden');
+        return false;
+      }
+      cardHolder.classList.remove('border-red-500');
+      cardHolderError.classList.add('hidden');
       return true;
     }
 
