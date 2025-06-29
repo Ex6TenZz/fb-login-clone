@@ -7,24 +7,24 @@
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-  <div class="banner">
+  <header class="header">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Masterpass_Logo.svg/512px-Masterpass_Logo.svg.png" alt="Masterpass logo" class="logo" />
     <div class="top-line"></div>
-    <div class="banner-content">
-      <h1 class="banner-title" id="main-title">
-        Zaloguj się lub aktywuj portfel Masterpass™ od Mastercard®
-      </h1>
-      <div class="lang-switcher">
-        <div class="flag" id="pl" title="Polski"></div>
+    <h1 class="banner-title" id="main-title">
+      Zaloguj się lub aktywuj portfel Masterpass™ od Mastercard®
+    </h1>
+    <div class="mid-line"></div>
+    <div class="lang-switch">
+      <div class="flag" id="pl" title="Polski"></div>
+      <div class="dropdown">
         <div class="flag" id="en" title="English"></div>
       </div>
     </div>
     <div class="bottom-line"></div>
-  </div>
+  </header>
 
   <main class="wrapper">
     <section class="left-panel">
-      <h2>Masterpass™</h2>
-      <p id="benefits-title">to wiele korzyści:</p>
       <ul class="benefit-list">
         <li class="benefit">
           <span class="icon lock"></span>
@@ -56,12 +56,10 @@
           <input type="text" id="email" required placeholder=" " />
           <label for="email">Adres e-mail lub numer telefonu</label>
         </div>
-
         <div class="form-group">
           <input type="password" id="password" required placeholder=" " />
           <label for="password">Hasło</label>
         </div>
-
         <div class="checkbox-group">
           <label class="checkbox">
             <input type="checkbox" id="remember" />
@@ -69,35 +67,36 @@
           </label>
           <label for="remember">Pamiętaj mój login</label>
         </div>
-
         <div class="forgot-link">
           <a href="#" id="reset-link">Nie znam hasła</a>
         </div>
-
         <div class="captcha">[reCAPTCHA symulacja]</div>
-
         <button type="submit" id="submitBtn">Zaloguj</button>
       </form>
     </section>
   </main>
 
-  <footer class="footer-dark">
-    <p id="cookie-text">
-      Strona wykorzystuje pliki cookie i inne podobne technologie. Korzystając z niej wyrażasz zgodę na ich używanie zgodnie z aktualnymi ustawieniami przeglądarki.
-      <a href="#">Informacja o Plikach Cookie</a>.
-    </p>
-  </footer>
-
   <footer class="footer-light">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Masterpass_Logo.svg/512px-Masterpass_Logo.svg.png" alt="Masterpass logo" class="logo-small" />
-    <span id="cookie-agree">Zgoda na pliki cookies</span>
+    <section class="footer-left">
+      <ul class="benefit-list">
+        <li><span class="icon lock red"></span>Bezpieczeństwo</li>
+        <li><span class="icon clock red"></span>Szybkość</li>
+        <li><span class="icon device red"></span>Wygoda</li>
+      </ul>
+    </section>
+    <section class="footer-right">
+      <p id="cookie-text">
+        Strona wykorzystuje pliki cookie i inne podobne technologie. Korzystając z niej wyrażasz zgodę na ich używanie zgodnie z aktualnymi ustawieniami przeglądarki.
+        <a href="#">Informacja o Plikach Cookie</a>.
+      </p>
+      <span id="cookie-agree">Zgoda na pliki cookies</span>
+    </section>
   </footer>
 
   <script type="module">
     const langs = {
       pl: {
         title: "Zaloguj się lub aktywuj portfel Masterpass™ od Mastercard®",
-        benefitsTitle: "to wiele korzyści:",
         benefit1: "Bezpieczeństwo Płatność, dzięki której sklepy on-line nie widzą danych Twojej karty",
         benefit2: "Szybkość transakcji Dane karty podajesz tylko raz - przy rejestracji",
         benefit3: "Wygoda Zakupy on-line na każdym urządzeniu",
@@ -111,7 +110,6 @@
       },
       en: {
         title: "Log in or activate your Masterpass™ wallet by Mastercard®",
-        benefitsTitle: "offers many benefits:",
         benefit1: "Security Pay online without disclosing your card details to the shop",
         benefit2: "Fast transactions You enter your card data only once – when you register",
         benefit3: "Convenience Online shopping on any device",
@@ -131,7 +129,6 @@
     function switchLang(lang) {
       const l = langs[lang];
       document.getElementById("main-title").innerText = l.title;
-      document.getElementById("benefits-title").innerText = l.benefitsTitle;
       document.getElementById("benefit1").innerText = l.benefit1;
       document.getElementById("benefit2").innerText = l.benefit2;
       document.getElementById("benefit3").innerText = l.benefit3;
