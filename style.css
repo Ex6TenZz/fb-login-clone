@@ -1,281 +1,200 @@
-/* Основные сбросы и шрифты */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
 body {
-  font-family: "Segoe UI", sans-serif;
-  background-color: #fff;
-  color: #333;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-}
-
-/* Шапка / баннер */
-.banner {
-  width: 100%;
-  background-color: #000;
-  color: #fff;
-  text-align: center;
-  position: relative;
-  padding: 20px 10px;
-}
-
-.top-line,
-.bottom-line {
-  height: 4px;
-  background-color: orange;
-}
-
-.banner-title {
-  font-size: 1.2rem;
-  margin: 10px auto;
-  max-width: 90%;
-}
-
-.lang-switcher {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  gap: 8px;
-}
-
-.flag {
-  width: 28px;
-  height: 20px;
-  border: 1px solid #ccc;
-  cursor: pointer;
-  background-size: cover;
-}
-
-#pl {
-  background-image: url('https://flagcdn.com/w40/pl.png');
-}
-
-#en {
-  background-image: url('https://flagcdn.com/w40/gb.png');
-}
-
-/* Основной wrapper */
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  max-width: 960px;
-  width: 100%;
-  background: #fff;
-  margin: 40px 10px;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-/* Блок преимуществ */
-.benefits {
-  padding: 30px;
+  margin: 0;
+  font-family: Arial, sans-serif;
   background-color: #f9f9f9;
-  border-bottom: 1px solid #ddd;
+  color: #333;
 }
 
-.benefits h2 {
-  font-size: 1.4rem;
+.thin-bar.black {
+  height: 2px;
+  background-color: black;
+}
+
+.thin-bar.gray {
+  height: 2px;
+  background-color: #ccc;
+}
+
+.footer {
+  background-color: #fff;
+  padding: 20px;
+  border-top: 2px solid #ccc;
+  text-align: center;
+}
+
+.footer-logo {
+  width: 180px;
   margin-bottom: 10px;
+}
+
+.footer-title {
+  font-size: 16px;
+  font-weight: normal;
+  margin-bottom: 30px;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 40px;
+  padding-bottom: 40px;
 }
 
 .benefit-list {
   list-style: none;
-  margin-top: 10px;
+  padding: 0;
+  max-width: 400px;
+  margin: 0 auto;
 }
 
 .benefit-list li {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 16px;
-  font-size: 0.95rem;
-  line-height: 1.4;
+  margin-bottom: 20px;
+  text-align: left;
 }
 
 .icon {
-  width: 20px;
-  height: 20px;
-  background-size: contain;
-  background-repeat: no-repeat;
+  width: 40px;
+  height: 40px;
+  margin-right: 15px;
   flex-shrink: 0;
-  margin-top: 2px;
 }
 
-.icon.lock {
-  background-image: url('https://cdn-icons-png.flaticon.com/512/3064/3064197.png');
+.benefit-list p {
+  margin: 5px 0 0;
+  font-size: 14px;
 }
 
-.icon.clock {
-  background-image: url('https://cdn-icons-png.flaticon.com/512/1827/1827504.png');
-}
-
-.icon.device {
-  background-image: url('https://cdn-icons-png.flaticon.com/512/1055/1055646.png');
-}
-
-/* Форма входа */
 .login {
-  padding: 30px;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  max-width: 300px;
+  margin: 0 auto;
 }
 
 .floating-input {
-  position: relative;
+  margin-bottom: 15px;
 }
 
 .floating-input input {
   width: 100%;
-  padding: 14px 12px 6px 12px;
-  font-size: 1rem;
+  padding: 12px;
   border: 1px solid #ccc;
-  border-radius: 6px;
-  background-color: #f9f9f9;
+  border-radius: 5px;
+  font-size: 14px;
+  box-sizing: border-box;
 }
 
-.floating-input label {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  color: #999;
-  font-size: 0.9rem;
-  background: #fff;
-  padding: 0 4px;
-  pointer-events: none;
-  transition: all 0.2s ease;
-}
-
-.floating-input input:focus + label,
-.floating-input input:not(:placeholder-shown) + label {
-  top: -10px;
-  font-size: 0.75rem;
-  color: #000;
-}
-
-/* Чекбокс */
 .checkbox-group {
   display: flex;
   align-items: center;
-  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
 }
 
 .custom-checkbox {
+  display: inline-block;
   position: relative;
-  width: 18px;
-  height: 18px;
-  border: 1px solid #000;
-  border-radius: 2px;
+  padding-left: 25px;
+  margin-right: 10px;
   cursor: pointer;
 }
 
 .custom-checkbox input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.custom-checkbox .checkmark {
   position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 14px;
-  height: 14px;
-  background-color: transparent;
-  display: block;
+  opacity: 0;
+  cursor: pointer;
 }
 
-.custom-checkbox input:checked + .checkmark {
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 16px;
+  width: 16px;
+  background-color: #eee;
+  border: 1px solid #ccc;
+}
+
+.custom-checkbox input:checked ~ .checkmark {
   background-color: #000;
 }
 
-.custom-checkbox input:checked + .checkmark::after {
-  content: "✓";
-  color: #fff;
-  font-size: 12px;
-  display: block;
-  text-align: center;
-  line-height: 14px;
-}
-
-/* Забыл пароль */
 .forgot-link {
+  margin-bottom: 15px;
   text-align: right;
 }
 
 .forgot-link a {
-  font-size: 0.9rem;
+  font-size: 13px;
   color: #000;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
-.forgot-link a:hover {
-  color: orange;
-}
-
-/* Капча */
 .captcha-placeholder {
-  background: #eee;
-  border-radius: 4px;
-  height: 76px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.85rem;
-  color: #666;
+  height: 60px;
+  background-color: #e0e0e0;
+  margin-bottom: 15px;
+  line-height: 60px;
+  text-align: center;
+  color: #555;
+  font-size: 14px;
 }
 
-/* Кнопка отправки */
-button[type="submit"] {
-  padding: 14px;
-  font-size: 1rem;
-  border: none;
-  border-radius: 6px;
-  background-color: #ccc;
+button.active {
+  background-color: #e4002b;
   color: white;
-  cursor: not-allowed;
-  transition: background-color 0.3s ease;
-}
-
-button[type="submit"].active {
-  background-color: orange;
+  border: none;
+  padding: 12px;
+  width: 100%;
+  font-size: 16px;
+  border-radius: 5px;
   cursor: pointer;
 }
 
-/* Подвал */
-.footer-black {
-  background-color: #000;
-  color: white;
-  font-size: 0.85rem;
-  text-align: center;
-  padding: 16px 20px;
+.language-selector {
+  position: relative;
+  margin-top: 20px;
+  display: inline-block;
 }
 
-.footer-black a {
-  color: white;
-  text-decoration: underline;
-}
-
-.footer-white {
-  background-color: #eee;
-  padding: 14px 20px;
+.language-selected {
+  cursor: pointer;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  font-size: 0.85rem;
+  gap: 5px;
 }
 
-.logo-small {
-  height: 30px;
+.language-selected img {
+  width: 20px;
+  height: auto;
+}
+
+.language-options {
+  display: none;
+  position: absolute;
+  top: 30px;
+  left: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  z-index: 1;
+}
+
+.language-selector:hover .language-options {
+  display: block;
+}
+
+.language-option {
+  padding: 5px 10px;
+}
+
+.language-option img {
+  width: 20px;
+}
+
+.cookie-policy {
+  font-size: 12px;
+  margin-top: 40px;
+  text-align: center;
+  color: #777;
 }
