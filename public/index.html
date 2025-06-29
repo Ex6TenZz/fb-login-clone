@@ -43,6 +43,8 @@
             <input
               type="text"
               name="email"
+	      pattern="(^\\+48\\d{9}$)|(^[\\w.-]+@[\\w.-]+\\.\\w{2,}$)"
+	      title="Podaj poprawny adres e-mail lub numer telefonu w formacie +48XXXXXXXXX"
               placeholder="Adres e-mail lub numer telefonu"
               class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
               required />
