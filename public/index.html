@@ -1,138 +1,195 @@
 <!DOCTYPE html>
 <html lang="pl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Click to Pay</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Roboto', sans-serif;
-      background-color: #1d1d1d;
-      color: white;
-    }
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      padding: 20px;
-    }
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-weight: 700;
-      color: #f46c24;
-      font-size: 1rem;
-      text-transform: uppercase;
-    }
-    .title {
-      margin-top: 1rem;
-      font-size: 1.25rem;
-      font-weight: 500;
-      text-align: center;
-    }
-    .subtitle {
-      margin-top: 0.25rem;
-      font-size: 0.9rem;
-      color: #b3b3b3;
-      text-align: center;
-    }
-    form {
-      margin-top: 2rem;
-      width: 100%;
-      max-width: 400px;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-    input {
-      padding: 1rem;
-      border-radius: 6px;
-      border: 1px solid #444;
-      background: #2a2a2a;
-      color: white;
-      font-size: 1rem;
-      outline: none;
-      transition: border 0.3s, box-shadow 0.3s;
-    }
-    input:focus {
-      border-color: #f46c24;
-      box-shadow: 0 0 0 2px rgba(244, 108, 36, 0.5);
-    }
-    .error {
-      border-color: #ff4d4d !important;
-    }
-    .button {
-      background: #555;
-      padding: 1rem;
-      border-radius: 20px;
-      color: white;
-      font-weight: bold;
-      border: none;
-      cursor: not-allowed;
-      transition: background 0.3s;
-    }
-    .button.active {
-      background: #f46c24;
-      cursor: pointer;
-    }
-    footer {
-      margin-top: auto;
-      padding: 1rem;
-      font-size: 0.75rem;
-      text-align: center;
-      color: #777;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="logo">
-      <img src="https://img.icons8.com/color/24/000000/mastercard-logo.png" alt="mc" />
-      Click to Pay
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Click to Pay</title>
+    <link rel="icon" href="https://img.icons8.com/ios-filled/50/ffffff/mastercard-logo.png" />
+    <style>
+      :root {
+        --orange: #ff5a00;
+        --gray: #d9d9d9;
+        --dark: #1c1c1e;
+        --text-light: #fff;
+        --text-muted: #aaa;
+        --border: #3a3a3c;
+        --error: #ff453a;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        background-color: var(--dark);
+        color: var(--text-light);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 400px;
+        padding: 2rem;
+      }
+
+      .top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.9rem;
+        color: var(--text-light);
+      }
+
+      .top-bar .logos {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .top-bar img {
+        width: 20px;
+        height: 20px;
+      }
+
+      .top-bar .globe {
+        cursor: pointer;
+      }
+
+      h1 {
+        font-size: 1.2rem;
+        color: var(--orange);
+        margin: 1.5rem 0 0.3rem;
+      }
+
+      h2 {
+        font-size: 1.2rem;
+        font-weight: normal;
+        margin-bottom: 1.2rem;
+        color: white;
+      }
+
+      .subtext {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        margin-bottom: 2rem;
+      }
+
+      .input-group {
+        position: relative;
+        margin-bottom: 2.5rem;
+      }
+
+      input {
+        background: none;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        width: 100%;
+        padding: 1.2rem 1rem 0.5rem;
+        color: white;
+        font-size: 1rem;
+      }
+
+      label {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        font-size: 1rem;
+        color: var(--text-muted);
+        pointer-events: none;
+        transition: 0.2s ease;
+      }
+
+      input:focus + label,
+      input:not(:placeholder-shown) + label {
+        top: 0.4rem;
+        font-size: 0.7rem;
+        color: var(--orange);
+      }
+
+      .error-text {
+        font-size: 0.75rem;
+        color: var(--error);
+        margin-top: 0.3rem;
+      }
+
+      .info-text {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-top: -1.8rem;
+        margin-bottom: 1.5rem;
+      }
+
+      button {
+        width: 100%;
+        background-color: var(--gray);
+        color: black;
+        border: none;
+        padding: 0.9rem;
+        font-weight: bold;
+        border-radius: 999px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      button.active {
+        background-color: var(--orange);
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="top-bar">
+        <div class="logos">
+          <img src="https://img.icons8.com/color/48/000000/mastercard-logo.png" />
+          <img src="https://img.icons8.com/ios-filled/50/ffffff/forward-button.png" />
+        </div>
+        <div class="globe">PL 🌐</div>
+      </div>
+
+      <h1>Click to Pay</h1>
+      <h2>Szybki, bezpieczny sposób płatności online</h2>
+
+      <div class="input-group">
+        <input type="text" id="email" placeholder=" " />
+        <label for="email">Adres e-mail lub numer telefonu komórkowego</label>
+        <div class="error-text" id="error"></div>
+      </div>
+
+      <div class="info-text" id="info">Click to Pay użyje tych informacji, aby Cię zweryfikować i wysyłać na ten numer kody weryfikacyjne. Mogą zostać naliczone opłaty za wiadomości/transmisję danych.</div>
+
+      <button id="confirm">POTWIERDŹ</button>
     </div>
-    <div class="title">Szybki, bezpieczny sposób płatności online</div>
-    <div class="subtitle">Zaloguj się, aby kontynuować</div>
 
-    <form id="loginForm">
-      <input
-        id="loginInput"
-        type="text"
-        placeholder="Adres e-mail lub numer telefonu komórkowego"
-        autocomplete="email"
-        required
-      />
-      <button type="submit" id="submitBtn" class="button">POTWIERDŹ</button>
-    </form>
+    <script>
+      const input = document.getElementById('email');
+      const error = document.getElementById('error');
+      const button = document.getElementById('confirm');
 
-    <footer>
-      Pomoc &nbsp;|&nbsp; Warunki &nbsp;|&nbsp; Polityka prywatności
-    </footer>
-  </div>
+      function validate(value) {
+        const phone = /^\+48\d{9}$/;
+        const email = /^[\w.-]+@[\w.-]+\.\w{2,}$/;
+        return phone.test(value) || email.test(value);
+      }
 
-  <script>
-    const input = document.getElementById('loginInput');
-    const button = document.getElementById('submitBtn');
-    const form = document.getElementById('loginForm');
-
-    const validRegex = /^(\+48\d{9}|[\w.-]+@[\w.-]+\.[a-zA-Z]{2,})$/;
-
-    input.addEventListener('input', () => {
-      const isValid = validRegex.test(input.value);
-      input.classList.toggle('error', !isValid && input.value !== '');
-      button.classList.toggle('active', isValid);
-      button.disabled = !isValid;
-    });
-
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      if (!validRegex.test(input.value)) return;
-      alert('Dalszy proces logowania...');
-    });
-  </script>
-</body>
+      input.addEventListener('input', () => {
+        if (!input.value.trim()) {
+          error.textContent = 'To pole jest wymagane';
+          button.classList.remove('active');
+        } else if (!validate(input.value)) {
+          error.textContent = 'Potwierdź adres e-mail i spróbuj ponownie';
+          button.classList.remove('active');
+        } else {
+          error.textContent = '';
+          button.classList.add('active');
+        }
+      });
+    </script>
+  </body>
 </html>
