@@ -11,37 +11,58 @@
 </head>
 <body>
   <div class="root-container">
+    <!-- HEADER -->
     <header class="header__wrapper">
-      <div class="container">
-        <div class="row row-space-between">
-          <div class="col-n header__brand">
-            <span class="icon-src">●●</span>
-            <span class="icon-mc">●●</span>
-          </div>
-          <nav class="col header__nav">
-            <a href="#" class="header__item"><span>US</span><span class="icon-globe">🌐</span></a>
-          </nav>
+      <div class="container header__container">
+        <div class="header__brand">
+          <!-- Click to Pay logo -->
+          <img
+            src="https://src.mastercard.com/profile/static/media/ctpay-logo-dark.3973aefa.svg"
+            alt="Click to Pay"
+            class="logo-ctp"
+          />
+          <!-- Mastercard logo -->
+          <img
+            src="https://www.mastercard.us/etc.clientlibs/mastercard/clientlibs/clientlib-base/resources/img/mc_symbol_opt_45_3x.png"
+            alt="Mastercard"
+            class="logo-mc"
+          />
         </div>
+        <nav class="header__nav">
+          <a href="#" class="header__item">
+            <span>US</span>
+            <span class="icon-globe">🌐</span>
+          </a>
+        </nav>
       </div>
     </header>
 
+    <!-- MAIN -->
     <main>
       <div class="container">
-        <div class="row margin-bottom-sm">
-          <div class="col">
-            <h1 class="display-lg color-orange-high">Click to Pay</h1>
-            <h2 class="display-lg">The fast, secure way to pay online</h2>
-          </div>
+        <div class="headline">
+          <h1 class="display-lg color-orange-high">Click to Pay</h1>
+          <h2 class="display-lg">The fast, secure way to pay online</h2>
         </div>
 
         <form id="login-form" class="container-fluid" novalidate>
           <div class="row">
-            <div class="col-full"><p>Create a profile or sign in</p></div>
+            <div class="col-full">
+              <p>Create a profile or sign in</p>
+            </div>
           </div>
+
           <div class="row">
             <div class="col">
               <div class="al-input floating">
-                <input type="text" id="userId" name="userId" placeholder=" " class="al-input__input" required />
+                <input
+                  type="text"
+                  id="userId"
+                  name="userId"
+                  placeholder=" "
+                  class="al-input__input"
+                  required
+                />
                 <label for="userId" class="al-input__label">Email or mobile number</label>
                 <div class="al-input__subtext">
                   We'll use this to verify your identity. Message/data rates may apply.
@@ -63,6 +84,7 @@
       </div>
     </main>
 
+    <!-- FOOTER -->
     <footer class="footer">
       <div class="container">
         <div class="row">
@@ -78,6 +100,7 @@
       </div>
     </footer>
   </div>
+
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>
