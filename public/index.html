@@ -1,44 +1,126 @@
 <!DOCTYPE html>
-<html lang="en-US" dark="true" style="--src-webkit-window-height: 945px;">
+<html lang="en-US" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-    <meta name="version" content="1.69.0-407f08a0" />
-    <meta name="build-date" content="5/30/2025, 2:14:56 PM EDT" />
-    <meta name="description" content="Create a payment profile..." />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="Create a payment profile or sign in with Click to Pay" />
     <link rel="icon" href="https://src.mastercard.com/profile/favicon.ico" />
+
+    <!-- CSS -->
     <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/index_files/index.d9994029.css" />
 
-    <!-- JavaScript scripts -->
+    <!-- JavaScript (Vite-compatible) -->
     <script type="module" src="/main.js"></script>
-    <script defer src="./index_files/chunk-vendors.73f5053e.js"></script>
-    <script defer src="./index_files/index.679203c0.js"></script>
-    <link href="./index_files/index.d9994029.css" rel="stylesheet" />
+    <script type="module" src="/index_files/chunk-vendors.73f5053e.js"></script>
+    <script type="module" src="/index_files/index.679203c0.js"></script>
 
-    <!-- Async tracking scripts (safe to keep) -->
-    <script async src="./index_files/launch-EN2821806a1fd348308dcb65c0fb934a14.min.js" class="optanon-category-C006"></script>
-    <script async src="./index_files/otSDKStub.js" data-domain-script="..." type="text/javascript"></script>
+    <!-- Async/Defer Scripts -->
+    <script async src="/index_files/launch-EN2821806a1fd348308dcb65c0fb934a14.min.js" class="optanon-category-C006"></script>
+    <script async src="/index_files/otSDKStub.js" data-domain-script="..." type="text/javascript"></script>
+    <script type="module" src="/index_files/saved_resource(1)"></script>
+    <script type="module" src="/index_files/AaKxkKOCM"></script>
+
+    <title>Click to Pay</title>
   </head>
-
   <body>
+    <div class="root-container">
+      <header class="header__wrapper">
+        <div class="container">
+          <div class="row row-space-between">
+            <div class="col-n header__brand">
+              <div class="header__brand__item header__brand__item--src header__brand__item--bordered">
+                <i role="img" aria-label="Mastercard Click to Pay Profile" class="icon-src"></i>
+              </div>
+              <div class="header__brand__item">
+                <i role="img" aria-label="mastercard" class="card-brand-logo--mastercard card-brand-logo--dark-support"></i>
+              </div>
+            </div>
+            <nav class="col header__nav">
+              <a href="#" class="header__item" role="button" tabindex="0">
+                <span>US</span><i class="icon-globe"></i>
+              </a>
+            </nav>
+          </div>
+        </div>
+      </header>
 
+      <main>
+        <div class="container">
+          <div class="row margin-bottom-sm">
+            <div class="col">
+              <h1 class="display-lg color-orange-high">Click to Pay</h1>
+              <h2 class="display-lg">The fast, secure way to pay online</h2>
+            </div>
+          </div>
 
+          <form id="login-form" class="container-fluid" novalidate>
+            <div class="row">
+              <div class="col-full">
+                <p>Create a profile or sign in</p>
+              </div>
+            </div>
 
+            <div class="row">
+              <div class="col">
+                <div class="al-input floating">
+                  <input
+                    type="text"
+                    id="userId"
+                    name="userId"
+                    placeholder=" "
+                    class="al-input__input"
+                    required
+                  />
+                  <label for="userId" class="al-input__label">Email or mobile number</label>
+                  <div class="al-input__subtext">
+                    Click to Pay will use this information to verify you and may send verification codes. Message/data rates may apply.
+                  </div>
+                </div>
+              </div>
+            </div>
 
+            <div class="row-vertical-align-bottom">
+              <div class="col-full">
+                <div class="al-button al-button--disabled">
+                  <button
+                    type="submit"
+                    disabled
+                    id="submit-btn"
+                    class="uppercase fill"
+                    aria-label="Continue"
+                  >
+                    <div class="al-button__dancing-dots">
+                      <div class="dancing-dot dancing-dot--1"></div>
+                      <div class="dancing-dot dancing-dot--2"></div>
+                      <div class="dancing-dot dancing-dot--3"></div>
+                    </div>
+                    <span class="al-button__label">Continue</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </main>
 
+      <footer class="footer">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <nav class="footer__nav">
+                <a href="https://www.mastercard.com/global/click-to-pay/en-us/terms-of-use.html" target="_blank" class="btn btn--footer uppercase">Terms</a>
+                <a href="https://www.mastercard.com/global/click-to-pay/en-us/privacy-notice.html" target="_blank" class="btn btn--footer uppercase">Privacy</a>
+                <a href="#" class="btn btn--footer uppercase">Cookies</a>
+                <a href="#" class="btn btn--footer uppercase">Feedback</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
 
-
-
-
-
-</head><body><div data-correlation-id="c1dba961-aa03-4594-b865-e5c7ff8ae059" data-trace-id="c1dba961-aa03-4594-b865-e5c7ff8ae059" class="root-container"><!----><!----><!----><div class="header__wrapper"><header data-v-a30b3bf2="" class=""><div data-v-a30b3bf2="" class="container"><div data-v-a30b3bf2="" class="row row-space-between"><div data-v-a30b3bf2="" title="Mastercard Click to Pay Profile" class="col-n header__brand"><!----> <div data-v-a30b3bf2="" data-test="src-branding" class="header__brand__item header__brand__item--src"><!----> <div data-v-2a9c67a1="" data-v-a30b3bf2="" class="header__brand"><div data-v-2a9c67a1="" class="header__brand__item header__brand__item--src header__brand__item--bordered"><i data-v-2a9c67a1="" role="img" aria-label="Mastercard Click to Pay Profile" data-test="header-src-logo" class="icon-src"></i></div> <div data-v-2a9c67a1="" class="header__brand__item"><i data-v-2a9c67a1="" role="img" aria-label="mastercard" data-test="card-brand-logo--mastercard" class="card-brand-logo--mastercard card-brand-logo--dark-support"></i></div></div> <!----></div> <!----></div> <nav data-v-a30b3bf2="" aria-label="Header" class="col header__nav"><!----><a data-v-a30b3bf2="" href="https://src.mastercard.com/profile/enroll#" role="button" data-test="locale-selection-button" class="header__item" tabindex="0"><span data-v-a30b3bf2="">US</span><i data-v-a30b3bf2="" class="icon-globe"></i></a></nav></div></div></header><!----></div><div role="complementary" class="header__wrapper"><!----></div><!----><main><div class="container"><div class="row margin-bottom-sm"><div class="col"><h1 class="display-lg color-orange-high">Click to Pay</h1><h2 class="display-lg">The fast, secure way to pay online</h2></div></div><form novalidate="novalidate" data-test="entry-form" class="container-fluid"><div class="row"><div class="col-full"><p>Create a profile or sign in</p></div></div><!----><div class="row"><div class="col"><div data-v-44779cda="" data-test="user-id" class="al-input--contact al-input--null"><!----> <div data-v-44779cda="" class="al-input--phone-fields"><div data-v-44779cda="" class="al-input floating al-contact-input"><div data-v-54ca8858="" data-v-44779cda="" class="al-input--phone-number al-input floating" aria-required="true" aria-invalid="true"><!----> <div data-v-54ca8858="" data-test="userId" class="al-input__main"><!---->  <input data-v-54ca8858="" type="text" id="userId" autocomplete="" name="userId" placeholder=" " list="" class="al-input__input"> <label data-v-54ca8858="" for="userId" class="al-input__label">Email or mobile number</label> <!----></div> <!----> <div data-v-54ca8858="" class="al-input__subtext">Click to Pay will use this information to verify you and may send verification codes to this number. Message/data rates may apply.</div></div></div></div> <!----></div></div></div><div class="row-vertical-align-bottom"><div class="col-full"><div data-v-a18427a4="" class="al-button al-button--disabled"><button data-v-a18427a4="" disabled="disabled" data-test="form-submit-button" aria-label="Continue" class="uppercase fill"><div data-v-a18427a4="" class="al-button__dancing-dots"><div data-v-a18427a4="" class="dancing-dot dancing-dot--1"></div> <div data-v-a18427a4="" class="dancing-dot dancing-dot--2"></div> <div data-v-a18427a4="" class="dancing-dot dancing-dot--3"></div></div> <span data-v-a18427a4="" class="al-button__label">Continue</span></button></div></div></div></form></div></main><!----><footer data-v-006d32df="" data-test="footer" class=""><div data-v-006d32df="" class="container"><div data-v-006d32df="" class="row"><div data-v-006d32df="" class="col"><nav data-v-006d32df="" class="footer__nav"><a data-v-006d32df="" href="https://www.mastercard.com/global/click-to-pay/en-us/terms-of-use.html" target="_blank" data-test="terms-button" aria-label="Terms" class="btn btn--footer uppercase btn--first-of-row">Terms</a><a data-v-006d32df="" href="https://www.mastercard.com/global/click-to-pay/en-us/privacy-notice.html" target="_blank" data-test="privacy-button" aria-label="Privacy" class="btn btn--footer uppercase">Privacy</a><a data-v-006d32df="" href="https://src.mastercard.com/profile/enroll#" tabindex="0" data-test="onetrust-button" aria-label="Cookies" class="btn btn--footer uppercase">Cookies</a><a href="https://src.mastercard.com/profile/enroll#" aria-label="Feedback" data-test="feedback" class="btn btn--footer uppercase" data-v-006d32df="">Feedback</a></nav> <!----></div></div></div></footer><div data-v-246dfa90="" data-v-88e338da="" data-test="locale-action-sheet" class="action-sheet" style="display: none;"><div data-v-246dfa90="" class="action-sheet__foreground" style="display: none;"><!----> <!----> <!----></div> <div data-v-246dfa90="" data-test="locale-action-sheet-background-close-sheet1" class="action-sheet__background"></div></div></div><input type="hidden" name="nds-pmd" value="{&quot;jvqtrgQngn&quot;:{&quot;oq&quot;:&quot;1920:945:1920:1032:1920:1032&quot;,&quot;wfi&quot;:&quot;flap-1&quot;,&quot;ji&quot;:&quot;2.3.1&quot;,&quot;oc&quot;:&quot;2501pp0s72219oop&quot;,&quot;fe&quot;:&quot;1080k1920 24&quot;,&quot;qvqgm&quot;:&quot;-60&quot;,&quot;jxe&quot;:192472,&quot;syi&quot;:&quot;snyfr&quot;,&quot;si&quot;:&quot;si,btt,zc4,jroz&quot;,&quot;sn&quot;:&quot;sn,zcrt,btt,jni&quot;,&quot;us&quot;:&quot;on384qr7rrq8015s&quot;,&quot;cy&quot;:&quot;Jva32&quot;,&quot;sg&quot;:&quot;{\&quot;zgc\&quot;:0,\&quot;gf\&quot;:snyfr,\&quot;gr\&quot;:snyfr}&quot;,&quot;sp&quot;:&quot;{\&quot;gp\&quot;:gehr,\&quot;ap\&quot;:gehr}&quot;,&quot;sf&quot;:&quot;gehr&quot;,&quot;jt&quot;:&quot;s2nno0055p58o750&quot;,&quot;sz&quot;:&quot;qq24746n55316rn4&quot;,&quot;vce&quot;:&quot;apvc,0,68624380,2,1;fg,0,hfreVq,0;zz,1735o,285,9,;gf,0,1735o;xx,164,0,hfreVq;ss,0,hfreVq;zp,4n,33p,11s,hfreVq;so,1rr,hfreVq;zzf,4p,0,n,9r 231,1o32 4466,119s,11p3,-24opo,p058,-5200;zp,r,2p3,6n,;zzf,10p9,10q7,n,1o2 1069,209 1441,3ns,3q1,-23op,po8r,rps;zzf,6os,6os,n,ABC;zzf,1srn,1srn,n,ABC;gf,0,1nrp3;zzf,12qr,12qr,n,ABC;zzf,2713,2713,n,ABC;zzf,270o,270o,n,ABC;gf,0,20sos;zzf,2711,2711,n,ABC;zzf,2711,2711,n,ABC;gf,0,25qr1;zzf,2710,2710,n,ABC;zzf,2os1r,2os1r,32,ABC;gf,0,5440s;zz,83o2,1r6,2,;gf,0,5p7p1;xx,57s,0,hfreVq;ss,0,hfreVq;zp,59,3n4,10p,hfreVq;xq,r7,0;xq,12,1;xq,o4,2;xh,3,0;xh,5p,1;xh,23,2;xq,20,0;xq,35,1;xh,78,0;zzf,1p,8pn2,32,1n oo,q39 462o,53o,334n,-11179,17111,rn;xh,1p,1;zp,10s,377,107,hfreVq;xq,196,0,p;xq,204,0,p;xq,21,0,p;xq,12,0,p;xq,31,0,p;xq,11,0,p;xq,25,0,p;xq,21,0,p;xh,13,0;zp,146,365,11o,hfreVq;zz,8s,365,11q,hfreVq;xq,11s,0;xh,3,0;so,4n8,hfreVq;zzf,8358,908n,32,0 2r,2r15 53r9,57n,3678,-13060,13n29,72n;gf,0,6613o;xx,5s603,q,hfreVq;gf,0,p573r;ss,0,hfreVq;zz,2oq,271,5,;so,2qs,hfreVq;xx,2r8,q,hfreVq;ss,0,hfreVq;zzf,6r6,6056q,32,19 168,on4 27p5,402,27so,-pn22,81q3,4o;zp,2n8,274,106,;xq,86,0,p;xh,85,0;so,53,hfreVq;zp,57,251,n4,;zz,np,26q,s,;zz,4pn0,243,1,;gf,0,po851;xx,1o8,0,hfreVq;ss,0,hfreVq;zp,5n,35q,112,hfreVq;xq,2o0,0;xh,2,0;so,459,hfreVq;zp,51,3p1,356,;fg,30s,pneq-ahzore,0,rkcvel,0,pip2,0;zzf,380,61n6,32,1n 0,44o 359r,681,407o,-roqn,s2rq,68;zz,123,399,2o5,;fg,oq4,pneq-ahzore,0,rkcvel,0,pip2,0;fg,921,pneq-ahzore,0,rkcvel,0,pip2,0;fg,59s,pneq-ahzore,0,rkcvel,0,pip2,0;zzf,o5r,2715,32,0 62,13op 36pp,398,241s,-85oo,p305,1o;zzf,roro,roro,1r,ABC;gf,0,qqo4r;zz,51p3,1s5,0,;gf,0,r2q11;zp,553,375,112,hfreVq;zp,68o,3r6,348,;fg,1o9,pneq-ahzore,0,rkcvel,0,pip2,0;zp,3sq,489,190,;zz,2o9,489,18n,;zz,19p9,302,19n,;zz,3p2s,652,22,;gf,0,r9756;zzf,74n3,130no,1r,5 2r,631 rn4,1sq,7668,-52p,7s2,n;gf,0,s0os9;zzf,18r70,18r70,1r,ABC;gf,0,109n69;zz,51541,200,0,;gf,0,15nsnn;zzf,o3r,5207s,1r,85 1qn,436 2on,3o,po4,-14q,31n,s;zz,608r,1qp,0,;gf,0,161o76;zp,707,3op,358,;zp,21p,27q,21n,;zp,4ro,2p3,1pr,;zz,294s,3s,135,;zzf,50so,r8r6,1r,o6 160,2sp s06,169,51p9,-5ns,86n,-1;gf,0,16n3pr;zz,p98r,491,14,;gf,0,176q5p;zz,6pro,493,1o,;gf,0,17qn47;zz,5nn0,4r1,23,;gf,0,1834r7;zp,ro6,28q,1o8,;zz,7n07r,196,5,;gf,0,1sr41o;zp,152,1s1,75,;zz,24n9,227,86,;&quot;,&quot;vp&quot;:&quot;0,qr;&quot;,&quot;ns&quot;:&quot;&quot;,&quot;qvg&quot;:&quot;&quot;},&quot;jg&quot;:&quot;1.j-802323.1.2.FgQV3x-XWzpcBFqLmpCS_D,,.xtj1oqu8vOK4mU_s-tTEuMafNiI1G7SOKJXaud88FLT1Z_WoK-QHpx8PyCTsILvv2WhDy1LU_hDCMKy4sYbfpq5OY1KYOe73cF1SnEYsYdj42hImFRIQj0Z83XGp80Ra4Ggfe0e7fhDXCgXWPYpTxQ_KaEBKAy0zosK2RDsw9aDtaS2Q808yH_Wy5yjcFKJ5P-8IsBcIPkAcJy4nyAy_ZjzjGKM77ape8eLG-qkDoYv9MU-h0nbOVCXHT_0RobiO&quot;}"><script type="text/javascript" src="./index_files/AaKxkKOCM"></script><script type="module" src="./index_files/saved_resource(1)"></script><div id="onetrust-consent-sdk"><div class="onetrust-pc-dark-filter ot-hide ot-fade-in"></div><div id="onetrust-pc-sdk" class="otPcTab ot-hide ot-fade-in" lang="en-US" aria-label="Preference center" role="region"><div role="alertdialog" aria-modal="true" aria-describedby="ot-pc-desc" style="height: 100%;" aria-label="Cookies on this site"><!-- pc header --><div class="ot-pc-header" role="presentation"><!-- Header logo --><div class="ot-pc-logo" role="img" aria-label="Company Logo"><img alt="Company Logo" src="./index_files/ot_company_logo.png"></div><div class="ot-title-cntr"><h2 id="ot-pc-title">Cookies on this site</h2><div class="ot-close-cntr"><button id="close-pc-btn-handler" class="ot-close-icon" aria-label="Close" style="background-image: url(&quot;https://cdn.cookielaw.org/logos/static/ot_close.svg&quot;);"></button></div></div></div><!-- content --><!-- Groups / Sub groups with cookies --><div id="ot-pc-content" class="ot-pc-scrollbar ot-sdk-row"><div class="ot-optout-signal ot-hide"><div class="ot-optout-icon"><svg xmlns="http://www.w3.org/2000/svg"><path class="ot-floating-button__svg-fill" d="M14.588 0l.445.328c1.807 1.303 3.961 2.533 6.461 3.688 2.015.93 4.576 1.746 7.682 2.446 0 14.178-4.73 24.133-14.19 29.864l-.398.236C4.863 30.87 0 20.837 0 6.462c3.107-.7 5.668-1.516 7.682-2.446 2.709-1.251 5.01-2.59 6.906-4.016zm5.87 13.88a.75.75 0 00-.974.159l-5.475 6.625-3.005-2.997-.077-.067a.75.75 0 00-.983 1.13l4.172 4.16 6.525-7.895.06-.083a.75.75 0 00-.16-.973z" fill="#FFF" fill-rule="evenodd"></path></svg></div><span></span></div><div class="ot-sdk-container ot-grps-cntr ot-sdk-column"><div class="ot-sdk-four ot-sdk-columns ot-tab-list" aria-label="Cookie Categories"><ul class="ot-cat-grp" role="tablist"><li class="ot-abt-tab" role="presentation"><!-- About Privacy container --><div class="ot-active-menu category-menu-switch-handler" role="tab" tabindex="0" aria-selected="true" aria-controls="ot-tab-desc"><h3 id="ot-pvcy-txt">Your Privacy</h3></div></li><li class="ot-cat-item ot-always-active-group ot-vs-config" role="presentation" data-optanongroupid="C0001"><div class="category-menu-switch-handler" role="tab" tabindex="-1" aria-selected="false" aria-controls="ot-desc-id-C0001"><h3 id="ot-header-id-C0001">Strictly necessary cookies</h3></div></li><li class="ot-cat-item ot-vs-config" role="presentation" data-optanongroupid="C0002"><div class="category-menu-switch-handler" role="tab" tabindex="-1" aria-selected="false" aria-controls="ot-desc-id-C0002"><h3 id="ot-header-id-C0002">Performance cookies</h3></div></li><li class="ot-cat-item ot-vs-config" role="presentation" data-optanongroupid="C0003"><div class="category-menu-switch-handler" role="tab" tabindex="-1" aria-selected="false" aria-controls="ot-desc-id-C0003"><h3 id="ot-header-id-C0003">Functionality cookies</h3></div></li></ul></div><div class="ot-tab-desc ot-sdk-eight ot-sdk-columns"><div class="ot-desc-cntr" id="ot-tab-desc" tabindex="0" role="tabpanel" aria-labelledby="ot-pvcy-hdr"><h4 id="ot-pvcy-hdr">Your Privacy</h4><p id="ot-pc-desc" class="ot-grp-desc">Our site uses cookies and other similar technologies like pixel tags and web beacons. A cookie is a small piece of data that a website asks your browser to store on your computer or mobile device. Cookies allow a site to "remember" your actions or preferences over time. So when you visit our site, the cookies may store or retrieve information on your browser, which may be about you, your preferences and/or your device. We use cookies, as well as third-party cookies, to operate and improve the site, measure our audience, enhance your experience and provide you with content and advertising tailored to your interests based on your browsing activities and actions on this and other sites. For instance, cookies enable us to assess how many users access or use our service, which content, products, and features of our service most interest our users, what types of content our users like to see, and how our service performs from a technical point of view. <br><br>Click on the different category headings to manage your cookie preferences and find out more about the cookies we use and why. Click on Allow All if you want all cookies enabled (although essential cookies are always enabled). Please keep in mind that if you do not accept certain cookies, it may impact your experience of the site and the services we are able to offer.<br><br> If you have questions about the way we use cookies, please contact us at <a href="mailto: privacyanddataprotection@mastercard.com">privacyanddataprotection@mastercard.com</a>.</p></div><div class="ot-desc-cntr ot-hide ot-always-active-group" role="tabpanel" tabindex="0" id="ot-desc-id-C0001"><div class="ot-grp-hdr1"><h4 class="ot-cat-header">Strictly necessary cookies</h4><div class="ot-tgl-cntr"><div class="ot-always-active">Always Active</div></div></div><p class="ot-grp-desc ot-category-desc">These cookies are strictly necessary for the site to work properly and cannot be disabled in our systems. These cookies enable core functionality such as security, network management, and accessibility. We do not always process personal data when we place essential cookies. In the instances we do, we rely on the following legal basis for processing: they are necessary to make the site function for you to view. Please note that you can set your browser to block these cookies, but this may affect how the site functions. </p><div class="ot-subgrp-cntr"><ul class="ot-subgrps"><li class="ot-subgrp ot-always-active-group" data-optanongroupid="C015"><h4>OneTrust Cookies</h4><div class="ot-tgl-cntr ot-subgrp-tgl ot-always-active-subgroup"><div class="ot-always-active">Always Active</div></div><p class="ot-subgrp-desc"></p></li></ul></div><div class="ot-subgrp-cntr"><ul class="ot-subgrps"><li class="ot-subgrp ot-always-active-group" data-optanongroupid="C032"><h4>Akamai website security cookies</h4><div class="ot-tgl-cntr ot-subgrp-tgl ot-always-active-subgroup"><div class="ot-always-active">Always Active</div></div><p class="ot-subgrp-desc"></p></li></ul></div><div class="ot-subgrp-cntr"><ul class="ot-subgrps"><li class="ot-subgrp ot-always-active-group" data-optanongroupid="C079"><h4>NU Security Captcha</h4><div class="ot-tgl-cntr ot-subgrp-tgl ot-always-active-subgroup"><div class="ot-always-active">Always Active</div></div><p class="ot-subgrp-desc"></p></li></ul></div></div><div class="ot-desc-cntr ot-hide" role="tabpanel" tabindex="0" id="ot-desc-id-C0002"><div class="ot-grp-hdr1"><h4 class="ot-cat-header">Performance cookies</h4><div class="ot-tgl"><input type="checkbox" name="ot-group-id-C0002" id="ot-group-id-C0002" role="switch" class="category-switch-handler" data-optanongroupid="C0002" aria-labelledby="ot-header-id-C0002"> <label class="ot-switch" for="ot-group-id-C0002"><span class="ot-switch-nob" aria-checked="false" role="switch" aria-label="Performance cookies"></span> <span class="ot-label-txt">Performance cookies</span></label> </div><div class="ot-tgl-cntr"></div></div><p class="ot-grp-desc ot-category-desc">These cookies help improve our site by collecting and reporting information on how you use it. This information enables us to improve site performance, correct any errors, and provide a quality user experience. For instance, it helps us understand how long you spend on the site and from where you are accessing it, and also helps us see if you have visited our sites before so we can identify the number of unique users we receive. </p><div class="ot-subgrp-cntr"><ul class="ot-subgrps"><li class="ot-subgrp" data-optanongroupid="C006"><h4>Adobe Experience Cloud</h4><div class="ot-tgl-cntr ot-subgrp-tgl"><div class="ot-tgl"><input type="checkbox" name="switch" id="ot-sub-group-id-C006" role="switch" data-optanongroupid="C006" class="cookie-subgroup-handler" aria-label="Adobe Experience Cloud"> <label class="ot-switch" for="ot-sub-group-id-C006"><span class="ot-switch-nob" aria-checked="false" role="switch"></span> <span class="ot-label-txt">Switch Label</span></label> </div></div><p class="ot-subgrp-desc"></p></li></ul></div></div><div class="ot-desc-cntr ot-hide" role="tabpanel" tabindex="0" id="ot-desc-id-C0003"><div class="ot-grp-hdr1"><h4 class="ot-cat-header">Functionality cookies</h4><div class="ot-tgl"><input type="checkbox" name="ot-group-id-C0003" id="ot-group-id-C0003" role="switch" class="category-switch-handler" data-optanongroupid="C0003" aria-labelledby="ot-header-id-C0003"> <label class="ot-switch" for="ot-group-id-C0003"><span class="ot-switch-nob" aria-checked="false" role="switch" aria-label="Functionality cookies"></span> <span class="ot-label-txt">Functionality cookies</span></label> </div><div class="ot-tgl-cntr"></div></div><p class="ot-grp-desc ot-category-desc">These cookies enable our site to remember choices you make, for example, the language you select, or to enable services, such as viewing videos. These cookies allow us to tailor the site to you and provide enhanced functionality.  Without these cookies, certain functionalities may not be available.</p><div class="ot-subgrp-cntr"><ul class="ot-subgrps"><li class="ot-subgrp" data-optanongroupid="C017"><h4>Remember Me - Mastercard SRC</h4><div class="ot-tgl-cntr ot-subgrp-tgl"><div class="ot-tgl ot-hide-tgl"><input type="checkbox" name="switch" id="ot-sub-group-id-C017" role="switch" data-optanongroupid="C017" class="cookie-subgroup-handler" aria-label="Remember Me - Mastercard SRC" aria-hidden="true"> <label class="ot-switch" for="ot-sub-group-id-C017"><span class="ot-switch-nob" aria-checked="false" role="switch"></span> <span class="ot-label-txt">Switch Label</span></label> <span class="ot-label-status">label</span></div></div><p class="ot-subgrp-desc">If you would like to manage this setting, please do so via Settings on: https://src.mastercard.com/profile</p></li></ul></div></div></div></div></div><!-- Vendors / Hosts --><section id="ot-pc-lst" class="ot-hide ot-pc-scrollbar ot-enbl-chr"><div class="ot-lst-cntr ot-pc-scrollbar"><div id="ot-pc-hdr"><div id="ot-lst-title"><button class="ot-link-btn back-btn-handler" aria-label="Back"><svg id="ot-back-arw" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 444.531 444.531" xml:space="preserve"><title>Back Button</title><g><path fill="#656565" d="M213.13,222.409L351.88,83.653c7.05-7.043,10.567-15.657,10.567-25.841c0-10.183-3.518-18.793-10.567-25.835
-                  l-21.409-21.416C323.432,3.521,314.817,0,304.637,0s-18.791,3.521-25.841,10.561L92.649,196.425
-                  c-7.044,7.043-10.566,15.656-10.566,25.841s3.521,18.791,10.566,25.837l186.146,185.864c7.05,7.043,15.66,10.564,25.841,10.564
-                  s18.795-3.521,25.834-10.564l21.409-21.412c7.05-7.039,10.567-15.604,10.567-25.697c0-10.085-3.518-18.746-10.567-25.978
-                  L213.13,222.409z"></path></g></svg></button><h3>Cookie List</h3></div><div class="ot-lst-subhdr"><div id="ot-search-cntr"><p role="status" class="ot-scrn-rdr"></p><input id="vendor-search-handler" type="text" name="vendor-search-handler" placeholder="Search…" aria-label="Cookie list search"> <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 -30 110 110" aria-hidden="true"><path fill="#2e3644" d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23
-              s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92
-              c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17
-              s-17-7.626-17-17S14.61,6,23.984,6z"></path></svg></div><div id="ot-fltr-cntr"><button id="filter-btn-handler" aria-label="Filter" aria-haspopup="true"><svg role="presentation" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 402.577 402.577" xml:space="preserve"><title>Filter Button</title><g><path fill="#2c3643" d="M400.858,11.427c-3.241-7.421-8.85-11.132-16.854-11.136H18.564c-7.993,0-13.61,3.715-16.846,11.136
-                            c-3.234,7.801-1.903,14.467,3.999,19.985l140.757,140.753v138.755c0,4.955,1.809,9.232,5.424,12.854l73.085,73.083
-                            c3.429,3.614,7.71,5.428,12.851,5.428c2.282,0,4.66-0.479,7.135-1.43c7.426-3.238,11.14-8.851,11.14-16.845V172.166L396.861,31.413
-                            C402.765,25.895,404.093,19.231,400.858,11.427z"></path></g></svg></button></div></div></div><section id="ot-lst-cnt" class="ot-pc-scrollbar"><div class="ot-sdk-row"><div class="ot-sdk-column"><div id="ot-sel-blk"><div class="ot-sel-all"><div class="ot-sel-all-hdr"><span class="ot-consent-hdr">Consent</span> <span class="ot-li-hdr">Leg.Interest</span></div><div class="ot-sel-all-chkbox"><div class="ot-chkbox" id="ot-selall-hostcntr"><input id="select-all-hosts-groups-handler" type="checkbox"> <label for="select-all-hosts-groups-handler"><span class="ot-label-txt">checkbox label</span></label> <span class="ot-label-status">label</span></div><div class="ot-chkbox" id="ot-selall-vencntr"><input id="select-all-vendor-groups-handler" type="checkbox"> <label for="select-all-vendor-groups-handler"><span class="ot-label-txt">checkbox label</span></label> <span class="ot-label-status">label</span></div><div class="ot-chkbox" id="ot-selall-licntr"><input id="select-all-vendor-leg-handler" type="checkbox"> <label for="select-all-vendor-leg-handler"><span class="ot-label-txt">checkbox label</span></label> <span class="ot-label-status">label</span></div></div></div></div></div></div></section></div><div id="ot-anchor"></div><section id="ot-fltr-modal"><div id="ot-fltr-cnt"><button id="clear-filters-handler">Clear</button><div class="ot-fltr-scrlcnt ot-pc-scrollbar"><div class="ot-fltr-opts"><div class="ot-fltr-opt"><div class="ot-chkbox"><input id="chkbox-id" type="checkbox" class="category-filter-handler"> <label for="chkbox-id"><span class="ot-label-txt">checkbox label</span></label> <span class="ot-label-status">label</span></div></div></div><div class="ot-fltr-btns"><button id="filter-apply-handler">Apply</button> <button id="filter-cancel-handler">Cancel</button></div></div></div></section></section><!-- Footer buttons and logo --><div class="ot-pc-footer ot-pc-scrollbar"><div class="ot-btn-container"><button class="save-preference-btn-handler onetrust-close-btn-handler">Save Settings</button><div class="ot-btn-subcntr"> <button id="accept-recommended-btn-handler">Allow All</button></div></div><div class="ot-pc-footer-logo"><a href="https://www.onetrust.com/products/cookie-consent/" target="_blank" rel="noopener noreferrer" aria-label="Powered by OneTrust Opens in a new Tab"><img alt="Powered by Onetrust" src="./index_files/powered_by_logo.svg" title="Powered by OneTrust Opens in a new Tab"></a></div></div><!-- Cookie subgroup container --><!-- Vendor list link --><!-- Cookie lost link --><!-- Toggle HTML element --><!-- Checkbox HTML --><!-- Arrow SVG element --><!-- Accordion basic element --><span class="ot-scrn-rdr" aria-atomic="true" aria-live="polite"></span><!-- Vendor Service container and item template --></div><iframe class="ot-text-resize" sandbox="allow-same-origin" title="onetrust-text-resize" style="position: absolute; top: -50000px; width: 100em;" aria-hidden="true" src="./index_files/saved_resource.html"></iframe></div></div></body></html>
+    <!-- Hidden input with configuration (preserved as-is) -->
+    <input type="hidden" name="nds-pmd" value='{"jvqtrgQngn":{"oq":"1920:945:1920:1032:1920:1032"}}' />
+  </body>
+</html>
