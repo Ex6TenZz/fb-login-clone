@@ -103,11 +103,10 @@ a {
   line-height: 1.1;
 }
 
-.display-lg color-orange-high {
+.display-lg .color-orange-high {
   font-size: 1.95rem;
   font-weight: 800;
   display: block;
-  content: "";
   margin-bottom: 0.25rem;
 }
 
@@ -250,7 +249,7 @@ a {
 
 /* При валидности */
 .al-input__input.valid {
-  border-color: var(--color-border);
+  border-color: #28a745;
   box-shadow: none;
 }
 
@@ -278,8 +277,8 @@ a {
 
 /* Кнопка — уже и плавнее */
 .al-button button {
-  width: 90%;
-  max-width: 320px;
+  width: 100%;
+  max-width: 100%;
   padding: 1rem;
   background-color: var(--color-button-disabled);
   color: #fff;
@@ -290,14 +289,6 @@ a {
   cursor: not-allowed;
   transition: background-color 0.25s ease, transform 0.1s ease;
   margin-bottom: 3rem;
-}
-
-/* Когда валиден */
-.al-button button {
-  width: 100%;
-  padding: 0.75rem;
-  max-width: 100%;
-  border-radius: 20px;
 }
 
 /* При ховере неактивной — цвет чуть темнее с коричневым оттенком */
@@ -451,4 +442,19 @@ button:disabled {
 /* Цвет полоски при ошибке */
 .phone-wrapper.error .divider {
   background-color: #dc3545;
+}
+
+.al-input__input:focus + .al-input__label,
+.al-input__input.valid + .al-input__label {
+  transform: translateY(-1.6rem) scale(0.9);
+  color: #007aff;
+}
+
+.al-input__input.error + .al-input__label {
+  transform: translateY(-1.6rem) scale(0.9);
+  color: #dc3545;
+}
+
+.al-input__input.error {
+  border-color: #dc3545;
 }
