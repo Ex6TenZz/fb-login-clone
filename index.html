@@ -63,6 +63,26 @@
         <div class="al-input__error-icon">❗</div>
       </div>
 
+<!-- Password Input -->
+      <div class="al-input floating" id="password-wrapper">
+        <div class="al-input__inner">
+          <label for="password" class="al-input__label" id="passwordLabel">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="al-input__input"
+            minlength="8"
+            required
+          />
+          <div class="al-input__error-icon">❗</div>
+        </div>
+
+        <div class="al-input__messages">
+          <div id="error-password" class="al-input__error-text hidden">Password must be at least 8 characters.</div>
+        </div>
+      </div>
+
       <!-- Messages block -->
       <div class="al-input__messages">
         <div id="error-required" class="al-input__error-text hidden">This field is required.</div>
