@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const passwordLabel = document.getElementById("passwordLabel");
   const input = document.getElementById("userId");
   const label = document.getElementById("inputLabel");
   const errorRequired = document.getElementById("error-required");
@@ -26,6 +27,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const val = input.value.trim();
     label.classList.toggle("shrink", !!val || document.activeElement === input);
   }
+
+  function updatePasswordLabelState() {
+    const val = passwordInput.value.trim();
+    passwordLabel.classList.toggle("shrink", !!val || document.activeElement === passwordInput);
+  }
+
 
   function validate() {
     const val = input.value.trim();
