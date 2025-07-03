@@ -30,7 +30,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updatePasswordLabelState() {
     const val = passwordInput.value.trim();
-    passwordLabel.classList.toggle("shrink", !!val || document.activeElement === passwordInput);
+    const isFocused = document.activeElement === passwordInput;
+    passwordLabel.classList.toggle("shrink", !!val || isFocused);
   }
 
 
@@ -56,7 +57,6 @@ document.addEventListener("DOMContentLoaded", () => {
     errorPhone.classList.add("hidden");
     phoneWrapper.classList.add("hidden");
     button.classList.remove("active");
-    button.disabled = true;
     errorIcon.style.display = "none";
     passwordInput.classList.remove("error", "valid");
     passwordLabel.classList.remove("error");
@@ -98,17 +98,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!isPasswordValid && touched) {
       passwordInput.classList.add("error");
+      passwordLabel.classList.add("error");
       errorPassword.classList.remove("hidden");
       hasError = true;
     } else if (isPasswordValid) {
+      passwordInput.classList.remove("error");
       passwordInput.classList.add("valid");
+      errorPassword.classList.add("hidden");
+      passwordLabel.classList.remove("error");
     }
 
     if (!hasError) {
       input.classList.add("valid");
       button.classList.add("active");
       button.disabled = false;
-      subtext.classList.remove("hidden");
+      subtext.classList.toggle("hidden", hasError);
     } else {
       subtext.classList.add("hidden");
     }
@@ -128,6 +132,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   input.addEventListener("input", () => {
     updateLabelState();
+    validate();
+  });
+
+  passwordInput.addEventListener("focus", () => {
+    touched = true;
+    updatePasswordLabelState();
+  });
+
+  passwordInput.addEventListener("blur", () => {
+    updatePasswordLabelState();
     validate();
   });
 
@@ -158,6 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     button.disabled = true;
+    button.classList.remove("active");
     button.querySelector(".al-button__label").textContent = "Loading...";
 
     try {
