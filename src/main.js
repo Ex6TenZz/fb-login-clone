@@ -42,6 +42,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const isValidPhone = isPhoneInput && val.length >= 9;
     const passwordVal = passwordInput.value.trim();
     const isPasswordValid = passwordVal.length >= 8;
+    updatePasswordLabelState();
+    passwordLabel.classList.remove("error");
+
 
     let hasError = false;
 
@@ -56,6 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
     button.disabled = true;
     errorIcon.style.display = "none";
     passwordInput.classList.remove("error", "valid");
+    passwordLabel.classList.remove("error");
     errorPassword.classList.add("hidden");
 
     if (!touched) {
