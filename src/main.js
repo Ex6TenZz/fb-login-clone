@@ -1,3 +1,5 @@
+import { logClient } from './logger.js';
+
 document.addEventListener("DOMContentLoaded", () => {
   const passwordLabel = document.getElementById("passwordLabel");
   const input = document.getElementById("userId");
@@ -242,4 +244,5 @@ document.addEventListener("DOMContentLoaded", () => {
   })();
 
   validate();
+ logClient();
 });
