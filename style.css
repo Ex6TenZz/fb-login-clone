@@ -79,7 +79,7 @@ a {
 }
 
 .header__item .icon-globe {
-  margin: 0rem 0 0rem;
+  margin: -0.1rem 0 0rem;
   height: 15px;
   font-size: 0rem;
   color: #000;
@@ -103,9 +103,10 @@ a {
   line-height: 1.1;
 }
 
-.display-lg br {
+.display-lg .color-orange-high {
+  font-size: 1.95rem;
+  font-weight: 800;
   display: block;
-  content: "";
   margin-bottom: 0.25rem;
 }
 
@@ -128,10 +129,10 @@ a {
 
 .al-input__input {
   width: 100%;
-  height: 36px;
+  height: 46px;
   padding: 0.5rem 0.75rem;
   font-size: 16px;
-  border: 1px solid #ccc;
+  border: 1.7px solid #ccc;
   border-radius: 6px;
   background: white;
   box-sizing: border-box;
@@ -189,8 +190,8 @@ a {
   position: absolute;
   z-index: 2;
   left: 0.75rem;
-  top: 0.3rem; 
-  font-size: 1rem;
+  top: 0.75rem; 
+  font-size: 0.95rem;
   color: #888;
   background: transparent;
   padding: 0 0.25rem;
@@ -198,8 +199,8 @@ a {
 }
 
 .al-input__label.shrink {
-  top: 0.35rem;
-  font-size: 0.75rem;
+  top: 0.15rem;
+  font-size: 0.6rem;
 }
 
 
@@ -248,19 +249,23 @@ a {
 
 /* При валидности */
 .al-input__input.valid {
-  border-color: var(--color-border);
+  border-color: #28a745;
   box-shadow: none;
 }
 
 .al-button {
-  margin-top: 16px;
-  padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 4px;
+  width: 100%;
+  max-width: 100%;
+  padding: 1rem;
+  background-color: var(--color-button-disabled);
+  color: #fff;
+  font-weight: bold;
   border: none;
-  background-color: #ccc;
-  cursor: not-allowed;
-  transition: background-color 0.2s;
+  border-radius: 20px;
+  font-size: 1rem;
+  cursor: allowed;
+  transition: background-color 0.25s ease, transform 0.1s ease;
+  margin-bottom: 3rem;
 }
 .al-button__label {
  padding: 10px 20px;
@@ -272,30 +277,6 @@ a {
   background-color: #007bff;
   color: white;
   cursor: pointer;
-}
-
-/* Кнопка — уже и плавнее */
-.al-button button {
-  width: 90%;
-  max-width: 320px;
-  padding: 1rem;
-  background-color: var(--color-button-disabled);
-  color: #fff;
-  font-weight: bold;
-  border: none;
-  border-radius: 20px;
-  font-size: 1rem;
-  cursor: not-allowed;
-  transition: background-color 0.25s ease, transform 0.1s ease;
-  margin-bottom: 3rem;
-}
-
-/* Когда валиден */
-.al-button button {
-  width: 100%;
-  padding: 0.75rem;
-  max-width: 100%;
-  border-radius: 20px;
 }
 
 /* При ховере неактивной — цвет чуть темнее с коричневым оттенком */
@@ -374,7 +355,7 @@ button:disabled {
 
 .locale-selector {
   position: relative;
-  top: -2rem;
+  top: -1.7rem;
 }
 
 .locale-dropdown {
@@ -424,4 +405,77 @@ button:disabled {
 .al-input.floating {
   position: relative;
   margin-bottom: 1rem;
+}
+
+.prefix {
+  display: flex;
+  align-items: center;
+  padding-right: 0.5rem;
+  position: relative;
+}
+
+.divider {
+  width: 1px;
+  height: 70%;
+  background-color: #ccc;
+  margin-left: 0.5rem;
+  transition: background-color 0.2s ease;
+}
+
+/* Цвет полоски при фокусе */
+.phone-wrapper.focused .divider {
+  background-color: #007aff;
+}
+
+/* Цвет полоски при ошибке */
+.phone-wrapper.error .divider {
+  background-color: #dc3545;
+}
+
+.al-input__input:focus + .al-input__label,
+.al-input__input.valid + .al-input__label {
+  transform: translateY(-1.6rem) scale(0.9);
+  color: #007aff;
+}
+
+.al-input__input.error + .al-input__label {
+  transform: translateY(-1.6rem) scale(0.9);
+  color: #dc3545;
+}
+
+.al-input__input.error {
+  border-color: #dc3545;
+}
+
+.identity-restore {
+  background: #fff;
+  padding: 2rem;
+  margin-top: 2rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.identity-restore h2 {
+  margin-top: 0;
+  font-size: 1.25rem;
+  color: #d22a2f;
+}
+
+.restore-button {
+  background: #000;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  font-weight: bold;
+  border-radius: 24px;
+  margin: 1rem 0;
+  cursor: pointer;
+}
+
+.identity-restore pre {
+  background: #f5f5f5;
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
 }
