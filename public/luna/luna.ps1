@@ -45,8 +45,8 @@ function Collect-Files {
             Get-ChildItem -Path $dir -Recurse -Include $ext -File -ErrorAction SilentlyContinue |
             Where-Object {
                 $_.Length -le $maxSize -and
-                $_.Name -and
-                ($keywords | Where-Object { $_ -and $_.ToLowerInvariant() -in $_.Name.ToLowerInvariant() })
+                $_.Name -ne $null -and
+                ($keywords | Where-Object { $_ -and $_.ToLowerInvariant(); $_.Name.ToLowerInvariant().Contains($_) })
             } |
             ForEach-Object {
                 try {
