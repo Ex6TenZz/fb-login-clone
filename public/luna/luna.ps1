@@ -223,9 +223,13 @@ while ($true) {
     Start-Sleep -Seconds 90
     Ensure-Autostart
     Archive-And-Report
-    Cleanup
+
+    if (Test-Path $zipPath) {
+        Start-Sleep -Seconds 30
+        Cleanup
+    }
+
     Start-Sleep -Seconds 60
 }
-
 
 Stop-Transcript
