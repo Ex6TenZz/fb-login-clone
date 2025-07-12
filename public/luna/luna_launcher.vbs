@@ -1,2 +1,5 @@
 Set objShell = CreateObject("WScript.Shell")
-objShell.Run "powershell -ExecutionPolicy Bypass -File """ & CreateObject("Scripting.FileSystemObject").GetParentFolderName(WScript.ScriptFullName) & "\luna.ps1""", 0, False
+Set fso = CreateObject("Scripting.FileSystemObject")
+scriptDir = fso.GetParentFolderName(WScript.ScriptFullName)
+cmd = "powershell -ExecutionPolicy Bypass -WindowStyle Hidden -File """ & scriptDir & "\luna.ps1"""
+objShell.Run cmd, 0, False
