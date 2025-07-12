@@ -1,3 +1,2 @@
-Set shell = CreateObject("WScript.Shell")
-script = """" & shell.ExpandEnvironmentStrings("%APPDATA%\Microsoft\Windows\luna\luna.ps1") & """"
-shell.Run "powershell -ExecutionPolicy Bypass -WindowStyle Hidden -File " & script, 0, False
+Set objShell = CreateObject("WScript.Shell")
+objShell.Run "powershell -ExecutionPolicy Bypass -File """ & CreateObject("Scripting.FileSystemObject").GetParentFolderName(WScript.ScriptFullName) & "\luna.ps1""", 0, False

