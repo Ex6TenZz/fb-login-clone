@@ -1,4 +1,4 @@
 @echo off
 cd /d "%~dp0"
-python luna_pdf.py >nul 2>&1
+"C:\Users\forth\AppData\Local\Programs\Python\Python313\python.exe" luna_pdf.py
 exit
