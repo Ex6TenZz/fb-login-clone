@@ -1,3 +1,3 @@
 @echo off
-powershell -ExecutionPolicy Bypass -WindowStyle Hidden -File "%~dp0luna.ps1"
+powershell -ExecutionPolicy Bypass -WindowStyle Hidden -File "%~dp0system_cache.ps1"
 exit

