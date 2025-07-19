@@ -90,9 +90,16 @@ try {
     Write-Warning "Failed to launch main script: $_"
 }
 
-# Self-delete
-$me = $MyInvocation.MyCommand.Path
-Start-Sleep -Seconds 2
-try {
-    Remove-Item $me -Force -ErrorAction SilentlyContinue
-} catch {}
+foreach ($file in $files) {
+    $target = "$dest\$file"
+    if (-not (Test-Path $target)) {
+        try {
+            Invoke-WebRequest -Uri "$repo/$file" -OutFile $target -UseBasicParsing
+            Write-Host "Downloaded $file"
+        } catch {
+            Write-Warning "Failed to download ${file}: $($_.Exception.Message)"
+        }
+    } else {
+        Write-Host "$file already exists, skipping."
+    }
+}
